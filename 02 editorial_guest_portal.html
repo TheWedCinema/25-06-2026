@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Guest Entry | The Wed Cinema</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        editorial: {
+                            bg: '#FBFaf7',
+                            text: '#1C1C1C',
+                            muted: '#737373',
+                            border: '#E5E5E5',
+                            accent: '#A67C74'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #FBFaf7; color: #1C1C1C; }
+        
+        /* Smooth Step Transitions */
+        .auth-step {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .auth-step.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom PIN Input */
+        .pin-input {
+            width: 40px;
+            height: 50px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            border-bottom: 2px solid #E5E5E5;
+            background: transparent;
+            transition: all 0.3s;
+        }
+        .pin-input:focus {
+            outline: none;
+            border-bottom-color: #1C1C1C;
+        }
+
+        /* Scanner Line */
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 8px rgba(255,255,255,0.5);
+            animation: scan 2s infinite linear alternate;
+        }
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row">
+
+    <!-- Left Column: Editorial Imagery (Hidden on small mobile, takes 50% on PC) -->
+    <div class="hidden md:block md:w-1/2 relative bg-gray-100 overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Wedding Moments" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/20"></div>
+        
+        <div class="absolute bottom-12 left-12 text-white">
+            <h2 class="font-serif text-4xl italic mb-2">Akshay & Anjali</h2>
+            <p class="text-xs uppercase tracking-widest font-light">Udaipur • Nov 25, 2026</p>
+        </div>
+        
+        <div class="absolute top-8 left-8">
+            <span class="text-[10px] text-white/80 uppercase tracking-[0.3em]">Asraf Khan Studios</span>
+        </div>
+    </div>
+
+    <!-- Right Column: The Functional Portal -->
+    <div class="w-full md:w-1/2 min-h-screen flex flex-col justify-center items-center p-6 sm:p-12 relative bg-editorial-bg">
+        
+        <!-- Mobile Header (Visible only on mobile) -->
+        <div class="md:hidden absolute top-8 w-full text-center px-6">
+            <span class="text-[9px] uppercase tracking-[0.3em] text-editorial-muted">Captured by</span>
+            <h2 class="font-serif text-sm tracking-widest uppercase mt-1">Asraf Khan Studios</h2>
+        </div>
+
+        <div class="w-full max-w-sm mx-auto mt-16 md:mt-0 relative z-10" id="gateway-container">
+            
+            <!-- STEP 0: Smart Router (Simulated QR Entry) -->
+            <div id="step-0" class="auth-step active animate-slide-up text-center">
+                <div class="w-16 h-16 bg-white border border-editorial-border rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                    <i data-lucide="camera" class="w-6 h-6 text-editorial-text"></i>
+                </div>
+                <h1 class="font-serif text-3xl text-editorial-text mb-3">Akshay & Anjali</h1>
+                <p class="text-sm text-editorial-muted font-light leading-relaxed mb-8">
+                    Welcome to the digital gallery. How would you like to experience the memories?
+                </p>
+                
+                <!-- System Check Simulation -->
+                <div class="space-y-3">
+                    <button onclick="checkSecurity(false)" class="w-full bg-editorial-text text-white py-4 rounded-lg text-xs uppercase tracking-widest font-medium hover:bg-black transition shadow-lg flex justify-center items-center">
+                        <i data-lucide="scan-face" class="w-4 h-4 mr-2"></i> Find My Photos (Open Access)
+                    </button>
+                    <button onclick="checkSecurity(true)" class="w-full bg-white border border-editorial-border text-editorial-text py-4 rounded-lg text-xs uppercase tracking-widest font-medium hover:border-editorial-text transition flex justify-center items-center">
+                        <i data-lucide="lock" class="w-4 h-4 mr-2"></i> Secure Entry (PIN Required)
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 1: Enter Event PIN (Only shown if private) -->
+            <div id="step-1" class="auth-step text-center">
+                <button onclick="navigateBack(0)" class="absolute -top-12 left-0 text-editorial-muted hover:text-editorial-text transition flex items-center text-xs">
+                    <i data-lucide="arrow-left" class="w-3 h-3 mr-1"></i> Back
+                </button>
+
+                <div class="mb-10">
+                    <h2 class="font-serif text-3xl text-editorial-text mb-3">Private Event</h2>
+                    <p class="text-sm text-editorial-muted font-light leading-relaxed">
+                        The couple has requested privacy. Please enter the 6-digit PIN.
+                    </p>
+                </div>
+
+                <div class="flex justify-center space-x-2 mb-8" id="pin-container">
+                    <input type="text" maxlength="1" class="pin-input" autofocus onkeyup="moveToNext(this, 'pin-2')">
+                    <input type="text" maxlength="1" class="pin-input" id="pin-2" onkeyup="moveToNext(this, 'pin-3')">
+                    <input type="text" maxlength="1" class="pin-input" id="pin-3" onkeyup="moveToNext(this, 'pin-4')">
+                    <span class="text-editorial-border mx-1 self-end mb-2">-</span>
+                    <input type="text" maxlength="1" class="pin-input" id="pin-4" onkeyup="moveToNext(this, 'pin-5')">
+                    <input type="text" maxlength="1" class="pin-input" id="pin-5" onkeyup="moveToNext(this, 'pin-6')">
+                    <input type="text" maxlength="1" class="pin-input" id="pin-6" onkeyup="verifyPin()">
+                </div>
+
+                <button onclick="verifyPin()" id="btn-pin" class="w-full bg-editorial-text text-white py-4 rounded-lg text-xs uppercase tracking-widest font-medium hover:bg-black transition shadow-lg">
+                    Verify PIN
+                </button>
+            </div>
+
+            <!-- STEP 2: Native Face Scan / Selfie -->
+            <div id="step-2" class="auth-step text-center">
+                <button onclick="navigateBack(0)" class="absolute -top-12 left-0 text-editorial-muted hover:text-editorial-text transition flex items-center text-xs" id="back-to-start">
+                    <i data-lucide="arrow-left" class="w-3 h-3 mr-1"></i> Back
+                </button>
+
+                <h2 class="font-serif text-3xl text-editorial-text mb-2">Find Your Photos</h2>
+                <p class="text-sm text-editorial-muted font-light mb-10 leading-relaxed">
+                    Take a quick selfie. Our AI will instantly search thousands of photos to find your best candid moments.
+                </p>
+
+                <div class="space-y-4">
+                    <!-- The Magic Native Camera Trigger -->
+                    <div class="relative w-full">
+                        <input type="file" accept="image/*" capture="user" id="native-camera" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="handleCameraUpload()">
+                        <div class="w-full bg-white border-2 border-dashed border-editorial-border hover:border-editorial-text py-8 rounded-xl transition flex flex-col items-center justify-center group relative z-10 pointer-events-none">
+                            <div class="w-14 h-14 bg-editorial-text text-white rounded-full flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform">
+                                <i data-lucide="camera" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs uppercase tracking-widest font-semibold text-editorial-text">Take Selfie Now</span>
+                            <span class="text-[10px] text-editorial-muted mt-2">Uses front camera natively</span>
+                        </div>
+                    </div>
+
+                    <div class="relative w-full py-2">
+                        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-editorial-border"></div></div>
+                        <div class="relative flex justify-center"><span class="bg-editorial-bg px-4 text-[10px] text-editorial-muted uppercase tracking-widest">OR</span></div>
+                    </div>
+
+                    <button onclick="alert('Bypassing AI to view full gallery...')" class="w-full bg-transparent border border-editorial-border hover:bg-white py-4 rounded-xl transition flex items-center justify-center space-x-2 group">
+                        <i data-lucide="layout-grid" class="w-4 h-4 text-editorial-muted group-hover:text-editorial-text"></i>
+                        <span class="text-xs uppercase tracking-widest font-medium text-editorial-muted group-hover:text-editorial-text transition">Just Browse Full Gallery</span>
+                    </button>
+                </div>
+                
+                <div class="mt-8 flex items-center justify-center text-[9px] text-editorial-muted uppercase tracking-wider">
+                    <i data-lucide="shield-check" class="w-3 h-3 mr-1"></i> Fast, Accurate, and Secure
+                </div>
+            </div>
+
+            <!-- STEP 3: The Lead Capture (The Real Goal) -->
+            <div id="step-3" class="auth-step text-center">
+                <div class="w-24 h-24 mx-auto mb-6 relative rounded-full overflow-hidden border-2 border-editorial-text shadow-xl">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Selfie" class="w-full h-full object-cover opacity-60">
+                    <div class="scan-line"></div>
+                </div>
+
+                <h2 class="font-serif text-3xl text-editorial-text mb-2">Analyzing Photos...</h2>
+                <p class="text-sm text-editorial-muted font-light mb-8">Where should we securely send your personalized collection?</p>
+
+                <div class="space-y-4">
+                    <div class="relative">
+                        <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-editorial-muted"></i>
+                        <input type="email" placeholder="Your Email Address" class="w-full bg-white border border-editorial-border rounded-lg pl-12 pr-4 py-4 text-sm focus:outline-none focus:border-editorial-text transition">
+                    </div>
+                    
+                    <button onclick="enterGallery()" id="btn-final" class="w-full bg-editorial-text text-white py-4 rounded-lg text-xs uppercase tracking-widest font-medium hover:bg-black transition shadow-lg">
+                        Unlock My Gallery
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="absolute bottom-6 w-full text-center">
+            <p class="text-[8px] text-editorial-muted uppercase tracking-[0.2em]">Platform by The Wed Cinema</p>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        let isPrivateMode = false;
+
+        // Smart Routing Logic based on Public/Private Gallery Status
+        function checkSecurity(requiresPin) {
+            isPrivateMode = requiresPin;
+            if (requiresPin) {
+                showStep(1); // Force PIN
+            } else {
+                // Bypass PIN entirely, go straight to selfie
+                document.getElementById('back-to-start').setAttribute('onclick', 'navigateBack(0)');
+                showStep(2); 
+            }
+        }
+
+        // Elegant PIN input progression
+        function moveToNext(current, nextFieldID) {
+            if (current.value.length >= current.maxLength) {
+                if (nextFieldID) {
+                    document.getElementById(nextFieldID).focus();
+                } else {
+                    verifyPin();
+                }
+            }
+        }
+
+        function verifyPin() {
+            const btn = document.getElementById('btn-pin');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Verifying...';
+            setTimeout(() => {
+                // PIN successful, move to selfie
+                btn.innerHTML = 'Verify PIN'; 
+                document.getElementById('back-to-start').setAttribute('onclick', 'navigateBack(1)');
+                showStep(2);
+            }, 600);
+        }
+
+        // Handle the native HTML5 Camera Capture
+        function handleCameraUpload() {
+            const input = document.getElementById('native-camera');
+            if (input.files && input.files.length > 0) {
+                // A selfie was captured natively!
+                showStep(3);
+            }
+        }
+
+        // Smooth Back Navigation
+        function navigateBack(targetStep) {
+            // Reset input values if navigating back to start
+            if(targetStep === 0) {
+                document.querySelectorAll('.pin-input').forEach(input => input.value = '');
+            }
+            showStep(targetStep);
+        }
+
+        // Unified transition engine
+        function showStep(stepNum) {
+            document.querySelectorAll('.auth-step').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => el.style.display = 'none', 300);
+            });
+            
+            const nextEl = document.getElementById('step-' + stepNum);
+            setTimeout(() => {
+                nextEl.style.display = 'block';
+                void nextEl.offsetWidth; // trigger reflow
+                nextEl.classList.add('active');
+            }, 300);
+        }
+
+        function enterGallery() {
+            const btn = document.getElementById('btn-final');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Building Gallery...';
+            setTimeout(() => {
+                alert("CTO Note: Lead captured. Guest is now seamlessly redirected to their curated view in the Final Client Gallery (Module 3). Happy guests lead to good reviews!");
+                btn.innerHTML = 'Unlock My Gallery';
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
