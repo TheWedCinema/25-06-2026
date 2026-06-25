@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Client Experience Portal | Asraf Khan Studios</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Playfair Display & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        /* THE WED CINEMA™ BRAND DESIGN CORES PERMANENTLY LOCKED */
+                        ivory: {
+                            bg: '#FDFBF7',     /* ROYAL IVORY MATTE CANVAS */
+                            100: '#F8F5F0',    /* IVORY SHADE 100 TACTILE FILLING */
+                            200: '#EBE5DD',    /* IVORY SHADE 200 TACTILE BORDERS */
+                        },
+                        brownAccent: '#B79873', /* LIGHT BROWN MUTED METALLIC */
+                        velvetCTA: '#4A0304',   /* ROYAL VELVET HIGH-REVENUE CONVERSION CORE */
+                        charcoalText: '#1A1A1A' /* SOFT VELVET CHARCOAL TEXT */
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF7 !important;
+            color: #1A1A1A !important;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .glass-header {
+            background: rgba(253, 251, 247, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid #EBE5DD;
+        }
+        .glass-panel {
+            background: #F8F5F0;
+            border: 1px solid #EBE5DD;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .grid-masonry {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-gap: 1.5rem;
+        }
+        .grid-justified {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .grid-justified .image-card {
+            flex-grow: 1;
+            height: 300px;
+        }
+        .grid-justified .image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-card img {
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .image-card:hover img {
+            transform: scale(1.03);
+        }
+
+        .scan-overlay-line {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #B79873, transparent);
+            position: absolute;
+            top: 0;
+            animation: scanHorizontal 2.5s infinite linear;
+        }
+        @keyframes scanHorizontal {
+            0% { top: 0%; }
+            50% { top: 100%; }
+            100% { top: 0%; }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-velvetCTA selection:text-white relative">
+
+    <div id="toast-container" class="fixed bottom-6 left-6 z-[100] flex flex-col gap-3 pointer-events-none"></div>
+
+    <nav class="fixed top-0 left-0 right-0 z-40 glass-header px-6 py-4 transition-transform duration-300" id="main-nav">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex flex-col cursor-pointer" onclick="window.scrollTo(0,0)">
+                <span class="text-[9px] uppercase tracking-[0.3em] text-brownAccent font-medium">Captured exclusively by</span>
+                <span class="serif text-lg md:text-xl font-medium tracking-wider text-charcoalText">ASRAF KHAN STUDIOS</span>
+            </div>
+            
+            <div class="flex items-center space-x-3 md:space-x-4">
+                <!-- Favorites Proofing Loop Trigger -->
+                <button onclick="toggleFavorites(true)" class="relative p-2.5 hover:bg-ivory-100 rounded-full transition group" title="Favorites">
+                    <i class="fa-regular fa-heart text-charcoalText group-hover:text-velvetCTA text-lg transition-colors"></i>
+                    <span id="fav-badge" class="absolute top-1.5 right-1.5 bg-velvetCTA text-white text-[9px] font-extrabold w-4.5 h-4.5 rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
+                </button>
+
+                <button onclick="toggleConfigurator(true)" class="p-2.5 hover:bg-ivory-100 rounded-full transition group hidden sm:inline-flex" title="Gallery Settings">
+                    <i class="fa-solid fa-sliders text-charcoalText group-hover:text-brownAccent text-lg"></i>
+                </button>
+
+                <!-- E-Commerce Fulfillment Trigger -->
+                <button onclick="toggleCart(true)" class="relative p-2.5 hover:bg-ivory-100 rounded-full transition group" title="Shopping Bag">
+                    <i class="fa-solid fa-bag-shopping text-charcoalText group-hover:text-brownAccent text-lg"></i>
+                    <span id="cart-badge" class="absolute top-1.5 right-1.5 bg-charcoalText text-white text-[9px] font-extrabold w-4.5 h-4.5 rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
+                </button>
+                
+                <button onclick="openShareModal()" class="p-2.5 hover:bg-ivory-100 rounded-full transition group hidden sm:inline-flex" title="Share Gallery">
+                    <i class="fa-solid fa-share-nodes text-charcoalText group-hover:text-brownAccent text-lg"></i>
+                </button>
+                
+                <a href="#booking-section" class="px-5 py-2.5 bg-velvetCTA text-white hover:opacity-90 transition-all duration-300 text-[10px] uppercase tracking-widest font-semibold rounded-none hidden md:block">
+                    Inquire Now
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative h-[85vh] w-full flex items-end overflow-hidden pt-20 bg-ivory-100">
+        <div class="absolute inset-0 z-0">
+            <video class="w-full h-full object-cover opacity-80 mix-blend-multiply" autoplay muted loop playsinline>
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-bride-and-groom-holding-hands-and-walking-41584-large.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-gradient-to-t from-ivory-bg via-transparent to-transparent"></div>
+        </div>
+        
+        <div class="relative max-w-7xl mx-auto w-full px-6 pb-16 md:pb-20 z-10 flex flex-col md:flex-row md:justify-between md:items-end gap-8">
+            <div class="space-y-3">
+                <span class="text-xs uppercase tracking-[0.4em] text-brownAccent font-bold block drop-shadow-sm"><i class="fa-solid fa-sparkles mr-2"></i>Live Smart Gallery</span>
+                <h1 class="serif text-5xl md:text-7xl font-light italic text-charcoalText tracking-wide leading-none">Akshay & Anjali</h1>
+                <p class="text-charcoalText text-sm tracking-widest font-medium">25th November 2026 &bull; City of Lakes, Udaipur</p>
+                <div class="flex flex-wrap gap-2.5 pt-2">
+                    <span class="px-3.5 py-1.5 bg-ivory-bg/80 backdrop-blur-md text-charcoalText text-[10px] uppercase tracking-wider font-bold border border-ivory-200"><i class="fa-solid fa-location-dot mr-1 text-brownAccent"></i>Umaid Bhawan Palace</span>
+                    <span class="px-3.5 py-1.5 bg-ivory-bg/80 backdrop-blur-md text-charcoalText text-[10px] uppercase tracking-wider font-bold border border-ivory-200"><i class="fa-solid fa-camera mr-1 text-brownAccent"></i>4.2K Captures</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-6 border-t border-ivory-200/50 pt-6 md:pt-0">
+                <div class="flex space-x-6">
+                    <div>
+                        <span class="block text-3xl font-light text-charcoalText serif" id="total-photos-count">350</span>
+                        <span class="text-[9px] text-charcoalText uppercase tracking-widest font-bold block mt-0.5">Retouched Shots</span>
+                    </div>
+                    <div class="border-l border-ivory-200/50 pl-6">
+                        <span class="block text-3xl font-light text-charcoalText serif" id="guest-photos-count">48</span>
+                        <span class="text-[9px] text-charcoalText uppercase tracking-widest font-bold block mt-0.5">Guest Uploads</span>
+                    </div>
+                </div>
+                <button onclick="scrollToGuestUpload()" class="px-6 py-4 bg-charcoalText hover:bg-brownAccent text-white rounded-none text-[10px] uppercase tracking-widest font-bold transition-all flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>Contribute</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="max-w-7xl mx-auto px-6 py-16">
+        <div class="mb-8 flex justify-between items-end border-b border-ivory-200 pb-4">
+            <div>
+                <span class="text-[10px] uppercase tracking-[0.3em] text-brownAccent font-bold block mb-1">Cinematic Showcase</span>
+                <h2 class="serif text-3xl font-light text-charcoalText">Event Masterpieces</h2>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Video 1: Upsell Module -->
+            <div class="bg-ivory-bg rounded-none overflow-hidden relative group border border-ivory-200 flex flex-col hover:border-brownAccent transition duration-300 shadow-sm">
+                <div class="aspect-video relative bg-charcoalText">
+                    <video id="teaser-video" class="w-full h-full object-cover opacity-90" poster="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3" controls>
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-wedding-shoot-of-the-bride-posing-for-photos-41582-large.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="p-5 flex justify-between items-center bg-ivory-100">
+                    <div>
+                        <h4 class="text-xs font-bold text-charcoalText uppercase tracking-wider">Social Teaser Cut</h4>
+                        <p class="text-[10px] text-zinc-500 mt-1">15-second uncompressed vertical format</p>
+                    </div>
+                    <button onclick="addDigitalToCart('4K Social Teaser Reel', 19.00)" class="bg-velvetCTA text-white px-4 py-2.5 text-[10px] uppercase tracking-widest font-bold hover:bg-charcoalText transition">
+                        Unlock $19
+                    </button>
+                </div>
+            </div>
+
+            <!-- Video 2: Upsell Module -->
+            <div class="bg-ivory-bg rounded-none overflow-hidden relative group border border-ivory-200 flex flex-col hover:border-brownAccent transition duration-300 shadow-sm">
+                <div class="aspect-video relative bg-charcoalText">
+                    <video id="documentary-video" class="w-full h-full object-cover opacity-90" poster="https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-4.0.3" controls>
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-bridegroom-whispering-something-in-brides-ear-at-wedding-41587-large.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="p-5 flex justify-between items-center bg-ivory-100">
+                    <div>
+                        <h4 class="text-xs font-bold text-charcoalText uppercase tracking-wider">Documentary Master</h4>
+                        <p class="text-[10px] text-zinc-500 mt-1">45-minute cinematic timeline</p>
+                    </div>
+                    <button onclick="addDigitalToCart('Documentary Master 4K', 49.00)" class="bg-velvetCTA text-white px-4 py-2.5 text-[10px] uppercase tracking-widest font-bold hover:bg-charcoalText transition">
+                        Unlock $49
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-6 py-8 relative z-10" id="gallery-container">
+        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6 pb-6 border-b border-ivory-200">
+            
+            <div class="flex flex-wrap p-1 bg-ivory-100 border border-ivory-200 rounded-none max-w-max self-start gap-1">
+                <button onclick="switchCategory('all')" id="tab-all" class="px-5 py-2.5 text-[10px] uppercase tracking-widest font-bold transition-all duration-300 bg-charcoalText text-white">
+                    Full Timeline
+                </button>
+                <button onclick="switchCategory('sangeet')" id="tab-sangeet" class="px-5 py-2.5 text-[10px] uppercase tracking-widest font-bold text-zinc-500 hover:text-charcoalText hover:bg-ivory-200 transition-all duration-300">
+                    Sangeet
+                </button>
+                <button onclick="switchCategory('wedding')" id="tab-wedding" class="px-5 py-2.5 text-[10px] uppercase tracking-widest font-bold text-zinc-500 hover:text-charcoalText hover:bg-ivory-200 transition-all duration-300">
+                    The Wedding
+                </button>
+            </div>
+
+            <!-- Identity Capture Hook -->
+            <div class="glass-panel border border-ivory-200 p-4 lg:p-5 flex flex-col sm:flex-row items-center gap-4 max-w-md w-full shadow-sm hover:border-brownAccent transition">
+                <div class="flex items-center space-x-4 w-full sm:w-auto">
+                    <div class="w-10 h-10 rounded-full bg-ivory-bg border border-ivory-200 flex items-center justify-center text-brownAccent" id="scanning-avatar">
+                        <i class="fa-solid fa-face-viewfinder text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-[11px] font-bold uppercase tracking-wider text-charcoalText">Find Your Photos</h4>
+                        <p class="text-[10px] text-zinc-500">AI Biometric Sort</p>
+                    </div>
+                </div>
+                <button onclick="openSelfieModal()" class="w-full sm:w-auto px-5 py-2.5 bg-ivory-200 text-charcoalText hover:bg-brownAccent hover:text-white border border-ivory-200 rounded-none text-[10px] font-bold uppercase tracking-widest transition-all">
+                    Scan Face
+                </button>
+            </div>
+        </div>
+
+        <!-- Active Filter Status -->
+        <div id="filter-indicator-bar" class="hidden flex justify-between items-center bg-ivory-100 border border-brownAccent px-5 py-3.5 mt-6 shadow-sm">
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <img id="filter-preview-thumbnail" src="" class="w-10 h-10 rounded-full object-cover border-2 border-brownAccent" alt="Selfie preview">
+                    <div class="absolute -bottom-1 -right-1 bg-velvetCTA text-white text-[8px] px-1.5 py-0.5 rounded-full font-bold"><i class="fa-solid fa-check"></i></div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold">Active AI Filter</p>
+                    <p class="text-sm text-charcoalText font-bold" id="filter-name-display">Profile Index</p>
+                </div>
+            </div>
+            <button onclick="clearActiveFilters()" class="text-[10px] bg-ivory-bg border border-ivory-200 text-zinc-500 hover:text-velvetCTA hover:border-velvetCTA px-3 py-1.5 uppercase font-bold transition flex items-center space-x-1.5">
+                <i class="fa-solid fa-xmark"></i> <span>Clear</span>
+            </button>
+        </div>
+
+        <!-- Master Masonry Grid -->
+        <div id="gallery-grid" class="grid-masonry pt-10"></div>
+
+        <!-- Empty State Handling -->
+        <div id="empty-state" class="hidden text-center py-24 max-w-md mx-auto">
+            <div class="w-20 h-20 mx-auto bg-ivory-100 border border-ivory-200 rounded-full flex items-center justify-center mb-6 text-zinc-400">
+                <i class="fa-solid fa-ghost text-2xl"></i>
+            </div>
+            <h3 class="serif text-3xl text-charcoalText mb-3">No Matches Found</h3>
+            <p class="text-xs text-zinc-500 mb-8 leading-relaxed">Our AI could not extract this facial vector from the current gallery timeline. Try scanning a different photo.</p>
+            <button onclick="clearActiveFilters()" class="px-8 py-3 bg-charcoalText text-white hover:bg-brownAccent transition text-[10px] uppercase tracking-widest font-bold">
+                Return to Full Gallery
+            </button>
+        </div>
+    </section>
+
+    <section id="guest-upload-section" class="max-w-7xl mx-auto px-6 py-20">
+        <div class="glass-panel p-8 md:p-14 border border-ivory-200 relative overflow-hidden shadow-sm">
+            <div class="max-w-xl mx-auto text-center space-y-5">
+                <span class="text-[10px] uppercase tracking-[0.4em] text-brownAccent font-bold block"><i class="fa-solid fa-users-rays mr-2"></i>Collaboration Hub</span>
+                <h2 class="serif text-4xl text-charcoalText font-light">Contribute to the Legacy</h2>
+                <p class="text-xs md:text-sm text-zinc-500 font-light leading-relaxed">Upload your candids directly into the studio's uncompressed processing pipeline.</p>
+
+                <!-- Step 1: Lead Capture Form -->
+                <div id="guest-lead-capture" class="bg-ivory-bg border border-ivory-200 p-8 mt-8 text-left space-y-5 shadow-inner">
+                    <div class="border-b border-ivory-200 pb-3">
+                        <h4 class="text-sm font-bold text-charcoalText uppercase tracking-wider">Identity Verification</h4>
+                        <p class="text-[10px] text-zinc-500 mt-1">Required for privacy and delivery tracking.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <input type="text" id="guest-name" placeholder="Full Name" class="w-full bg-ivory-100 border border-ivory-200 p-3.5 text-xs text-charcoalText focus:border-brownAccent outline-none transition">
+                        <input type="email" id="guest-email" placeholder="Email Address" class="w-full bg-ivory-100 border border-ivory-200 p-3.5 text-xs text-charcoalText focus:border-brownAccent outline-none transition">
+                    </div>
+                    <button onclick="unlockGuestUpload()" class="w-full bg-charcoalText text-white py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-brownAccent transition shadow-md">
+                        Unlock Upload Portal
+                    </button>
+                </div>
+
+                <!-- Step 2: Hidden Dropzone -->
+                <div id="guest-upload-dropzone" class="hidden border-2 border-dashed border-brownAccent/50 hover:border-brownAccent rounded-none p-12 mt-8 transition cursor-pointer relative bg-ivory-bg">
+                    <input type="file" id="guest-file-input" capture="user" multiple class="absolute inset-0 opacity-0 cursor-pointer" onchange="handleGuestFileSelect(event)">
+                    <div class="space-y-4">
+                        <div class="w-16 h-16 bg-ivory-100 rounded-full flex items-center justify-center mx-auto border border-ivory-200">
+                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-brownAccent"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-charcoalText font-bold">Tap to Upload Media</p>
+                            <p class="text-[10px] text-zinc-500 mt-1">Supports RAW, JPG, HEIC, MP4</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Progress Queue -->
+                <div id="upload-queue-container" class="hidden text-left bg-ivory-bg border border-ivory-200 p-5 mt-6 space-y-3 shadow-inner">
+                    <div class="flex justify-between items-center text-[10px] uppercase tracking-wider font-bold text-charcoalText">
+                        <span>Syncing to Studio Vault</span>
+                        <span id="queue-percentage" class="text-brownAccent">0%</span>
+                    </div>
+                    <div class="w-full bg-ivory-200 h-1.5 overflow-hidden">
+                        <div id="queue-progress-bar" class="bg-velvetCTA h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <p class="text-[10px] text-zinc-500"><i class="fa-solid fa-shield-halved mr-1 text-brownAccent"></i> Processing biometrics securely...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="lightbox" class="fixed inset-0 z-50 bg-ivory-bg/95 hidden transition-opacity duration-300 opacity-0 flex flex-col backdrop-blur-sm">
+        <header class="w-full p-6 flex justify-between items-center z-10 glass-header border-b border-ivory-200">
+            <div class="flex flex-col">
+                <span class="text-[9px] uppercase tracking-[0.3em] font-bold text-brownAccent">The Print Studio</span>
+                <span id="lightbox-image-title" class="serif text-charcoalText font-light text-lg">Active Frame</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <!-- Proofing Favorite action -->
+                <button onclick="toggleLightboxFavorite()" id="lightbox-fav-btn" class="p-2.5 bg-ivory-100 hover:bg-ivory-200 border border-ivory-200 text-charcoalText transition flex items-center space-x-2" title="Add to Shortlist">
+                    <i class="fa-regular fa-heart text-lg" id="lightbox-fav-icon"></i>
+                    <span class="text-[10px] uppercase tracking-widest font-bold hidden sm:inline">Shortlist</span>
+                </button>
+                <button onclick="closeLightbox()" class="p-2.5 hover:bg-ivory-200 text-charcoalText transition border border-transparent">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+            <div class="flex-1 flex items-center justify-center p-6 md:p-10 relative overflow-hidden">
+                <!-- Anti-Theft Watermark -->
+                <div class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none opacity-10 select-none">
+                    <span class="text-6xl font-serif text-charcoalText transform -rotate-12 tracking-widest font-bold">ASRAF KHAN</span>
+                </div>
+                <img id="lightbox-main-img" src="" alt="Active Canvas" class="max-h-[75vh] max-w-full object-contain relative z-0 shadow-2xl border border-ivory-200/50">
+            </div>
+
+            <!-- E-Commerce Fulfillment Panel -->
+            <div class="w-full lg:w-[400px] glass-panel border-t lg:border-t-0 lg:border-l border-ivory-200 p-8 flex flex-col justify-between overflow-y-auto max-h-[50vh] lg:max-h-full">
+                <div class="space-y-8">
+                    <div>
+                        <span class="text-[10px] uppercase tracking-[0.3em] text-brownAccent font-bold block mb-2"><i class="fa-solid fa-store mr-1.5"></i>Fulfillment Center</span>
+                        <h3 class="serif text-2xl text-charcoalText">Order Premium Art</h3>
+                        <p class="text-[11px] text-zinc-500 leading-relaxed mt-2">Museum-grade archival prints curated by the studio.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <label class="text-[10px] text-charcoalText uppercase tracking-widest font-bold block">Medium & Size</label>
+                        <div class="space-y-3" id="print-catalog">
+                            <!-- Product 1 -->
+                            <label class="border border-ivory-200 hover:border-brownAccent p-4 flex items-center justify-between cursor-pointer transition bg-ivory-bg relative group shadow-sm">
+                                <input type="radio" name="product-medium" value="print-8x10" checked onchange="updateProductBasePrice(29)" class="absolute right-4 accent-velvetCTA w-4 h-4">
+                                <div class="flex items-center space-x-4 pr-10">
+                                    <div class="w-10 h-10 bg-ivory-100 flex items-center justify-center border border-ivory-200 text-charcoalText"><i class="fa-regular fa-image"></i></div>
+                                    <div>
+                                        <p class="text-xs font-bold text-charcoalText">8x10" Archival Print</p>
+                                        <p class="text-[10px] text-zinc-500 mt-0.5">Cotton Matte</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-bold text-velvetCTA pr-8">$29.00</span>
+                            </label>
+
+                            <!-- Product 2 -->
+                            <label class="border border-ivory-200 hover:border-brownAccent p-4 flex items-center justify-between cursor-pointer transition bg-ivory-bg relative group shadow-sm">
+                                <input type="radio" name="product-medium" value="canvas-24x36" onchange="updateProductBasePrice(149)" class="absolute right-4 accent-velvetCTA w-4 h-4">
+                                <div class="flex items-center space-x-4 pr-10">
+                                    <div class="w-10 h-10 bg-ivory-100 flex items-center justify-center border border-ivory-200 text-charcoalText"><i class="fa-solid fa-border-all"></i></div>
+                                    <div>
+                                        <p class="text-xs font-bold text-charcoalText">24x36" Gallery Canvas</p>
+                                        <p class="text-[10px] text-zinc-500 mt-0.5">Wrapped Frame</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-bold text-velvetCTA pr-8">$149.00</span>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-5 border-t border-ivory-200 mt-4">
+                            <span class="text-[10px] text-charcoalText uppercase tracking-widest font-bold">Quantity</span>
+                            <div class="flex items-center bg-ivory-bg border border-ivory-200">
+                                <button onclick="adjustQuantity(-1)" class="px-4 py-2 hover:bg-ivory-100 text-charcoalText transition text-xs font-bold">-</button>
+                                <span id="purchase-qty" class="px-4 py-2 text-sm text-charcoalText font-bold border-l border-r border-ivory-200 min-w-[40px] text-center">1</span>
+                                <button onclick="adjustQuantity(1)" class="px-4 py-2 hover:bg-ivory-100 text-charcoalText transition text-xs font-bold">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4 pt-6 border-t border-ivory-200 mt-8 lg:mt-0 bg-ivory-100 -mx-8 -mb-8 p-8">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-zinc-500 uppercase tracking-widest font-bold">Subtotal</span>
+                        <span id="lightbox-subtotal" class="text-2xl font-light serif text-charcoalText">$29.00</span>
+                    </div>
+                    <button onclick="addToCartFromLightbox()" class="w-full bg-charcoalText text-white py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-brownAccent transition-all duration-300 shadow-md flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-cart-plus"></i>
+                        <span>Add to Cart</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="favorites-panel" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-ivory-bg border-l border-ivory-200 shadow-2xl translate-x-full transition-transform duration-500 flex flex-col">
+        <header class="p-6 border-b border-ivory-200 flex justify-between items-center bg-ivory-100">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-heart text-velvetCTA text-lg"></i>
+                <h3 class="serif text-xl text-charcoalText">Couple's Shortlist</h3>
+            </div>
+            <button onclick="toggleFavorites(false)" class="p-2 hover:bg-ivory-200 text-zinc-500 hover:text-charcoalText transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar bg-ivory-bg" id="favorites-list">
+            <!-- Populated via JS -->
+        </div>
+
+        <!-- AI Smart Album Upsell (Monetization Injection) -->
+        <div id="ai-album-upsell" class="hidden p-6 border-t border-ivory-200 bg-ivory-100">
+            <div class="border border-brownAccent bg-ivory-bg p-5 text-center space-y-3 relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-brownAccent text-white text-[8px] uppercase tracking-widest font-bold px-2 py-1">AI Curated</div>
+                <i class="fa-solid fa-book-open text-2xl text-brownAccent"></i>
+                <h4 class="serif text-lg text-charcoalText">Pre-Designed Album</h4>
+                <p class="text-[10px] text-zinc-500 leading-relaxed">Our system has designed a beautiful 12x12 Linen Album using your shortlisted favorites.</p>
+                <button onclick="addDigitalToCart('AI 12x12 Linen Album (Printed)', 199.00)" class="w-full bg-charcoalText text-white py-3 text-[10px] uppercase tracking-widest font-bold hover:bg-brownAccent transition mt-2">
+                    Review & Buy ($199)
+                </button>
+            </div>
+        </div>
+
+        <footer class="p-6 border-t border-ivory-200 bg-ivory-bg space-y-3">
+            <p class="text-[10px] text-zinc-500 text-center uppercase tracking-widest font-bold mb-3">Proofing Workflow</p>
+            <button onclick="submitFavoritesToStudio()" class="w-full bg-velvetCTA text-white py-4 text-[10px] uppercase tracking-widest font-bold hover:opacity-95 transition-all duration-300">
+                Send to Photographer
+            </button>
+        </footer>
+    </div>
+
+    <div id="cart-panel" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-ivory-bg border-l border-ivory-200 shadow-2xl translate-x-full transition-transform duration-500 flex flex-col">
+        <header class="p-6 border-b border-ivory-200 flex justify-between items-center bg-ivory-100">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-bag-shopping text-brownAccent text-lg"></i>
+                <h3 class="serif text-xl text-charcoalText">Shopping Bag</h3>
+            </div>
+            <button onclick="toggleCart(false)" class="p-2 hover:bg-ivory-200 text-zinc-500 hover:text-charcoalText transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 no-scrollbar" id="cart-item-list">
+            <!-- Populated via JS -->
+        </div>
+
+        <div id="stripe-checkout-section" class="hidden p-6 border-t border-ivory-200 bg-ivory-100 space-y-4">
+            <h4 class="text-[10px] uppercase tracking-widest text-charcoalText font-bold mb-1">Billing Details</h4>
+            <input type="email" id="stripe-email" placeholder="Email Address" class="w-full bg-ivory-bg border border-ivory-200 p-3.5 text-xs text-charcoalText focus:outline-none focus:border-brownAccent">
+            
+            <div class="flex justify-between items-center text-sm pt-4 border-t border-ivory-200/50">
+                <span class="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">Grand Total</span>
+                <span id="grand-total-display" class="text-2xl font-light serif text-velvetCTA">$0.00</span>
+            </div>
+            <button onclick="executeOrderCheckout()" id="checkout-cta" class="w-full bg-charcoalText text-white py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-brownAccent transition-all duration-300 shadow-md">
+                Complete Purchase
+            </button>
+        </div>
+    </div>
+
+    <div id="selfie-modal" class="fixed inset-0 z-50 bg-charcoalText/80 backdrop-blur-sm flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-ivory-bg border border-ivory-200 max-w-md w-full p-10 rounded-none text-center space-y-6 relative m-4 shadow-2xl">
+            <button onclick="closeSelfieModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-charcoalText transition p-2">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="w-16 h-16 bg-ivory-100 border border-ivory-200 rounded-full flex items-center justify-center mx-auto text-brownAccent shadow-sm">
+                <i class="fa-solid fa-face-viewfinder text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="serif text-3xl text-charcoalText">Find Your Photos</h3>
+                <p class="text-xs text-zinc-500 mt-2 leading-relaxed">Securely scan your face to instantly filter the gallery and find every photo you appear in.</p>
+            </div>
+
+            <div class="bg-ivory-100 border border-ivory-200 p-5 flex flex-col space-y-4 shadow-inner text-left">
+                <p class="text-[10px] uppercase tracking-widest font-bold text-zinc-500">Demo Identity Vectors</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button onclick="executeSelfieScan('guest-self', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3', 'Anjali (Demo Profile)')" class="flex items-center space-x-4 p-3 bg-ivory-bg hover:border-brownAccent border border-transparent transition shadow-sm group">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3" class="w-10 h-10 rounded-full object-cover border border-ivory-200 group-hover:border-brownAccent" alt="Profile">
+                        <div>
+                            <p class="font-bold text-xs text-charcoalText">Scan as Anjali</p>
+                            <p class="text-[9px] text-zinc-400 uppercase tracking-widest mt-0.5">Primary Subject</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div id="scan-hud" class="hidden relative aspect-square w-32 mx-auto rounded-full overflow-hidden border-4 border-brownAccent shadow-lg mt-6">
+                <img id="scan-hud-img" src="" class="w-full h-full object-cover opacity-70 filter grayscale" alt="HUD context">
+                <div class="scan-overlay-line"></div>
+                <div class="absolute inset-0 flex items-center justify-center z-10 text-white font-bold text-[10px] uppercase tracking-widest drop-shadow-md">Analyzing</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layout Configurator Drawer -->
+    <div id="configurator-drawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-ivory-bg border-l border-ivory-200 shadow-2xl translate-x-full transition-transform duration-500 flex flex-col">
+        <header class="p-6 border-b border-ivory-200 flex justify-between items-center bg-ivory-100">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-palette text-brownAccent text-lg"></i>
+                <h3 class="serif text-xl text-charcoalText">Viewing Preferences</h3>
+            </div>
+            <button onclick="toggleConfigurator(false)" class="p-2 hover:bg-ivory-200 text-zinc-500 hover:text-charcoalText transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 space-y-8">
+            <div class="space-y-4">
+                <label class="text-[10px] uppercase tracking-widest text-charcoalText font-bold block">Grid Alignment</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="toggleGridLayout('masonry')" class="border border-ivory-200 p-4 hover:border-brownAccent transition bg-ivory-100 flex flex-col items-center justify-center space-y-2 text-xs text-charcoalText font-bold">
+                        <i class="fa-solid fa-grip text-xl text-brownAccent"></i>
+                        <span>Masonry</span>
+                    </button>
+                    <button onclick="toggleGridLayout('justified')" class="border border-ivory-200 p-4 hover:border-brownAccent transition bg-ivory-100 flex flex-col items-center justify-center space-y-2 text-xs text-charcoalText font-bold">
+                        <i class="fa-solid fa-grip-lines text-xl text-brownAccent"></i>
+                        <span>Justified</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="share-modal" class="fixed inset-0 z-50 bg-charcoalText/80 backdrop-blur-sm flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-ivory-bg border border-ivory-200 max-w-md w-full p-8 text-center space-y-6 relative m-4 shadow-2xl">
+            <button onclick="closeShareModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-charcoalText transition p-2">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="w-16 h-16 bg-ivory-100 border border-ivory-200 rounded-full flex items-center justify-center mx-auto text-brownAccent">
+                <i class="fa-solid fa-share-nodes text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="serif text-3xl text-charcoalText">Share the Magic</h3>
+                <p class="text-xs text-zinc-500 mt-2">Send this private gallery link to friends and family.</p>
+            </div>
+            <div class="bg-ivory-100 border border-ivory-200 p-2 flex justify-between items-center shadow-inner">
+                <span class="text-xs text-charcoalText truncate select-all px-3 font-medium" id="share-link">https://asrafkhan.com/akshay-anjali</span>
+                <button onclick="copyShareLink()" class="bg-charcoalText text-white px-5 py-3 text-[10px] uppercase tracking-widest font-bold hover:bg-brownAccent transition">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking CTA Footer -->
+    <section class="bg-charcoalText border-t border-ivory-200 py-24 px-6 text-center" id="booking-section">
+        <div class="max-w-2xl mx-auto space-y-8">
+            <span class="text-[10px] uppercase tracking-[0.4em] text-brownAccent font-bold">Limited Availability 2026 / 2027</span>
+            <h2 class="serif text-4xl md:text-5xl font-light text-white leading-tight">Secure Your Legacy</h2>
+            <p class="text-xs md:text-sm text-zinc-400 font-light max-w-lg mx-auto">Commission our studio for high-end destination cinematography.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-0 max-w-md mx-auto pt-4 shadow-2xl">
+                <input type="email" id="booking-email-input" placeholder="Your Email Address" class="bg-white border-none text-charcoalText text-xs px-6 py-4 rounded-none flex-1 focus:outline-none">
+                <button onclick="submitBookingInquiry()" class="bg-brownAccent text-white hover:bg-velvetCTA px-8 py-4 text-[10px] uppercase tracking-widest font-bold transition duration-300">
+                    Request Proposal
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-charcoalText pt-8 pb-12 px-6 text-center border-t border-zinc-800">
+        <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">&copy; 2026 ASRAF KHAN STUDIOS. ALL RIGHTS RESERVED.</p>
+        <p class="text-[8px] text-zinc-600 uppercase tracking-widest mt-2">SaaS Infrastructure Powered by The Wed Cinema™ OS</p>
+    </footer>
+
+    <script>
+        const MASTER_GALLERY_DATABASE = [
+            { id: 1, title: "Symmetrical Archway Entrance", src: "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["guest-self", "bride", "groom"], category: "wedding" },
+            { id: 2, title: "Anjali - Editorial Saree Silhouette", src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["bride"], category: "wedding" },
+            { id: 3, title: "Traditional Saptapadi Walk", src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["guest-self", "groom"], category: "wedding" },
+            { id: 4, title: "Sangeet Group Dance", src: "https://images.unsplash.com/photo-1549417229-aa67d3263c09?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: [], category: "sangeet" }
+        ];
+
+        // State Variables
+        let currentSubEventCategory = "all";
+        let activeFaceFilterTag = null;
+        let selectedThemeLayout = "masonry";
+        let shoppingCart = [];
+        let favorites = [];
+        let activeLightboxPhoto = null;
+        let lightboxProductPrice = 29.00;
+        let purchaseQuantity = 1;
+        let isGuestIdentified = false;
+
+        window.onload = function() {
+            renderGallery();
+            document.getElementById("total-photos-count").innerText = MASTER_GALLERY_DATABASE.length;
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('main-nav');
+                if (window.scrollY > 50) {
+                    nav.classList.add('shadow-md');
+                } else {
+                    nav.classList.remove('shadow-md');
+                }
+            });
+        };
+
+        // UI Toast Controller
+        function showToast(message, icon = "fa-check-circle") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = "bg-charcoalText border border-zinc-700 text-white px-5 py-4 flex items-center space-x-3 shadow-2xl transform transition-all duration-300 translate-y-10 opacity-0";
+            toast.innerHTML = `<i class="fa-solid ${icon} text-brownAccent text-lg"></i> <span class="text-xs font-bold uppercase tracking-wider">${message}</span>`;
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.remove('translate-y-10', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Gallery Rendering Engine
+        function renderGallery() {
+            const grid = document.getElementById("gallery-grid");
+            const emptyState = document.getElementById("empty-state");
+            grid.innerHTML = "";
+
+            let photos = MASTER_GALLERY_DATABASE;
+
+            if (currentSubEventCategory !== "all") {
+                photos = photos.filter(p => p.category === currentSubEventCategory);
+                
+                // Update tabs
+                ['all', 'sangeet', 'wedding'].forEach(id => {
+                    const btn = document.getElementById(`tab-${id}`);
+                    if(btn) {
+                        btn.className = (id === currentSubEventCategory) 
+                            ? "px-5 py-2.5 text-[10px] uppercase tracking-widest font-bold transition-all duration-300 bg-charcoalText text-white"
+                            : "px-5 py-2.5 text-[10px] uppercase tracking-widest font-bold text-zinc-500 hover:text-charcoalText hover:bg-ivory-200 transition-all duration-300";
+                    }
+                });
+            } else {
+                document.getElementById('tab-all').className = "px-5 py-2.5 text-[10px] uppercase tracking-widest font-bold transition-all duration-300 bg-charcoalText text-white";
+                ['sangeet', 'wedding'].forEach(id => {
+                    const btn = document.getElementById(`tab-${id}`);
+                    if(btn) btn.className = "px-5 py-2.5 text-[10px] uppercase tracking-widest font-bold text-zinc-500 hover:text-charcoalText hover:bg-ivory-200 transition-all duration-300";
+                });
+            }
+
+            if (activeFaceFilterTag) {
+                photos = photos.filter(p => p.tags.includes(activeFaceFilterTag));
+            }
+
+            if (photos.length === 0) {
+                grid.classList.add("hidden");
+                emptyState.classList.remove("hidden");
+                return;
+            } else {
+                grid.classList.remove("hidden");
+                emptyState.classList.add("hidden");
+            }
+
+            photos.forEach(photo => {
+                const card = document.createElement("div");
+                card.className = "image-card relative overflow-hidden cursor-pointer border border-ivory-200 shadow-sm group bg-ivory-100 p-2";
+                card.setAttribute("onclick", `openLightbox(${photo.id})`);
+
+                if (selectedThemeLayout === "justified") card.classList.add("aspect-[4/3]");
+                else card.classList.add("aspect-[3/4]");
+
+                const isFav = favorites.includes(photo.id);
+                const heartClass = isFav ? "fa-solid text-velvetCTA" : "fa-regular text-white drop-shadow-md";
+
+                const isMatched = activeFaceFilterTag && photo.tags.includes(activeFaceFilterTag);
+
+                card.innerHTML = `
+                    <img src="${photo.src}" class="w-full h-full object-cover" alt="${photo.title}">
+                    <div class="absolute inset-0 bg-charcoalText/10 group-hover:bg-charcoalText/30 transition-all duration-300"></div>
+                    
+                    <!-- Proofing Action -->
+                    <button onclick="toggleFavorite(event, ${photo.id})" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-charcoalText/40 backdrop-blur-md flex items-center justify-center hover:bg-ivory-100 group/btn transition border border-white/20">
+                        <i class="${heartClass} fa-heart text-sm group-hover/btn:scale-110 transition-transform"></i>
+                    </button>
+
+                    <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-charcoalText/80 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex justify-between items-end">
+                        <div>
+                            <span class="text-[8px] text-ivory-bg uppercase tracking-[0.2em] font-bold">${photo.category}</span>
+                            <h4 class="serif text-sm text-white font-medium truncate max-w-[150px] mt-1">${photo.title}</h4>
+                        </div>
+                    </div>
+
+                    ${isMatched ? `
+                    <div class="absolute top-4 left-4 bg-brownAccent text-white text-[8px] font-extrabold uppercase tracking-widest px-3 py-1.5 shadow-md">
+                        <span>Identity Matched</span>
+                    </div>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Feature: Proofing & Favorites
+        function toggleFavorite(e, id) {
+            if(e) e.stopPropagation();
+            const index = favorites.indexOf(id);
+            if(index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(id);
+                showToast("Added to Couple's Shortlist", "fa-heart");
+            }
+            
+            const badge = document.getElementById('fav-badge');
+            badge.innerText = favorites.length;
+            if(favorites.length > 0) badge.classList.remove('scale-0');
+            else badge.classList.add('scale-0');
+            
+            renderGallery();
+            renderFavoritesDrawer();
+        }
+
+        function toggleFavorites(open) {
+            const panel = document.getElementById("favorites-panel");
+            if (open) {
+                panel.classList.remove("translate-x-full");
+                renderFavoritesDrawer();
+            } else {
+                panel.classList.add("translate-x-full");
+            }
+        }
+
+        function renderFavoritesDrawer() {
+            const list = document.getElementById("favorites-list");
+            const upsell = document.getElementById("ai-album-upsell");
+            list.innerHTML = "";
+            
+            if(favorites.length === 0) {
+                list.innerHTML = `<div class="text-center py-10 text-zinc-500 text-xs font-medium">Your shortlist is empty. Heart images to curate your album.</div>`;
+                upsell.classList.add('hidden');
+                return;
+            }
+
+            favorites.forEach(id => {
+                const photo = MASTER_GALLERY_DATABASE.find(p => p.id === id);
+                list.innerHTML += `
+                    <div class="flex items-center space-x-4 border-b border-ivory-200 pb-4 mb-4 bg-ivory-100 p-2 shadow-sm relative">
+                        <img src="${photo.src}" class="w-16 h-16 object-cover border border-ivory-200">
+                        <div class="flex-1">
+                            <h4 class="text-xs font-bold text-charcoalText truncate w-40">${photo.title}</h4>
+                            <p class="text-[9px] text-zinc-500 uppercase tracking-widest mt-1">Image Ref: #${photo.id}</p>
+                        </div>
+                        <button onclick="toggleFavorite(null, ${photo.id})" class="text-zinc-400 hover:text-velvetCTA transition p-2"><i class="fa-solid fa-trash-can text-sm"></i></button>
+                    </div>
+                `;
+            });
+
+            // AI Upsell Logic: If they select > 2 photos, suggest an album
+            if(favorites.length >= 2) upsell.classList.remove('hidden');
+            else upsell.classList.add('hidden');
+        }
+
+        function submitFavoritesToStudio() {
+            if(favorites.length === 0) return;
+            showToast("Shortlist transmitted to Studio Dashboard.", "fa-paper-plane");
+            toggleFavorites(false);
+        }
+
+        // Gallery Core Logic
+        function switchCategory(category) {
+            currentSubEventCategory = category;
+            renderGallery();
+        }
+
+        function openSelfieModal() {
+            const modal = document.getElementById("selfie-modal");
+            modal.classList.remove("hidden");
+            setTimeout(() => modal.classList.add("opacity-100"), 50);
+        }
+
+        function closeSelfieModal() {
+            const modal = document.getElementById("selfie-modal");
+            modal.classList.remove("opacity-100");
+            setTimeout(() => modal.classList.add("hidden"), 300);
+        }
+
+        function executeSelfieScan(tag, imgSrc, name) {
+            const scanHud = document.getElementById("scan-hud");
+            const scanImg = document.getElementById("scan-hud-img");
+            scanImg.src = imgSrc;
+            scanHud.classList.remove("hidden");
+
+            setTimeout(() => {
+                scanHud.classList.add("hidden");
+                closeSelfieModal();
+                
+                activeFaceFilterTag = tag;
+                document.getElementById("filter-preview-thumbnail").src = imgSrc;
+                document.getElementById("filter-name-display").innerText = name;
+                document.getElementById("filter-indicator-bar").classList.remove("hidden");
+                renderGallery();
+                showToast("Face Matched. Gallery Filtered.", "fa-wand-magic-sparkles");
+            }, 1800);
+        }
+
+        function clearActiveFilters() {
+            activeFaceFilterTag = null;
+            document.getElementById("filter-indicator-bar").classList.add("hidden");
+            renderGallery();
+        }
+
+        // Feature: Lead Gatekeeper & Uploads
+        function scrollToGuestUpload() {
+            document.getElementById("guest-upload-section").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function unlockGuestUpload() {
+            const email = document.getElementById('guest-email').value;
+            const name = document.getElementById('guest-name').value;
+            if(!email || !name) {
+                showToast("Please enter name and email.", "fa-circle-exclamation");
+                return;
+            }
+            
+            isGuestIdentified = true;
+            document.getElementById('guest-lead-capture').classList.add('hidden');
+            document.getElementById('guest-upload-dropzone').classList.remove('hidden');
+            showToast("Identity Verified. Portal Unlocked.", "fa-unlock");
+        }
+
+        function handleGuestFileSelect(event) {
+            if(!isGuestIdentified) return;
+            const files = event.target.files;
+            if (!files.length) return;
+
+            const queueContainer = document.getElementById("upload-queue-container");
+            const progressBar = document.getElementById("queue-progress-bar");
+            const percentLabel = document.getElementById("queue-percentage");
+
+            queueContainer.classList.remove("hidden");
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += 20;
+                progressBar.style.width = `${progress}%`;
+                percentLabel.innerText = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    queueContainer.classList.add("hidden");
+                    
+                    const newId = MASTER_GALLERY_DATABASE.length + 1;
+                    MASTER_GALLERY_DATABASE.push({
+                        id: newId,
+                        title: `Guest Candids #${newId}`,
+                        src: "https://images.unsplash.com/photo-1549417229-aa67d3263c09?ixlib=rb-4.0.3",
+                        tags: ["guest-self"],
+                        category: "wedding"
+                    });
+
+                    document.getElementById("guest-photos-count").innerText = parseInt(document.getElementById("guest-photos-count").innerText) + 1;
+                    renderGallery();
+                    showToast("Assets Uploaded Successfully", "fa-cloud");
+                }
+            }, 400);
+        }
+
+        // Layout Configurator
+        function toggleConfigurator(open) {
+            const panel = document.getElementById("configurator-drawer");
+            if (open) panel.classList.remove("translate-x-full");
+            else panel.classList.add("translate-x-full");
+        }
+
+        function toggleGridLayout(layout) {
+            selectedThemeLayout = layout;
+            const grid = document.getElementById("gallery-grid");
+            grid.className = (layout === "justified") ? "grid-justified pt-10" : "grid-masonry pt-10";
+            renderGallery();
+            toggleConfigurator(false);
+            showToast("Layout Updated");
+        }
+
+        // Lightbox Logic
+        function openLightbox(photoId) {
+            const photo = MASTER_GALLERY_DATABASE.find(p => p.id === photoId);
+            if (!photo) return;
+
+            activeLightboxPhoto = photo;
+            purchaseQuantity = 1;
+            document.getElementById("purchase-qty").innerText = purchaseQuantity;
+            document.getElementById("lightbox-main-img").src = photo.src;
+            document.getElementById("lightbox-image-title").innerText = photo.title;
+
+            // Sync favorite state
+            const favIcon = document.getElementById('lightbox-fav-icon');
+            if(favorites.includes(photoId)) {
+                favIcon.className = "fa-solid fa-heart text-lg text-velvetCTA";
+            } else {
+                favIcon.className = "fa-regular fa-heart text-lg";
+            }
+
+            const lightbox = document.getElementById("lightbox");
+            lightbox.classList.remove("hidden");
+            setTimeout(() => lightbox.classList.add("opacity-100"), 50);
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById("lightbox");
+            lightbox.classList.remove("opacity-100");
+            setTimeout(() => lightbox.classList.add("hidden"), 300);
+        }
+
+        function toggleLightboxFavorite() {
+            if(!activeLightboxPhoto) return;
+            toggleFavorite(null, activeLightboxPhoto.id);
+            const favIcon = document.getElementById('lightbox-fav-icon');
+            if(favorites.includes(activeLightboxPhoto.id)) {
+                favIcon.className = "fa-solid fa-heart text-lg text-velvetCTA";
+            } else {
+                favIcon.className = "fa-regular fa-heart text-lg";
+            }
+        }
+
+        function updateProductBasePrice(val) {
+            lightboxProductPrice = parseFloat(val);
+            document.getElementById("lightbox-subtotal").innerText = `$${(lightboxProductPrice * purchaseQuantity).toFixed(2)}`;
+        }
+
+        function adjustQuantity(direction) {
+            purchaseQuantity += direction;
+            if (purchaseQuantity < 1) purchaseQuantity = 1;
+            document.getElementById("purchase-qty").innerText = purchaseQuantity;
+            document.getElementById("lightbox-subtotal").innerText = `$${(lightboxProductPrice * purchaseQuantity).toFixed(2)}`;
+        }
+
+        // Cart & E-commerce Hub
+        function toggleCart(open) {
+            const panel = document.getElementById("cart-panel");
+            if (open) {
+                panel.classList.remove("translate-x-full");
+                updateCartUI();
+            } else {
+                panel.classList.add("translate-x-full");
+            }
+        }
+
+        function addDigitalToCart(title, price) {
+            shoppingCart.push({ id: Date.now(), title: title, src: '', qty: 1, total: price, isDigital: true });
+            const badge = document.getElementById("cart-badge");
+            badge.innerText = shoppingCart.length;
+            badge.classList.remove("scale-0");
+            showToast("Added to Cart", "fa-cart-plus");
+            toggleFavorites(false); // Close if opened from Upsell
+            setTimeout(() => toggleCart(true), 500);
+        }
+
+        function addToCartFromLightbox() {
+            if (!activeLightboxPhoto) return;
+            shoppingCart.push({ id: Date.now(), title: activeLightboxPhoto.title, src: activeLightboxPhoto.src, qty: purchaseQuantity, total: lightboxProductPrice * purchaseQuantity, isDigital: false });
+            const badge = document.getElementById("cart-badge");
+            badge.innerText = shoppingCart.length;
+            badge.classList.remove("scale-0");
+            closeLightbox();
+            showToast("Added to Cart", "fa-cart-plus");
+            setTimeout(() => toggleCart(true), 500);
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById("cart-item-list");
+            if(shoppingCart.length === 0) {
+                list.innerHTML = `<div class="text-center py-12 text-zinc-500"><i class="fa-solid fa-basket-shopping text-3xl mb-4 opacity-50"></i><br><span class="text-xs font-bold uppercase tracking-widest">Cart is empty</span></div>`;
+                document.getElementById("stripe-checkout-section").classList.add("hidden");
+                return;
+            }
+            
+            let total = 0;
+            list.innerHTML = "";
+            shoppingCart.forEach((item, index) => {
+                total += item.total;
+                list.innerHTML += `
+                    <div class="flex items-center space-x-4 border border-ivory-200 bg-white p-3 mb-3 shadow-sm">
+                        ${item.src ? `<img src="${item.src}" class="w-16 h-16 object-cover border border-ivory-200">` : `<div class="w-16 h-16 bg-charcoalText flex items-center justify-center text-brownAccent"><i class="fa-solid fa-film text-xl"></i></div>`}
+                        <div class="flex-1">
+                            <h4 class="text-xs font-bold text-charcoalText truncate w-40">${item.title}</h4>
+                            <p class="text-[9px] text-zinc-500 uppercase tracking-widest mt-0.5">Qty: ${item.qty} ${item.isDigital ? '| Digital' : ''}</p>
+                            <p class="text-sm font-bold text-velvetCTA mt-1">$${item.total.toFixed(2)}</p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-zinc-400 hover:text-velvetCTA transition px-2"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+            });
+            document.getElementById("grand-total-display").innerText = `$${total.toFixed(2)}`;
+            document.getElementById("stripe-checkout-section").classList.remove("hidden");
+        }
+
+        function removeFromCart(index) {
+            shoppingCart.splice(index, 1);
+            const badge = document.getElementById("cart-badge");
+            badge.innerText = shoppingCart.length;
+            if(shoppingCart.length === 0) badge.classList.add("scale-0");
+            updateCartUI();
+        }
+
+        // Post-Purchase Viral Hook execution
+        function executeOrderCheckout() {
+            if(shoppingCart.length === 0) return;
+            const email = document.getElementById("stripe-email").value;
+            if(!email) {
+                showToast("Billing email required.", "fa-circle-exclamation");
+                return;
+            }
+            
+            document.getElementById("cart-item-list").innerHTML = `
+                <div class="text-center py-10 space-y-5">
+                    <div class="w-20 h-20 bg-velvetCTA text-white rounded-full flex items-center justify-center mx-auto shadow-lg">
+                        <i class="fa-solid fa-check text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="serif text-3xl text-charcoalText">Order Secured</h3>
+                        <p class="text-xs text-zinc-500 mt-2">Receipt sent to ${email}</p>
+                    </div>
+                    
+                    <div class="bg-ivory-100 p-6 border-2 border-brownAccent mt-8 relative overflow-hidden text-left shadow-inner">
+                        <div class="absolute top-0 right-0 bg-brownAccent text-white text-[8px] font-bold uppercase tracking-widest px-2 py-1">Limited Offer</div>
+                        <p class="text-xs font-bold text-charcoalText uppercase tracking-wider mb-2">Unlock 10% Cash Back</p>
+                        <p class="text-[11px] text-zinc-600 mb-4 leading-relaxed">Share this gallery link on Instagram or WhatsApp. Once 5 guests view it from your link, your card will be automatically credited 10%.</p>
+                        <button onclick="copyShareLink()" class="w-full bg-charcoalText text-white py-3 text-[10px] uppercase tracking-widest font-bold hover:bg-brownAccent transition flex justify-center items-center space-x-2">
+                            <i class="fa-solid fa-link"></i> <span>Copy Viral Link</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById("stripe-checkout-section").classList.add("hidden");
+            
+            // Clear backend cart state
+            shoppingCart = [];
+            document.getElementById("cart-badge").classList.add("scale-0");
+        }
+
+        // Utils
+        function openShareModal() {
+            const modal = document.getElementById("share-modal");
+            modal.classList.remove("hidden");
+            setTimeout(() => modal.classList.add("opacity-100"), 50);
+        }
+
+        function closeShareModal() {
+            const modal = document.getElementById("share-modal");
+            modal.classList.remove("opacity-100");
+            setTimeout(() => modal.classList.add("hidden"), 300);
+        }
+
+        function copyShareLink() {
+            navigator.clipboard.writeText(document.getElementById("share-link").innerText);
+            showToast("Copied to clipboard. Ready to share.", "fa-copy");
+        }
+
+        function submitBookingInquiry() {
+            const email = document.getElementById("booking-email-input").value;
+            if(!email) {
+                showToast("Please enter an email address.", "fa-envelope");
+                return;
+            }
+            showToast("Inquiry received. The Studio will contact you.", "fa-calendar-check");
+            document.getElementById("booking-email-input").value = "";
+        }
+    </script>
+</body>
+</html>
