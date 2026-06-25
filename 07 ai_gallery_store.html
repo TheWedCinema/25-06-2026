@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized Client Gallery | Asraf Khan Studios</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Playfair Display & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        gold: {
+                            50: '#fdfbf7',
+                            100: '#fbf7ed',
+                            200: '#f4ebd0',
+                            300: '#ebd8a5',
+                            400: '#dec074',
+                            500: '#cda24e',
+                            600: '#ba8c3e',
+                            700: '#9b7132',
+                            800: '#7c582a',
+                            900: '#644724',
+                        },
+                        onyx: {
+                            900: '#09090b',
+                            800: '#121214',
+                            700: '#1c1c1f',
+                            600: '#27272a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #09090b;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom Blur Panels */
+        .glass-header {
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .glass-panel {
+            background: rgba(18, 18, 20, 0.8);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        /* Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Dynamic Image Zoom */
+        .image-card img {
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .image-card:hover img {
+            transform: scale(1.04);
+        }
+        /* Elegant Watermark Styling */
+        .watermark-overlay {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-gold-500 selection:text-black">
+
+    <!-- Navigation Bar: 100% White-Labeled -->
+    <nav class="fixed top-0 left-0 right-0 z-40 glass-header px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Studio Branding (Hero) -->
+            <div class="flex flex-col">
+                <span class="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-medium">Delivered Exclusively By</span>
+                <span class="serif text-lg md:text-xl font-medium tracking-wider text-white">ASRAF KHAN STUDIOS</span>
+            </div>
+            
+            <!-- System Controls & Navigation -->
+            <div class="flex items-center space-x-4 md:space-x-6">
+                <!-- Shopping Cart Icon with Badge -->
+                <button onclick="toggleCart(true)" class="relative p-2.5 hover:bg-zinc-800/60 rounded-full transition group">
+                    <i class="fa-solid fa-bag-shopping text-lg text-zinc-300 group-hover:text-gold-400 transition"></i>
+                    <span id="cart-badge" class="absolute top-1.5 right-1.5 bg-gold-500 text-black text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
+                </button>
+                
+                <!-- Share Button -->
+                <button onclick="openShareModal()" class="p-2.5 hover:bg-zinc-800/60 rounded-full transition group hidden sm:inline-flex">
+                    <i class="fa-solid fa-share-nodes text-lg text-zinc-300 group-hover:text-white"></i>
+                </button>
+                
+                <!-- Call-to-action Lead Trigger -->
+                <a href="#booking-section" class="px-5 py-2.5 bg-white text-black hover:bg-gold-400 transition-colors duration-300 text-xs uppercase tracking-widest font-semibold rounded-full hidden md:block">
+                    Inquire for your shoot
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Wedding Cinematic Cover Section -->
+    <header class="relative h-[85vh] w-full flex items-end overflow-hidden pt-20">
+        <!-- Parallax Background Image -->
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" 
+                 alt="Akshay and Anjali Wedding Editorial" 
+                 class="w-full h-full object-cover object-center opacity-65">
+            <div class="absolute inset-0 bg-gradient-to-t from-onyx-900 via-transparent to-black/40"></div>
+        </div>
+        
+        <!-- Wedding Title & Quick Statistics -->
+        <div class="relative max-w-7xl mx-auto w-full px-6 pb-16 md:pb-24 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
+            <div class="space-y-3">
+                <span class="text-xs md:text-sm uppercase tracking-[0.3em] text-gold-300 font-semibold">THE OFFICIAL SELECTIONS</span>
+                <h1 class="serif text-5xl md:text-7xl font-light italic text-white tracking-wide">Akshay & Anjali</h1>
+                <p class="text-zinc-300 text-sm md:text-base tracking-widest font-light">25th November 2026 &bull; Udaipur, Rajasthan</p>
+            </div>
+            
+            <!-- Dynamic Gallery Metrics -->
+            <div class="flex space-x-6 md:space-x-8 border-t border-white/10 pt-6 md:pt-0">
+                <div>
+                    <span class="block text-2xl font-light text-white serif" id="total-photos-count">128</span>
+                    <span class="text-[10px] text-zinc-400 uppercase tracking-widest">Master Frames</span>
+                </div>
+                <div class="border-l border-white/10 pl-6 md:pl-8">
+                    <span class="block text-2xl font-light text-white serif">4.2K</span>
+                    <span class="text-[10px] text-zinc-400 uppercase tracking-widest">Raw Captures</span>
+                </div>
+                <div class="border-l border-white/10 pl-6 md:pl-8">
+                    <span class="block text-2xl font-light text-gold-400 serif"><i class="fa-solid fa-sparkles mr-1.5"></i>Active</span>
+                    <span class="text-[10px] text-zinc-400 uppercase tracking-widest">AI Curation</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Interactive Gallery Navigation -->
+    <section class="max-w-7xl mx-auto px-6 py-12 relative z-10" id="gallery-container">
+        <!-- Interactive Controls Bar -->
+        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6 pb-8 border-b border-zinc-800">
+            <!-- Curated Collection Tabs -->
+            <div class="flex border-b border-zinc-800 lg:border-none p-1 bg-zinc-900/60 rounded-full max-w-max self-start">
+                <button onclick="switchTab('matched')" id="tab-matched" class="px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all duration-300 bg-white text-black">
+                    <i class="fa-solid fa-sparkles mr-1.5"></i> My Matched Photos (<span id="user-matched-count">4</span>)
+                </button>
+                <button onclick="switchTab('all')" id="tab-all" class="px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium text-zinc-400 hover:text-white transition-all duration-300">
+                    Full Event Timeline
+                </button>
+            </div>
+
+            <!-- Dynamic Live Face Matching Demo Panel -->
+            <div class="glass-panel rounded-2xl p-4 lg:p-5 flex flex-col sm:flex-row items-center gap-4 max-w-md w-full">
+                <div class="flex items-center space-x-3 w-full sm:w-auto">
+                    <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-gold-400" id="sandbox-avatar">
+                        <i class="fa-solid fa-user-circle text-2xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-semibold text-white">AI Sandbox Simulation</h4>
+                        <p class="text-[10px] text-zinc-400">Match dynamic facial identities</p>
+                    </div>
+                </div>
+                <!-- Selection Dropdown to simulate scanning of different guest selfies -->
+                <select id="sandbox-guest-select" onchange="simulateGuestMatch(this.value)" class="w-full sm:w-auto bg-zinc-900 border border-zinc-700/60 text-white text-xs rounded-lg p-2.5 focus:ring-1 focus:ring-gold-400 focus:outline-none">
+                    <option value="guest-self">My Selfie (Mock Guest A)</option>
+                    <option value="guest-b">Mock Guest B (Bridal Party)</option>
+                    <option value="guest-c">Mock Guest C (Groom Squad)</option>
+                    <option value="guest-none">No Match Scenario</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Interactive Gallery Grid -->
+        <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-10">
+            <!-- Dynamically populated via javascript -->
+        </div>
+
+        <!-- Secondary Empty State Handler (Embedded inside Module 3 to handle no-match selection elegantly) -->
+        <div id="empty-state-view" class="hidden text-center py-24 max-w-lg mx-auto">
+            <div class="w-16 h-16 mx-auto bg-zinc-900 border border-zinc-800 rounded-full flex items-center justify-center mb-6 text-zinc-500">
+                <i class="fa-solid fa-magnifying-glass text-xl"></i>
+            </div>
+            <h3 class="serif text-2xl mb-2 text-white">No AI Matches Found</h3>
+            <p class="text-sm text-zinc-400 mb-8 leading-relaxed">
+                The facial recognition scanner couldn't lock onto this identity. Try checking the "Full Event Timeline" to discover wide shots and candids.
+            </p>
+            <button onclick="switchTab('all')" class="px-6 py-3 bg-white text-black hover:bg-gold-400 transition font-medium text-xs uppercase tracking-widest rounded-full">
+                Browse Full Timeline
+            </button>
+        </div>
+    </section>
+
+    <!-- Production-Ready Luxury Lightbox Overlay -->
+    <div id="lightbox" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden transition-opacity duration-300 opacity-0 flex flex-col">
+        <!-- Close Button & Metadata Bar -->
+        <header class="w-full p-6 flex justify-between items-center z-10 glass-header">
+            <div class="flex flex-col">
+                <span class="text-[10px] uppercase tracking-widest text-zinc-400">Asraf Khan Studios</span>
+                <span id="lightbox-image-title" class="serif text-white font-light text-base">Master Frame #01</span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleWatermarkPreview()" id="watermark-toggle-btn" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700/80 rounded-lg text-xs text-zinc-300 transition flex items-center space-x-2">
+                    <i class="fa-solid fa-eye-slash text-[11px] text-gold-400"></i>
+                    <span>Hide Watermark</span>
+                </button>
+                <button onclick="closeLightbox()" class="p-2.5 hover:bg-zinc-800/80 rounded-full text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace Area -->
+        <div class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+            <!-- Left Half: Beautiful Cinematic Image Container -->
+            <div class="flex-1 flex items-center justify-center p-4 md:p-8 bg-zinc-950 relative overflow-hidden group">
+                <!-- Visual Watermark Sim -->
+                <div class="absolute inset-0 z-10 watermark-overlay transition-opacity duration-300 opacity-70" id="lightbox-watermark">
+                    <div class="absolute bottom-10 right-10 flex flex-col items-end opacity-20 text-white tracking-widest">
+                        <span class="text-lg font-serif">ASRAF KHAN</span>
+                        <span class="text-[8px] uppercase">PROPRIETARY COPYRIGHT</span>
+                    </div>
+                </div>
+                <!-- Main Frame Display -->
+                <img id="lightbox-main-img" src="" alt="Active Image Frame" class="max-h-[70vh] max-w-full object-contain shadow-2xl relative z-0 rounded-sm">
+            </div>
+
+            <!-- Right Half: Studio Print Shop & Digital Fulfillment -->
+            <div class="w-full lg:w-96 glass-panel border-t lg:border-t-0 lg:border-l border-zinc-800 p-6 md:p-8 flex flex-col justify-between overflow-y-auto max-h-[40vh] lg:max-h-full">
+                <!-- Shopping Header -->
+                <div class="space-y-6">
+                    <div>
+                        <span class="text-[10px] uppercase tracking-widest text-gold-400 font-bold"><i class="fa-solid fa-store mr-1.5"></i>Premium Store</span>
+                        <h3 class="serif text-xl text-white mt-1">Purchase Artwork</h3>
+                        <p class="text-[11px] text-zinc-400 leading-relaxed mt-1">Giclée archival pigment prints hand-inspected by Asraf Khan.</p>
+                    </div>
+
+                    <!-- Store Catalog Selector -->
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] text-zinc-400 uppercase tracking-widest block mb-1.5">Select Medium</label>
+                            <div class="grid grid-cols-1 gap-2.5" id="store-products">
+                                <!-- Print Option A -->
+                                <label class="border border-zinc-700/60 hover:border-gold-400/50 rounded-xl p-3 flex items-center justify-between cursor-pointer transition bg-zinc-900/40 relative group">
+                                    <input type="radio" name="product-medium" value="8x10-print" checked onchange="updateSelectedProductPrice(29)" class="absolute right-4 accent-gold-500">
+                                    <div class="flex items-center space-x-3 pr-8">
+                                        <div class="text-white text-lg"><i class="fa-regular fa-image"></i></div>
+                                        <div>
+                                            <p class="text-xs font-semibold text-white">8x10 Fine Art Print</p>
+                                            <p class="text-[10px] text-zinc-400">Archival Matte Paper</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-bold text-gold-400 pr-8">$29.00</span>
+                                </label>
+
+                                <!-- Print Option B -->
+                                <label class="border border-zinc-700/60 hover:border-gold-400/50 rounded-xl p-3 flex items-center justify-between cursor-pointer transition bg-zinc-900/40 relative group">
+                                    <input type="radio" name="product-medium" value="12x12-album" onchange="updateSelectedProductPrice(199)" class="absolute right-4 accent-gold-500">
+                                    <div class="flex items-center space-x-3 pr-8">
+                                        <div class="text-white text-lg"><i class="fa-solid fa-book-open"></i></div>
+                                        <div>
+                                            <p class="text-xs font-semibold text-white">12x12 Premium Album</p>
+                                            <p class="text-[10px] text-zinc-400">Leather Bound &bull; 20 pages</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-bold text-gold-400 pr-8">$199.00</span>
+                                </label>
+
+                                <!-- Digital Option -->
+                                <label class="border border-zinc-700/60 hover:border-gold-400/50 rounded-xl p-3 flex items-center justify-between cursor-pointer transition bg-zinc-900/40 relative group">
+                                    <input type="radio" name="product-medium" value="digital-unlocked" onchange="updateSelectedProductPrice(1.99)" class="absolute right-4 accent-gold-500">
+                                    <div class="flex items-center space-x-3 pr-8">
+                                        <div class="text-white text-lg"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+                                        <div>
+                                            <p class="text-xs font-semibold text-white">Original High-Res Digital</p>
+                                            <p class="text-[10px] text-zinc-400">Perfect for large external prints</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-bold text-gold-400 pr-8">$1.99</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Quantity Selector -->
+                        <div class="flex items-center justify-between pt-4 border-t border-zinc-800">
+                            <span class="text-[10px] text-zinc-400 uppercase tracking-widest">Quantity</span>
+                            <div class="flex items-center bg-zinc-900 border border-zinc-700/60 rounded-lg">
+                                <button onclick="adjustQuantity(-1)" class="px-3 py-1 text-zinc-400 hover:text-white transition text-xs font-bold">-</button>
+                                <span id="cart-item-quantity" class="px-3 text-xs text-white font-semibold">1</span>
+                                <button onclick="adjustQuantity(1)" class="px-3 py-1 text-zinc-400 hover:text-white transition text-xs font-bold">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add to Cart Trigger & Instant Checkout Option -->
+                <div class="space-y-3 pt-6 border-t border-zinc-800 mt-6 lg:mt-0">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-zinc-400 font-light">Subtotal Price</span>
+                        <span id="lightbox-subtotal-price" class="text-base font-bold text-white">$29.00</span>
+                    </div>
+                    <button onclick="addItemToCartFromLightbox()" class="w-full bg-gold-500 text-black py-4 rounded-xl text-xs uppercase tracking-widest font-semibold hover:bg-gold-400 transition-all duration-300">
+                        <i class="fa-solid fa-cart-plus mr-1.5"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide-out Premium Cart Panel -->
+    <div id="cart-panel" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-onyx-800 border-l border-zinc-800 shadow-2xl translate-x-full transition-transform duration-500 flex flex-col">
+        <!-- Cart Header -->
+        <header class="p-6 border-b border-zinc-800 flex justify-between items-center">
+            <div class="flex items-center space-x-2.5">
+                <i class="fa-solid fa-bag-shopping text-gold-400 text-lg"></i>
+                <h3 class="serif text-lg text-white">Your Selections</h3>
+            </div>
+            <button onclick="toggleCart(false)" class="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </header>
+
+        <!-- Cart Items List (Dynamic) -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar" id="cart-items-container">
+            <!-- Dynamic Injection -->
+        </div>
+
+        <!-- Checkout Form & Stripe Simulation -->
+        <div id="checkout-form-container" class="p-6 border-t border-zinc-800 bg-onyx-900 hidden space-y-4">
+            <h4 class="text-xs uppercase tracking-widest text-gold-400 font-semibold mb-3">Secure Checkout</h4>
+            <div class="space-y-3">
+                <input type="email" id="checkout-email" placeholder="Email Address for Delivery" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-gold-400">
+                <div class="relative">
+                    <input type="text" placeholder="Card Number (Simulated)" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 pl-10 text-xs text-white focus:outline-none focus:border-gold-400">
+                    <i class="fa-solid fa-credit-card absolute left-3.5 top-3.5 text-zinc-500 text-xs"></i>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" placeholder="MM/YY" class="bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-xs text-white text-center focus:outline-none focus:border-gold-400">
+                    <input type="text" placeholder="CVC" class="bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-xs text-white text-center focus:outline-none focus:border-gold-400">
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Total & Buttons -->
+        <footer class="p-6 border-t border-zinc-800 bg-onyx-900 space-y-4">
+            <div class="flex justify-between items-center text-sm">
+                <span class="text-zinc-400">Grand Total</span>
+                <span id="cart-grand-total" class="text-lg font-bold text-white">$0.00</span>
+            </div>
+            
+            <button onclick="processCheckout()" id="checkout-cta-btn" class="w-full bg-white text-black py-4 rounded-xl text-xs uppercase tracking-widest font-semibold hover:bg-gold-400 transition-all duration-300">
+                Proceed to Checkout
+            </button>
+        </footer>
+    </div>
+
+    <!-- Share Modal Popup -->
+    <div id="share-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="glass-panel max-w-md w-full p-8 rounded-3xl text-center space-y-6 relative m-4">
+            <!-- Close icon -->
+            <button onclick="closeShareModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center mx-auto text-gold-400">
+                <i class="fa-solid fa-share-nodes"></i>
+            </div>
+            <div>
+                <h3 class="serif text-2xl text-white">Share Gallery</h3>
+                <p class="text-xs text-zinc-400 mt-1">Provide direct, white-labeled access to family and friends.</p>
+            </div>
+            
+            <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 flex justify-between items-center">
+                <span class="text-xs text-zinc-400 select-all truncate" id="gallery-share-link">https://asrafkhan.com/akshay-anjali</span>
+                <button onclick="copyShareLinkToClipboard()" class="bg-white text-black px-4 py-2 rounded-lg text-[10px] uppercase tracking-widest font-bold hover:bg-gold-400 transition">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Banner Section -->
+    <section class="bg-zinc-950 border-t border-zinc-900 py-24 px-6 text-center" id="booking-section">
+        <div class="max-w-2xl mx-auto space-y-8">
+            <span class="text-[10px] uppercase tracking-[0.4em] text-gold-400 font-bold">Limited Dates Available for 2026/2027</span>
+            <h2 class="serif text-3xl md:text-5xl font-light text-white leading-tight">Capture Your Wedding With Editorial Perfection</h2>
+            <p class="text-xs md:text-sm text-zinc-400 font-light leading-relaxed max-w-lg mx-auto">
+                Specializing in luxury destination weddings worldwide. Leverage the same elite AI delivery software to delight your guests instantly.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 max-w-md mx-auto">
+                <input type="email" placeholder="Enter your email" class="bg-zinc-900 border border-zinc-800 text-white text-xs px-5 py-4 rounded-full flex-1 focus:outline-none focus:border-gold-400">
+                <button onclick="submitLeadForm()" class="bg-white text-black hover:bg-gold-400 px-8 py-4 rounded-full text-xs uppercase tracking-widest font-semibold transition duration-300">
+                    Get Proposal
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global White-Label Footer -->
+    <footer class="bg-onyx-900 border-t border-zinc-800 py-8 px-6 text-center">
+        <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold">&copy; 2026 ASRAF KHAN STUDIOS. ALL RIGHTS RESERVED.</p>
+        <p class="text-[8px] text-zinc-600 uppercase tracking-widest mt-1">Platform Orchestrated by The Wed Cinema</p>
+    </footer>
+
+    <script>
+        /*
+          THE WED CINEMA OS - Interactive Client Gallery Core Engine
+          Contains Mock database metadata, Tab Toggling, simulated AI Sandbox,
+          Dynamic light-box selection, shopping cart calculations and Stripe Sim.
+        */
+
+        // 1. Photo Database with Facial Identification Tag Metadata
+        const PHOTOS_DATABASE = [
+            { id: 1, title: "Symmetrical Archway Entrance", src: "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["guest-self", "bride", "groom"], category: "timeline" },
+            { id: 2, title: "Anjali - Editorial Saree Silhouette", src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["bride"], category: "timeline" },
+            { id: 3, title: "Traditional Saptapadi Walk", src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["guest-self", "groom"], category: "timeline" },
+            { id: 4, title: "Laughter in the Palace Court", src: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["guest-self", "guest-b"], category: "timeline" },
+            { id: 5, title: "Groom Squad Arrival", src: "https://images.unsplash.com/photo-1519225495810-7512c696505a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["guest-c", "groom"], category: "timeline" },
+            { id: 6, title: "The Imperial Mandap Portrait", src: "https://images.unsplash.com/photo-1591604466107-ec97de577aff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["bride", "groom"], category: "timeline" },
+            { id: 7, title: "Bridal Party Candid Cheers", src: "https://images.unsplash.com/photo-1549417229-aa67d3263c09?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["guest-b"], category: "timeline" },
+            { id: 8, title: "Udaipur Lake Sunset Gaze", src: "https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["guest-self", "bride", "groom"], category: "timeline" },
+            { id: 9, title: "Detailed Henna & Rings Shot", src: "https://images.unsplash.com/photo-1604017011826-d3b4c23f8914?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: [], category: "details" },
+            { id: 10, title: "Reception First Dance Waltz", src: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["bride", "groom"], category: "timeline" },
+            { id: 11, title: "Intimate Dinner Conversation", src: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["guest-c", "guest-b"], category: "timeline" },
+            { id: 12, title: "Sparkler Grand Exit Silhouette", src: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", tags: ["guest-self", "bride"], category: "timeline" }
+        ];
+
+        // 2. Client Side State Management Variables
+        let currentTab = "matched"; // Options: 'matched' | 'all'
+        let currentActiveSelfieTag = "guest-self"; // Matches the option values in the AI dropdown
+        let shoppingCart = []; // Collection of ordered items
+        let currentLightboxPhoto = null; // Store currently selected photo in Lightbox
+        let currentBaseProductPrice = 29.00; // Track item base cost
+        let quantitySelected = 1;
+        let isWatermarkHidden = false;
+
+        // 3. Document Bootstrapper & Initialization
+        window.onload = function() {
+            renderGallery();
+            updateAllStatistics();
+        };
+
+        // 4. Render Gallery Cards Dynamically based on current identity matching
+        function renderGallery() {
+            const grid = document.getElementById("gallery-grid");
+            const emptyState = document.getElementById("empty-state-view");
+            grid.innerHTML = "";
+
+            let filteredPhotos = [];
+            
+            if (currentTab === "all") {
+                filteredPhotos = PHOTOS_DATABASE;
+            } else {
+                // Filter based on the selected AI Sandbox tag
+                filteredPhotos = PHOTOS_DATABASE.filter(photo => photo.tags.includes(currentActiveSelfieTag));
+            }
+
+            if (filteredPhotos.length === 0) {
+                grid.classList.add("hidden");
+                emptyState.classList.remove("hidden");
+                return;
+            } else {
+                grid.classList.remove("hidden");
+                emptyState.classList.add("hidden");
+            }
+
+            // Build Luxury Image Cards
+            filteredPhotos.forEach(photo => {
+                const isMatched = photo.tags.includes(currentActiveSelfieTag);
+                const card = document.createElement("div");
+                card.className = "image-card group relative aspect-[3/4] bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer border border-zinc-800/40 hover:border-gold-400/40 transition-colors duration-500 shadow-lg";
+                card.setAttribute("onclick", `openLightbox(${photo.id})`);
+                
+                card.innerHTML = `
+                    <img src="${photo.src}" alt="${photo.title}" class="w-full h-full object-cover">
+                    <!-- Standard subtle visual watermark to showcase protective capability -->
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300"></div>
+                    
+                    <!-- Symmetrical watermark tag overlay -->
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-white text-[8px] tracking-[0.4em] uppercase font-bold text-center">Asraf Khan Studios<br>Watermarked</span>
+                    </div>
+
+                    <!-- Client Interaction Overlay (Appears on Hover) -->
+                    <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/90 via-black/40 to-transparent translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex justify-between items-end">
+                        <div>
+                            <span class="text-[9px] text-gold-400 uppercase tracking-widest font-semibold">Master Collection</span>
+                            <h4 class="serif text-sm text-white font-medium truncate max-w-[140px]">${photo.title}</h4>
+                        </div>
+                        <div class="flex space-x-2">
+                            <span class="p-2 bg-white/10 hover:bg-gold-500 hover:text-black rounded-lg text-white transition-all text-xs">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </span>
+                            <span class="p-2 bg-white/10 hover:bg-white hover:text-black rounded-lg text-white transition-all text-xs">
+                                <i class="fa-solid fa-expand"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Beautiful Matched AI Badge overlay -->
+                    ${isMatched ? `
+                    <div class="absolute top-4 left-4 bg-gold-500/90 backdrop-blur text-black text-[9px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-full flex items-center space-x-1 shadow">
+                        <i class="fa-solid fa-sparkles text-[8px]"></i>
+                        <span>AI Matched</span>
+                    </div>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 5. Simulated AI Sandbox identity filtering trigger
+        function simulateGuestMatch(value) {
+            currentActiveSelfieTag = value;
+            
+            // Adjust visual indicator for the avatar representing biometric scanning
+            const avatar = document.getElementById("sandbox-avatar");
+            if (value === "guest-none") {
+                avatar.innerHTML = `<i class="fa-solid fa-user-xmark text-red-400"></i>`;
+            } else {
+                avatar.innerHTML = `<i class="fa-solid fa-circle-check text-gold-400"></i>`;
+            }
+
+            // Recalculate statistics and redraw UI
+            updateAllStatistics();
+            renderGallery();
+        }
+
+        // 6. Tab Selection (Matched Collection vs Entire timeline)
+        function switchTab(tabName) {
+            currentTab = tabName;
+            const tabMatchedBtn = document.getElementById("tab-matched");
+            const tabAllBtn = document.getElementById("tab-all");
+
+            if (tabName === "matched") {
+                tabMatchedBtn.className = "px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all duration-300 bg-white text-black shadow-md";
+                tabAllBtn.className = "px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium text-zinc-400 hover:text-white transition-all duration-300";
+            } else {
+                tabAllBtn.className = "px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all duration-300 bg-white text-black shadow-md";
+                tabMatchedBtn.className = "px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium text-zinc-400 hover:text-white transition-all duration-300";
+            }
+            renderGallery();
+        }
+
+        // 7. Update dynamically calculated metadata across views
+        function updateAllStatistics() {
+            // Calculate total photos and active face matches
+            document.getElementById("total-photos-count").innerText = PHOTOS_DATABASE.length;
+            
+            const matchedCount = PHOTOS_DATABASE.filter(photo => photo.tags.includes(currentActiveSelfieTag)).length;
+            document.getElementById("user-matched-count").innerText = matchedCount;
+        }
+
+        // 8. Luxury Single Image Interactive Lightbox Handlers
+        function openLightbox(photoId) {
+            const photo = PHOTOS_DATABASE.find(p => p.id === photoId);
+            if (!photo) return;
+
+            currentLightboxPhoto = photo;
+            quantitySelected = 1;
+            document.getElementById("cart-item-quantity").innerText = quantitySelected;
+
+            // Reset selector options to default (option A selected)
+            document.getElementsByName("product-medium")[0].checked = true;
+            currentBaseProductPrice = 29.00;
+            updateSubtotalPrice();
+
+            // Populate static UI properties
+            document.getElementById("lightbox-main-img").src = photo.src;
+            document.getElementById("lightbox-image-title").innerText = photo.title;
+
+            // Display overlay elegantly using class transition triggers
+            const lightbox = document.getElementById("lightbox");
+            lightbox.classList.remove("hidden");
+            setTimeout(() => {
+                lightbox.classList.add("opacity-100");
+            }, 50);
+
+            // Set body scroll lock
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById("lightbox");
+            lightbox.classList.remove("opacity-100");
+            setTimeout(() => {
+                lightbox.classList.add("hidden");
+            }, 300);
+
+            // Release body scroll lock
+            document.body.style.overflow = "auto";
+        }
+
+        // 9. Interactive Watermark toggling & lock simulation
+        function toggleWatermarkPreview() {
+            isWatermarkHidden = !isWatermarkHidden;
+            const toggleBtn = document.getElementById("watermark-toggle-btn");
+            const overlay = document.getElementById("lightbox-watermark");
+
+            if (isWatermarkHidden) {
+                overlay.classList.add("opacity-0");
+                overlay.classList.remove("opacity-70");
+                toggleBtn.innerHTML = `<i class="fa-solid fa-eye text-[11px] text-zinc-400"></i><span>Show Watermark</span>`;
+            } else {
+                overlay.classList.add("opacity-70");
+                overlay.classList.remove("opacity-0");
+                toggleBtn.innerHTML = `<i class="fa-solid fa-eye-slash text-[11px] text-gold-400"></i><span>Hide Watermark</span>`;
+            }
+        }
+
+        // 10. Direct Cart and Catalog pricing calculators
+        function updateSelectedProductPrice(price) {
+            currentBaseProductPrice = parseFloat(price);
+            updateSubtotalPrice();
+        }
+
+        function adjustQuantity(direction) {
+            quantitySelected += direction;
+            if (quantitySelected < 1) quantitySelected = 1;
+            document.getElementById("cart-item-quantity").innerText = quantitySelected;
+            updateSubtotalPrice();
+        }
+
+        function updateSubtotalPrice() {
+            const total = currentBaseProductPrice * quantitySelected;
+            document.getElementById("lightbox-subtotal-price").innerText = `$${total.toFixed(2)}`;
+        }
+
+        // 11. Custom Cart Operations & Dynamic Redraws
+        function toggleCart(isOpen) {
+            const panel = document.getElementById("cart-panel");
+            if (isOpen) {
+                panel.classList.remove("translate-x-full");
+                renderCart();
+            } else {
+                panel.classList.add("translate-x-full");
+            }
+        }
+
+        function addItemToCartFromLightbox() {
+            if (!currentLightboxPhoto) return;
+
+            // Read Selected Product value
+            const radios = document.getElementsByName("product-medium");
+            let selectedMedium = "";
+            let mediumLabel = "";
+            
+            for (let radio of radios) {
+                if (radio.checked) {
+                    selectedMedium = radio.value;
+                    if (selectedMedium === "8x10-print") mediumLabel = "8x10 Fine Art Print";
+                    else if (selectedMedium === "12x12-album") mediumLabel = "12x12 Premium Album";
+                    else if (selectedMedium === "digital-unlocked") mediumLabel = "Original Digital Unlock";
+                }
+            }
+
+            // Create cart product element
+            const cartItem = {
+                id: Date.now(), // unique timestamp instance
+                photoId: currentLightboxPhoto.id,
+                title: currentLightboxPhoto.title,
+                src: currentLightboxPhoto.src,
+                medium: selectedMedium,
+                mediumLabel: mediumLabel,
+                unitPrice: currentBaseProductPrice,
+                quantity: quantitySelected,
+                totalPrice: currentBaseProductPrice * quantitySelected
+            };
+
+            shoppingCart.push(cartItem);
+            updateCartBadge();
+            closeLightbox();
+            toggleCart(true); // Open panel instantly to create a positive validation feedback loop
+        }
+
+        function removeCartItem(itemId) {
+            shoppingCart = shoppingCart.filter(item => item.id !== itemId);
+            updateCartBadge();
+            renderCart();
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById("cart-badge");
+            const totalItems = shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.innerText = totalItems;
+            
+            if (totalItems > 0) {
+                badge.classList.remove("scale-0");
+                badge.classList.add("scale-100");
+            } else {
+                badge.classList.remove("scale-100");
+                badge.classList.add("scale-0");
+            }
+        }
+
+        function renderCart() {
+            const container = document.getElementById("cart-items-container");
+            const checkoutForm = document.getElementById("checkout-form-container");
+            const ctaBtn = document.getElementById("checkout-cta-btn");
+            container.innerHTML = "";
+
+            if (shoppingCart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 text-zinc-500">
+                        <i class="fa-solid fa-basket-shopping text-3xl mb-4 text-zinc-700"></i>
+                        <p class="text-xs uppercase tracking-widest font-semibold">Your Cart is Empty</p>
+                        <p class="text-[10px] text-zinc-600 mt-1">Select any image frame to begin purchasing fine art.</p>
+                    </div>
+                `;
+                document.getElementById("cart-grand-total").innerText = "$0.00";
+                checkoutForm.classList.add("hidden");
+                ctaBtn.innerText = "Proceed to Checkout";
+                ctaBtn.setAttribute("onclick", "toggleCart(false)");
+                return;
+            }
+
+            // Populate Cart Items
+            shoppingCart.forEach(item => {
+                const itemEl = document.createElement("div");
+                itemEl.className = "flex items-center justify-between p-3.5 bg-zinc-900/60 border border-zinc-800/80 rounded-2xl";
+                itemEl.innerHTML = `
+                    <div class="flex items-center space-x-3.5">
+                        <img src="${item.src}" alt="${item.title}" class="w-12 h-12 rounded-lg object-cover">
+                        <div>
+                            <p class="text-xs font-semibold text-white truncate max-w-[140px]">${item.title}</p>
+                            <p class="text-[9px] text-gold-400 uppercase tracking-widest mt-0.5">${item.mediumLabel}</p>
+                            <p class="text-[10px] text-zinc-500 mt-1">Qty: ${item.quantity} &bull; $${item.unitPrice.toFixed(2)} ea</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-xs font-bold text-white">$${item.totalPrice.toFixed(2)}</span>
+                        <button onclick="removeCartItem(${item.id})" class="text-zinc-500 hover:text-red-400 transition text-xs p-1">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(itemEl);
+            });
+
+            // Calculate Grand Total
+            const grandTotal = shoppingCart.reduce((sum, item) => sum + item.totalPrice, 0);
+            document.getElementById("cart-grand-total").innerText = `$${grandTotal.toFixed(2)}`;
+        }
+
+        // 12. Interactive Multi-Step Checkout Processor
+        function processCheckout() {
+            const checkoutForm = document.getElementById("checkout-form-container");
+            const ctaBtn = document.getElementById("checkout-cta-btn");
+
+            // If the checkout inputs are hidden, reveal them to process billing details first
+            if (checkoutForm.classList.contains("hidden")) {
+                checkoutForm.classList.remove("hidden");
+                ctaBtn.innerText = "Authorize & Pay";
+                ctaBtn.setAttribute("onclick", "executeSimulatedPayment()");
+            }
+        }
+
+        function executeSimulatedPayment() {
+            const emailInput = document.getElementById("checkout-email").value;
+            if (!emailInput || !emailInput.includes("@")) {
+                // Inline feedback instead of ugly alert dialogues
+                alert("Please provide a valid delivery email address for fine-art fulfillment.");
+                return;
+            }
+
+            const ctaBtn = document.getElementById("checkout-cta-btn");
+            ctaBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Authorizing...`;
+            ctaBtn.disabled = true;
+
+            setTimeout(() => {
+                // Reset cart database instances
+                shoppingCart = [];
+                updateCartBadge();
+                renderCart();
+                toggleCart(false);
+
+                // Show elegant visual success toast
+                alert("Payment Captured Successfully!\nAn order confirmation receipt has been sent to " + emailInput + " containing pristine unwatermarked download instructions.");
+                
+                ctaBtn.disabled = false;
+                ctaBtn.innerHTML = "Proceed to Checkout";
+                ctaBtn.setAttribute("onclick", "processCheckout()");
+            }, 1500);
+        }
+
+        // 13. Dynamic Share Modals
+        function openShareModal() {
+            const modal = document.getElementById("share-modal");
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                modal.classList.add("opacity-100");
+            }, 50);
+        }
+
+        function closeShareModal() {
+            const modal = document.getElementById("share-modal");
+            modal.classList.remove("opacity-100");
+            setTimeout(() => {
+                modal.classList.add("hidden");
+            }, 300);
+        }
+
+        function copyShareLinkToClipboard() {
+            const link = document.getElementById("gallery-share-link").innerText;
+            
+            // Re-usable high-reliability clipboard copy mechanism
+            const tempInput = document.createElement("input");
+            tempInput.value = link;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            alert("Luxury share link copied successfully!");
+        }
+
+        // 14. Lead Capture submission
+        function submitLeadForm() {
+            alert("Inquiry Logged Securely!\nAsraf Khan Studios will contact you with booking proposals within 24 hours.");
+        }
+    </script>
+</body>
+</html>
