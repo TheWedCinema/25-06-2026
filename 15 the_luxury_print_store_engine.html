@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Print Boutique | The Wed Cinema OS</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts: Playfair Display for Editorial Serif, Inter for UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        editorial: {
+                            bg: '#FBFaf7', // Warm premium paper
+                            text: '#1C1C1C', // Deep charcoal
+                            muted: '#737373', // Elegant gray
+                            border: '#E5E5E5',
+                            accent: '#A67C74' // Subtle taupe/rose
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #FBFaf7; color: #1C1C1C; overflow-x: hidden; }
+        
+        /* Custom scrollbar for the options panel */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E5E5E5; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #737373; }
+
+        .glass-header {
+            background: rgba(251, 250, 247, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Room Preview Styles */
+        .room-preview {
+            background-image: url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            transition: all 0.5s ease;
+        }
+        
+        .artwork-container {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Product Option Selectors */
+        .option-radio:checked + label {
+            border-color: #1C1C1C;
+            background-color: #1C1C1C;
+            color: #FBFaf7;
+        }
+        .option-radio:checked + label .text-muted {
+            color: rgba(251, 250, 247, 0.7);
+        }
+        
+        .frame-option:checked + label {
+            border-color: #1C1C1C;
+            background-color: rgba(0,0,0,0.02);
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen">
+
+    <header class="fixed top-0 w-full z-50 glass-header flex items-center justify-between px-6 py-4">
+        <div class="flex items-center space-x-4">
+            <button onclick="alert('Returning to Gallery...')" class="text-editorial-muted hover:text-editorial-text transition flex items-center text-sm font-medium">
+                <i data-lucide="chevron-left" class="w-5 h-5 mr-1"></i> Back to Gallery
+            </button>
+        </div>
+        <div class="text-center">
+            <p class="text-[9px] uppercase tracking-[0.2em] text-editorial-muted font-medium mb-1">Print Boutique</p>
+            <h2 class="font-serif text-sm tracking-widest uppercase">Asraf Khan Studios</h2>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button class="relative text-editorial-text hover:text-editorial-accent transition">
+                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                <span class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-editorial-text text-white text-[9px] font-bold rounded-full flex items-center justify-center">1</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col lg:flex-row pt-[73px] overflow-hidden">
+        
+        <!-- Left: Image Preview & Visualization Area -->
+        <div class="w-full lg:w-3/5 h-[50vh] lg:h-full bg-[#EFECE6] relative flex items-center justify-center overflow-hidden" id="preview-area">
+            
+            <!-- Standard View -->
+            <div id="standard-view" class="relative z-10 p-8 w-full h-full flex items-center justify-center transition-opacity duration-500">
+                <img src="https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Selected Photo" class="max-h-full max-w-full object-contain shadow-2xl rounded-sm artwork-container" id="main-artwork">
+            </div>
+
+            <!-- Wall Preview View (Initially Hidden) -->
+            <div id="wall-view" class="absolute inset-0 room-preview opacity-0 pointer-events-none transition-opacity duration-500 flex items-center justify-center">
+                <div class="absolute inset-0 bg-black/10"></div> <!-- Subtle lighting adjust -->
+                <div class="relative z-10 mb-20 artwork-container" id="wall-artwork" style="width: 20%; border: 12px solid #222; background: white; padding: 4px;">
+                    <img src="https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wall Art" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <!-- Preview Toggles -->
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-md rounded-full px-2 py-2 flex space-x-1 shadow-lg z-20 border border-white">
+                <button onclick="togglePreview('standard')" id="btn-standard" class="px-4 py-1.5 rounded-full text-xs font-medium tracking-wide bg-editorial-text text-white transition">Image</button>
+                <button onclick="togglePreview('wall')" id="btn-wall" class="px-4 py-1.5 rounded-full text-xs font-medium tracking-wide text-editorial-muted hover:text-editorial-text transition">View on Wall</button>
+            </div>
+        </div>
+
+        <div class="w-full lg:w-2/5 h-[50vh] lg:h-full bg-editorial-bg overflow-y-auto px-6 py-8 lg:px-12 lg:py-12 border-l border-editorial-border">
+            
+            <div class="max-w-md mx-auto animate-slide-up">
+                
+                <!-- Product Header -->
+                <p class="text-[10px] uppercase tracking-[0.2em] text-editorial-muted mb-2 font-medium">Fine Art Collection</p>
+                <h1 class="font-serif text-3xl text-editorial-text mb-4">Gallery Framed Print</h1>
+                <p class="text-sm text-editorial-muted font-light leading-relaxed mb-8">
+                    Printed on archival-quality Hahnemühle photo rag paper and expertly framed in solid wood. A timeless piece for your home.
+                </p>
+
+                <!-- Configuration Options -->
+                <form id="product-form" class="space-y-8">
+                    
+                    <!-- Size Selection -->
+                    <div>
+                        <div class="flex justify-between items-end mb-3">
+                            <h3 class="text-xs uppercase tracking-widest font-semibold text-editorial-text">1. Select Size</h3>
+                            <button type="button" class="text-[10px] text-editorial-accent hover:underline">Size Guide</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <input type="radio" name="size" id="size-8x10" value="8x10" class="hidden option-radio" onchange="updatePrice(45, '8x10')" checked>
+                                <label for="size-8x10" class="flex flex-col items-center justify-center border border-editorial-border rounded-lg p-4 cursor-pointer transition-colors hover:border-editorial-text">
+                                    <span class="font-medium text-sm">8 x 10"</span>
+                                    <span class="text-xs text-editorial-muted mt-1 text-muted">$45.00</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="size" id="size-16x20" value="16x20" class="hidden option-radio" onchange="updatePrice(120, '16x20')">
+                                <label for="size-16x20" class="flex flex-col items-center justify-center border border-editorial-border rounded-lg p-4 cursor-pointer transition-colors hover:border-editorial-text">
+                                    <span class="font-medium text-sm">16 x 20"</span>
+                                    <span class="text-xs text-editorial-muted mt-1 text-muted">$120.00</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="size" id="size-24x36" value="24x36" class="hidden option-radio" onchange="updatePrice(280, '24x36')">
+                                <label for="size-24x36" class="flex flex-col items-center justify-center border border-editorial-border rounded-lg p-4 cursor-pointer transition-colors hover:border-editorial-text">
+                                    <span class="font-medium text-sm">24 x 36"</span>
+                                    <span class="text-xs text-editorial-muted mt-1 text-muted">$280.00</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="size" id="size-30x40" value="30x40" class="hidden option-radio" onchange="updatePrice(450, '30x40')">
+                                <label for="size-30x40" class="flex flex-col items-center justify-center border border-editorial-border rounded-lg p-4 cursor-pointer transition-colors hover:border-editorial-text">
+                                    <span class="font-medium text-sm">30 x 40"</span>
+                                    <span class="text-xs text-editorial-muted mt-1 text-muted">$450.00</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frame Selection -->
+                    <div>
+                        <h3 class="text-xs uppercase tracking-widest font-semibold text-editorial-text mb-3">2. Frame Finish</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <input type="radio" name="frame" id="frame-none" value="none" class="hidden frame-option" onchange="updateFrame('none')">
+                                <label for="frame-none" class="flex items-center justify-between border border-editorial-border rounded-lg p-4 cursor-pointer transition-colors hover:border-editorial-text">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-6 h-6 rounded-full border border-editorial-border flex items-center justify-center overflow-hidden bg-white"></div>
+                                        <span class="font-medium text-sm">Print Only (No Frame)</span>
+                                    </div>
+                                    <span class="text-xs text-editorial-muted">Included</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="frame" id="frame-black" value="black" class="hidden frame-option" onchange="updateFrame('black')" checked>
+                                <label for="frame-black" class="flex items-center justify-between border border-editorial-border rounded-lg p-4 cursor-pointer transition-colors hover:border-editorial-text">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-6 h-6 rounded-full overflow-hidden bg-[#222] shadow-inner"></div>
+                                        <span class="font-medium text-sm">Matte Black Gallery Frame</span>
+                                    </div>
+                                    <span class="text-xs text-editorial-muted">+$65.00</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="frame" id="frame-wood" value="wood" class="hidden frame-option" onchange="updateFrame('wood')">
+                                <label for="frame-wood" class="flex items-center justify-between border border-editorial-border rounded-lg p-4 cursor-pointer transition-colors hover:border-editorial-text">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-6 h-6 rounded-full overflow-hidden bg-[#C6A67A] shadow-inner"></div>
+                                        <span class="font-medium text-sm">Natural Maple Wood</span>
+                                    </div>
+                                    <span class="text-xs text-editorial-muted">+$85.00</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Image Crop & Finish -->
+                    <div>
+                        <h3 class="text-xs uppercase tracking-widest font-semibold text-editorial-text mb-3">3. Paper Finish</h3>
+                        <div class="flex p-1 bg-white border border-editorial-border rounded-lg">
+                            <button type="button" class="flex-1 py-2 text-xs font-medium bg-editorial-bg rounded-md shadow-sm border border-editorial-border">Luster (Semi-Gloss)</button>
+                            <button type="button" class="flex-1 py-2 text-xs font-medium text-editorial-muted hover:text-editorial-text">Deep Matte</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="mt-12 pt-6 border-t border-editorial-border pb-8">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest text-editorial-muted mb-1">Total</p>
+                        <h3 class="font-serif text-3xl" id="total-price">$110.00</h3>
+                    </div>
+                    <p class="text-xs text-editorial-muted">Free standard shipping</p>
+                </div>
+                
+                <div class="space-y-3">
+                    <button onclick="simulateCheckout()" class="w-full bg-editorial-text text-white py-4 rounded-lg flex justify-center items-center font-medium text-sm hover:bg-black transition shadow-lg hover:shadow-xl">
+                        Add to Cart
+                    </button>
+                    <!-- Simulated Express Checkout -->
+                    <button class="w-full bg-black text-white py-4 rounded-lg flex justify-center items-center space-x-2 font-medium hover:bg-gray-900 transition">
+                        <i class="fab fa-apple text-lg"></i>
+                        <span>Pay</span>
+                    </button>
+                </div>
+                
+                <!-- Silent Upsell Engine -->
+                <div class="mt-6 bg-white border border-editorial-border p-4 rounded-lg flex items-center justify-between group cursor-pointer hover:border-editorial-text transition">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 bg-[#EFECE6] flex items-center justify-center rounded">
+                            <i data-lucide="image" class="w-5 h-5 text-editorial-muted"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-editorial-text group-hover:underline">Add High-Res Digital Download</p>
+                            <p class="text-[10px] text-editorial-muted">Get the unwatermarked file instantly.</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-editorial-accent">+$15</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // State Management
+        let basePrice = 45;
+        let framePrice = 65;
+        let currentSize = '8x10';
+
+        function updatePrice(newBase, sizeStr) {
+            basePrice = newBase;
+            currentSize = sizeStr;
+            renderTotal();
+            updateWallArtScale(sizeStr);
+        }
+
+        function updateFrame(style) {
+            const wallArt = document.getElementById('wall-artwork');
+            
+            if (style === 'none') {
+                framePrice = 0;
+                wallArt.style.border = 'none';
+                wallArt.style.padding = '0px';
+            } else if (style === 'black') {
+                framePrice = 65;
+                wallArt.style.border = '8px solid #222';
+                wallArt.style.padding = '4px';
+                wallArt.style.backgroundColor = 'white'; // Matting
+            } else if (style === 'wood') {
+                framePrice = 85;
+                wallArt.style.border = '8px solid #C6A67A';
+                wallArt.style.padding = '4px';
+                wallArt.style.backgroundColor = 'white';
+            }
+            renderTotal();
+        }
+
+        function renderTotal() {
+            const total = basePrice + framePrice;
+            document.getElementById('total-price').innerText = `$${total.toFixed(2)}`;
+        }
+
+        // Room Visualization Simulator
+        function togglePreview(mode) {
+            const standardView = document.getElementById('standard-view');
+            const wallView = document.getElementById('wall-view');
+            const btnStandard = document.getElementById('btn-standard');
+            const btnWall = document.getElementById('btn-wall');
+
+            if (mode === 'wall') {
+                standardView.classList.add('opacity-0', 'pointer-events-none');
+                wallView.classList.remove('opacity-0', 'pointer-events-none');
+                
+                btnWall.classList.add('bg-editorial-text', 'text-white');
+                btnWall.classList.remove('text-editorial-muted');
+                btnStandard.classList.remove('bg-editorial-text', 'text-white');
+                btnStandard.classList.add('text-editorial-muted');
+            } else {
+                wallView.classList.add('opacity-0', 'pointer-events-none');
+                standardView.classList.remove('opacity-0', 'pointer-events-none');
+                
+                btnStandard.classList.add('bg-editorial-text', 'text-white');
+                btnStandard.classList.remove('text-editorial-muted');
+                btnWall.classList.remove('bg-editorial-text', 'text-white');
+                btnWall.classList.add('text-editorial-muted');
+            }
+        }
+
+        function updateWallArtScale(size) {
+            const wallArt = document.getElementById('wall-artwork');
+            // Mock scaling to visually represent size changes on the wall
+            const scales = {
+                '8x10': '12%',
+                '16x20': '20%',
+                '24x36': '30%',
+                '30x40': '40%'
+            };
+            wallArt.style.width = scales[size] || '20%';
+        }
+
+        function simulateCheckout() {
+            const btn = document.querySelector('button[onclick="simulateCheckout()"]');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+            setTimeout(() => {
+                btn.innerHTML = '<i data-lucide="check" class="w-5 h-5 mr-2"></i> Added to Cart';
+                lucide.createIcons();
+                btn.classList.remove('bg-editorial-text');
+                btn.classList.add('bg-green-700');
+                
+                setTimeout(() => {
+                    btn.innerHTML = 'Add to Cart';
+                    btn.classList.remove('bg-green-700');
+                    btn.classList.add('bg-editorial-text');
+                }, 2000);
+            }, 800);
+        }
+    </script>
+</body>
+</html>

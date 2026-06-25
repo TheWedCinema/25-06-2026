@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased bg-[#FBFaf7]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Deploy Event | The Wed Cinema OS</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        studio: {
+                            bg: '#FBFaf7',       /* Pearl */
+                            surface: '#FFFFFF',
+                            text: '#1C1C1C',     /* Charcoal */
+                            muted: '#737373',
+                            border: '#E5E5E5',
+                            accent: '#A67C74'    /* Subtle Luxury */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .step-content { display: none; opacity: 0; transition: opacity 0.4s ease-in-out; }
+        .step-content.active { display: block; opacity: 1; }
+        .toggle-checkbox:checked { right: 0; border-color: #1C1C1C; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #1C1C1C; }
+    </style>
+</head>
+<body class="text-studio-text font-sans h-screen flex overflow-hidden bg-studio-bg">
+
+    <!-- Minimal Sidebar (Contextual for Setup) -->
+    <aside class="w-72 border-r border-studio-border bg-studio-surface hidden md:flex flex-col justify-between p-8">
+        <div>
+            <span class="font-serif text-xl tracking-wide uppercase">The Wed Cinema</span>
+            <div class="mt-12 space-y-6">
+                <p class="text-[10px] font-semibold tracking-[0.2em] text-studio-muted uppercase mb-4">Deployment Sequence</p>
+                
+                <div class="flex items-center space-x-4 text-studio-text" id="nav-step-1">
+                    <div class="w-6 h-6 rounded-full bg-studio-text text-white flex items-center justify-center text-[10px]">1</div>
+                    <span class="text-sm font-medium">Event Details</span>
+                </div>
+                
+                <div class="flex items-center space-x-4 text-studio-muted" id="nav-step-2">
+                    <div class="w-6 h-6 rounded-full border border-studio-border flex items-center justify-center text-[10px]">2</div>
+                    <span class="text-sm">AI & Privacy Rules</span>
+                </div>
+                
+                <div class="flex items-center space-x-4 text-studio-muted" id="nav-step-3">
+                    <div class="w-6 h-6 rounded-full border border-studio-border flex items-center justify-center text-[10px]">3</div>
+                    <span class="text-sm">Revenue Engine</span>
+                </div>
+            </div>
+        </div>
+        <div class="text-[10px] text-studio-muted uppercase tracking-widest leading-relaxed">
+            Close to exit setup. <br>Progress is auto-saved.
+        </div>
+    </aside>
+
+    <!-- Main Form Area -->
+    <main class="flex-1 overflow-y-auto relative">
+        
+        <!-- Header -->
+        <header class="h-20 flex items-center justify-between px-8 lg:px-16 border-b border-studio-border bg-studio-surface sticky top-0 z-10">
+            <h1 class="font-serif text-2xl">Deploy New Event</h1>
+            <button class="w-10 h-10 rounded-full border border-studio-border flex items-center justify-center hover:bg-studio-bg transition-colors">
+                <i data-lucide="x" class="w-4 h-4 text-studio-text"></i>
+            </button>
+        </header>
+
+        <div class="max-w-2xl mx-auto p-8 lg:p-16">
+            
+            <!-- STEP 1: Basic Details -->
+            <div id="step-1" class="step-content active">
+                <h2 class="text-xs uppercase tracking-widest font-semibold text-studio-muted mb-8">Part 1 of 3</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-studio-text mb-2">Event Title</label>
+                        <input type="text" placeholder="e.g., Akshay & Anjali" class="w-full border-b-2 border-studio-border bg-transparent pb-2 text-2xl font-serif focus:outline-none focus:border-studio-text transition-colors" autofocus>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider text-studio-muted mb-2">Event Date</label>
+                            <input type="date" class="w-full border border-studio-border rounded-md p-3 text-sm focus:outline-none focus:border-studio-text">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider text-studio-muted mb-2">Venue / City</label>
+                            <input type="text" placeholder="Udaipur, Rajasthan" class="w-full border border-studio-border rounded-md p-3 text-sm focus:outline-none focus:border-studio-text">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-studio-muted mb-2">Cinematic Cover Image</label>
+                        <div class="border-2 border-dashed border-studio-border rounded-xl p-8 text-center hover:bg-white hover:border-studio-text transition-all cursor-pointer group">
+                            <i data-lucide="image-plus" class="w-6 h-6 mx-auto mb-3 text-studio-muted group-hover:text-studio-text"></i>
+                            <p class="text-sm text-studio-text font-medium">Click to upload cover</p>
+                            <p class="text-xs text-studio-muted mt-1">High-resolution JPG or PNG</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12 flex justify-end">
+                    <button onclick="goToStep(2)" class="bg-studio-text text-white px-8 py-3 rounded-md text-xs uppercase tracking-widest font-medium hover:bg-black transition-all shadow-md flex items-center">
+                        Configure AI <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 2: AI Rules -->
+            <div id="step-2" class="step-content">
+                <h2 class="text-xs uppercase tracking-widest font-semibold text-studio-muted mb-8">Part 2 of 3</h2>
+                
+                <h3 class="font-serif text-2xl text-studio-text mb-2">The AI Engine</h3>
+                <p class="text-sm text-studio-muted mb-8 leading-relaxed">Configure how our machine learning models will index and distribute your photos for this specific event.</p>
+                
+                <div class="space-y-6">
+                    
+                    <!-- Feature Toggle 1 -->
+                    <div class="flex items-start justify-between p-5 border border-studio-border rounded-xl bg-white">
+                        <div class="pr-6">
+                            <h4 class="text-sm font-medium text-studio-text flex items-center">
+                                <i data-lucide="scan-face" class="w-4 h-4 mr-2"></i> Biometric Guest Matching
+                            </h4>
+                            <p class="text-xs text-studio-muted mt-1 leading-relaxed">Allow guests to upload a selfie to instantly find all photos they appear in. Critical for lead generation.</p>
+                        </div>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in mt-1 flex-shrink-0">
+                            <input type="checkbox" name="toggle" id="toggle-bio" checked class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 border-studio-border appearance-none cursor-pointer"/>
+                            <label for="toggle-bio" class="toggle-label block overflow-hidden h-5 rounded-full bg-studio-border cursor-pointer"></label>
+                        </div>
+                    </div>
+
+                    <!-- Feature Toggle 2 -->
+                    <div class="flex items-start justify-between p-5 border border-studio-border rounded-xl bg-white">
+                        <div class="pr-6">
+                            <h4 class="text-sm font-medium text-studio-text flex items-center">
+                                <i data-lucide="lock" class="w-4 h-4 mr-2"></i> Enforce Email Capture
+                            </h4>
+                            <p class="text-xs text-studio-muted mt-1 leading-relaxed">Require guests to enter their email address before they can view or download their AI-matched photos.</p>
+                        </div>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in mt-1 flex-shrink-0">
+                            <input type="checkbox" name="toggle" id="toggle-email" checked class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 border-studio-border appearance-none cursor-pointer"/>
+                            <label for="toggle-email" class="toggle-label block overflow-hidden h-5 rounded-full bg-studio-border cursor-pointer"></label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-studio-muted mb-2 mt-4">Estimated Guest Count</label>
+                        <select class="w-full border border-studio-border rounded-md p-3 text-sm focus:outline-none focus:border-studio-text bg-transparent">
+                            <option>Intimate (Under 100)</option>
+                            <option>Standard (100 - 300)</option>
+                            <option selected>Grand (300 - 800)</option>
+                            <option>Royal (800+)</option>
+                        </select>
+                        <p class="text-[10px] text-studio-muted mt-2"><i data-lucide="info" class="w-3 h-3 inline"></i> Helps us allocate optimal server clusters for faster AI processing.</p>
+                    </div>
+
+                </div>
+
+                <div class="mt-12 flex justify-between items-center">
+                    <button onclick="goToStep(1)" class="text-xs uppercase tracking-widest text-studio-muted hover:text-studio-text transition-colors">Back</button>
+                    <button onclick="goToStep(3)" class="bg-studio-text text-white px-8 py-3 rounded-md text-xs uppercase tracking-widest font-medium hover:bg-black transition-all shadow-md flex items-center">
+                        Setup Revenue <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Revenue Engine -->
+            <div id="step-3" class="step-content">
+                <h2 class="text-xs uppercase tracking-widest font-semibold text-studio-muted mb-8">Part 3 of 3</h2>
+                
+                <h3 class="font-serif text-2xl text-studio-text mb-2">Monetization Engine</h3>
+                <p class="text-sm text-studio-muted mb-8 leading-relaxed">Turn this gallery into an automated sales channel. Your clients and guests will be able to purchase physical prints directly.</p>
+                
+                <div class="space-y-6">
+                    
+                    <div class="p-6 border border-studio-border rounded-xl bg-white relative overflow-hidden">
+                        <!-- Subtle premium accent -->
+                        <div class="absolute top-0 left-0 w-1 h-full bg-studio-accent"></div>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-sm font-medium text-studio-text">Luxury Print Store</h4>
+                            <span class="bg-green-100 text-green-800 text-[9px] px-2 py-1 rounded uppercase tracking-wider font-medium">Recommended</span>
+                        </div>
+                        
+                        <p class="text-xs text-studio-muted mb-6 leading-relaxed">Allow users to buy premium canvases, framed prints, and albums. Orders are automatically fulfilled by our lab partners, or routed to your studio.</p>
+                        
+                        <label class="block text-xs uppercase tracking-wider text-studio-muted mb-2">Price Sheet</label>
+                        <select class="w-full border border-studio-border rounded-md p-3 text-sm focus:outline-none focus:border-studio-text bg-transparent">
+                            <option>Studio Standard Pricing (30% Markup)</option>
+                            <option>Premium Wedding Pricing (50% Markup)</option>
+                            <option>No Print Store (Downloads Only)</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-start justify-between p-5 border border-studio-border rounded-xl bg-white">
+                        <div class="pr-6">
+                            <h4 class="text-sm font-medium text-studio-text">Watermark Engine</h4>
+                            <p class="text-xs text-studio-muted mt-1 leading-relaxed">Apply your studio logo to all free digital downloads. High-res unwatermarked photos must be purchased.</p>
+                        </div>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in mt-1 flex-shrink-0">
+                            <input type="checkbox" name="toggle" id="toggle-watermark" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 border-studio-border appearance-none cursor-pointer"/>
+                            <label for="toggle-watermark" class="toggle-label block overflow-hidden h-5 rounded-full bg-studio-border cursor-pointer"></label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-12 pt-8 border-t border-studio-border flex justify-between items-center bg-studio-bg sticky bottom-0 pb-8">
+                    <button onclick="goToStep(2)" class="text-xs uppercase tracking-widest text-studio-muted hover:text-studio-text transition-colors">Back</button>
+                    <button id="btn-deploy" onclick="deployEvent()" class="bg-studio-text text-white px-10 py-4 rounded-md text-xs uppercase tracking-widest font-medium hover:bg-black transition-all shadow-xl hover:-translate-y-1 flex items-center group">
+                        <i data-lucide="rocket" class="w-4 h-4 mr-2 group-hover:animate-pulse"></i> Deploy Event Container
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function goToStep(stepNum) {
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Update Sidebar UI
+            for(let i=1; i<=3; i++) {
+                const nav = document.getElementById(`nav-step-${i}`);
+                if(i < stepNum) {
+                    nav.querySelector('div').className = "w-6 h-6 rounded-full bg-studio-border flex items-center justify-center text-[10px] text-studio-muted";
+                    nav.classList.add('text-studio-muted');
+                    nav.classList.remove('text-studio-text');
+                } else if (i === stepNum) {
+                    nav.querySelector('div').className = "w-6 h-6 rounded-full bg-studio-text text-white flex items-center justify-center text-[10px]";
+                    nav.classList.remove('text-studio-muted');
+                    nav.classList.add('text-studio-text');
+                } else {
+                    nav.querySelector('div').className = "w-6 h-6 rounded-full border border-studio-border flex items-center justify-center text-[10px] text-studio-muted";
+                    nav.classList.add('text-studio-muted');
+                    nav.classList.remove('text-studio-text');
+                }
+            }
+
+            // Show current step
+            document.getElementById(`step-${stepNum}`).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deployEvent() {
+            const btn = document.getElementById('btn-deploy');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 mr-2 animate-spin"></i> Initializing Servers...';
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                alert("CTO SUCCESS: Event Container Created! \n\nNext Step: We should route the user to the 'Pre-Event QR Generation' page so they can print table cards before the wedding even starts.");
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

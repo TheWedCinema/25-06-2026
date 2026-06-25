@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Manager | The Wed Cinema OS</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        studio: {
+                            900: '#0a0a0b',
+                            800: '#121214',
+                            700: '#1e1e21',
+                            accent: '#ffffff',
+                            muted: '#8a8a93',
+                            success: '#34d399',
+                            brand: '#D4AF37'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0a0a0b;
+            color: #ffffff;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .glass-panel {
+            background: #121214;
+            border: 1px solid #1e1e21;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Toggle Switch Styling */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #34d399;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #34d399;
+        }
+        
+        /* Drag and Drop Zone */
+        .upload-zone {
+            transition: all 0.3s ease;
+        }
+        .upload-zone.dragover {
+            border-color: #34d399;
+            background-color: rgba(52, 211, 153, 0.05);
+            transform: scale(1.01);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1e1e21; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+    </style>
+</head>
+<body class="font-sans antialiased h-screen flex overflow-hidden">
+
+    <aside class="w-20 lg:w-64 glass-panel border-r border-t-0 border-b-0 border-l-0 flex flex-col hidden md:flex z-20">
+        <div class="p-6 border-b border-studio-700 flex justify-center lg:justify-start">
+            <h1 class="text-xs uppercase tracking-[0.3em] font-bold text-studio-accent hidden lg:block">TWC OS</h1>
+            <i data-lucide="camera" class="w-6 h-6 lg:hidden text-studio-accent"></i>
+        </div>
+        <nav class="p-4 space-y-2 flex-1">
+            <a href="#" class="flex items-center space-x-3 px-3 py-3 text-studio-muted hover:text-white hover:bg-studio-700/30 rounded-lg transition">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i><span class="text-sm font-medium hidden lg:block">Dashboard</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-3 py-3 bg-studio-700/50 text-white rounded-lg transition">
+                <i data-lucide="image" class="w-5 h-5"></i><span class="text-sm font-medium hidden lg:block">Events & Galleries</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-3 py-3 text-studio-muted hover:text-white hover:bg-studio-700/30 rounded-lg transition">
+                <i data-lucide="users" class="w-5 h-5"></i><span class="text-sm font-medium hidden lg:block">Guest CRM</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen relative">
+        
+        <header class="glass-panel border-b border-studio-700 p-4 lg:p-6 flex justify-between items-center z-30 sticky top-0">
+            <div class="flex items-center space-x-4">
+                <button class="text-studio-muted hover:text-white transition">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                </button>
+                <div>
+                    <h2 class="text-lg lg:text-xl font-serif text-white">Virat & Anushka</h2>
+                    <p class="text-[10px] uppercase tracking-widest text-studio-muted">Lake Como • 4,209 Assets</p>
+                </div>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="showToast('Saving draft...')" class="px-4 py-2 border border-studio-700 rounded-lg text-xs font-medium text-white hover:bg-studio-700 transition hidden sm:block">
+                    Save Draft
+                </button>
+                <button onclick="openShareModal()" class="px-4 py-2 bg-white text-black rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-gray-200 transition flex items-center shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+                    <i data-lucide="send" class="w-4 h-4 mr-2"></i> Publish & Share
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 lg:p-8">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 xl:grid-cols-3 gap-8">
+                
+                <!-- Left Column: Upload & Content -->
+                <div class="xl:col-span-2 space-y-6">
+                    
+                    <!-- 1. High-Res Upload Engine -->
+                    <div class="glass-panel p-6 rounded-xl">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-white">1. High-Resolution Upload</h3>
+                            <span class="text-xs text-studio-success flex items-center"><i data-lucide="check-circle-2" class="w-3 h-3 mr-1"></i> Quality Preserved</span>
+                        </div>
+                        
+                        <div id="drop-zone" class="upload-zone border-2 border-dashed border-studio-700 rounded-xl p-10 text-center cursor-pointer group hover:border-studio-muted">
+                            <div class="w-16 h-16 bg-studio-800 border border-studio-700 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                <i data-lucide="cloud-upload" class="w-8 h-8 text-studio-muted group-hover:text-white transition-colors"></i>
+                            </div>
+                            <h4 class="text-lg font-serif text-white mb-2">Drag & Drop Event Folders</h4>
+                            <p class="text-xs text-studio-muted max-w-sm mx-auto leading-relaxed">
+                                Supports RAW, JPEG, TIFF, and MP4. <br>Our backend will automatically generate optimized web-previews while safely vaulting your original high-res files.
+                            </p>
+                            <button class="mt-6 px-6 py-2 bg-studio-700 text-white rounded-full text-xs font-medium hover:bg-studio-600 transition">
+                                Browse Files
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Structure Preview -->
+                    <div class="glass-panel p-6 rounded-xl">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-white mb-4">Gallery Structure</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between p-3 bg-studio-900 border border-studio-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i data-lucide="folder" class="w-4 h-4 text-studio-brand"></i>
+                                    <span class="text-sm font-medium">01_Haldi</span>
+                                </div>
+                                <span class="text-xs text-studio-muted">842 photos</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-studio-900 border border-studio-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i data-lucide="folder" class="w-4 h-4 text-studio-brand"></i>
+                                    <span class="text-sm font-medium">02_Wedding_Ceremony</span>
+                                </div>
+                                <span class="text-xs text-studio-muted">2,104 photos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Settings & Monetization -->
+                <div class="space-y-6">
+                    
+                    <!-- 2. Security & AI Configuration -->
+                    <div class="glass-panel p-6 rounded-xl">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-white mb-6">2. Security & AI Access</h3>
+                        
+                        <div class="space-y-6">
+                            <!-- Toggle 1: AI Match -->
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-white">Enable AI Face Matching</p>
+                                    <p class="text-[10px] text-studio-muted mt-0.5 max-w-[200px]">Allows guests to find themselves instantly via selfie.</p>
+                                </div>
+                                <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                    <input type="checkbox" checked name="toggle" id="toggle-ai" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10 right-0 border-studio-success"/>
+                                    <label for="toggle-ai" class="toggle-label block overflow-hidden h-5 rounded-full bg-studio-success cursor-pointer transition-colors duration-300"></label>
+                                </div>
+                            </div>
+
+                            <hr class="border-studio-700">
+
+                            <!-- Toggle 2: Privacy PIN -->
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div>
+                                        <p class="text-sm font-medium text-white">Gallery Privacy PIN</p>
+                                        <p class="text-[10px] text-studio-muted mt-0.5">Restrict access to full timeline.</p>
+                                    </div>
+                                    <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                        <input type="checkbox" onchange="togglePinInput(this)" name="toggle" id="toggle-pin" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 border-studio-700 appearance-none cursor-pointer transition-all duration-300 z-10"/>
+                                        <label for="toggle-pin" class="toggle-label block overflow-hidden h-5 rounded-full bg-studio-700 cursor-pointer transition-colors duration-300"></label>
+                                    </div>
+                                </div>
+                                <div id="pin-input-container" class="hidden opacity-0 transition-opacity duration-300">
+                                    <input type="text" placeholder="Enter 4-6 digit PIN" class="w-full bg-studio-900 border border-studio-700 rounded-lg px-3 py-2 text-sm text-white focus:border-white focus:outline-none placeholder-studio-700">
+                                </div>
+                            </div>
+
+                            <hr class="border-studio-700">
+
+                            <!-- Expiry -->
+                            <div>
+                                <p class="text-sm font-medium text-white mb-2">Gallery Expiration Date</p>
+                                <input type="date" class="w-full bg-studio-900 border border-studio-700 rounded-lg px-3 py-2 text-sm text-white focus:border-white focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Monetization & Downloads -->
+                    <div class="glass-panel p-6 rounded-xl border-t-2 border-t-studio-success">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-white">3. Monetization</h3>
+                            <i data-lucide="coins" class="w-4 h-4 text-studio-success"></i>
+                        </div>
+
+                        <div class="space-y-5">
+                            <!-- Download Rules -->
+                            <div>
+                                <p class="text-sm font-medium text-white mb-3">Download Permissions</p>
+                                <select class="w-full bg-studio-900 border border-studio-700 text-white text-sm rounded-lg p-2.5 appearance-none focus:outline-none focus:border-white">
+                                    <option>Free Web-Res (Watermarked)</option>
+                                    <option>Free High-Res (Clients Only)</option>
+                                    <option>No Downloads Allowed</option>
+                                </select>
+                            </div>
+
+                            <div class="bg-studio-900/50 p-4 rounded-lg border border-studio-700">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium text-white">Charge for High-Res</span>
+                                    <div class="relative inline-block w-8 mr-2 align-middle select-none transition duration-200 ease-in">
+                                        <input type="checkbox" checked class="toggle-checkbox absolute block w-4 h-4 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10 right-0 border-studio-success"/>
+                                        <label class="toggle-label block overflow-hidden h-4 rounded-full bg-studio-success cursor-pointer transition-colors duration-300"></label>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-studio-muted text-xs">$</span>
+                                    <input type="number" value="4.99" class="bg-transparent border-b border-studio-700 w-16 text-white text-sm focus:outline-none focus:border-white pb-1">
+                                    <span class="text-studio-muted text-xs">per photo</span>
+                                </div>
+                            </div>
+
+                            <!-- Print Store -->
+                            <div class="flex items-start space-x-3 pt-2">
+                                <i data-lucide="store" class="w-5 h-5 text-studio-muted mt-0.5"></i>
+                                <div>
+                                    <p class="text-sm font-medium text-white">Attach Print Store</p>
+                                    <p class="text-[10px] text-studio-muted mt-1 leading-relaxed">Guests can purchase fine-art prints directly from the gallery. You keep 100% markup.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Publish & Share Modal -->
+    <div id="share-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-lg rounded-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="share-modal-content">
+            
+            <div class="bg-gradient-to-r from-studio-800 to-studio-900 p-6 border-b border-studio-700 flex justify-between items-center relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/5 rounded-full blur-xl"></div>
+                <div>
+                    <h3 class="font-serif text-2xl text-white">Gallery is Live!</h3>
+                    <p class="text-xs text-studio-success mt-1 flex items-center"><i data-lucide="check-circle" class="w-3 h-3 mr-1"></i> Ready for clients and guests</p>
+                </div>
+                <button onclick="closeShareModal()" class="text-studio-muted hover:text-white transition z-10">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-6">
+                
+                <!-- Client Link -->
+                <div>
+                    <p class="text-xs uppercase tracking-widest font-bold text-studio-muted mb-2">1. Send to Couple (Full Access)</p>
+                    <div class="flex items-center bg-studio-900 border border-studio-700 rounded-lg p-2">
+                        <input type="text" readonly value="https://thewedcinema.com/v/virat-anushka-client" class="bg-transparent text-sm text-white w-full px-2 focus:outline-none">
+                        <button onclick="showToast('Link Copied!')" class="bg-white text-black px-4 py-1.5 rounded-md text-xs font-medium hover:bg-gray-200 transition">Copy</button>
+                    </div>
+                </div>
+
+                <hr class="border-studio-700">
+
+                <!-- Guest Link & QR -->
+                <div>
+                    <div class="flex justify-between items-end mb-2">
+                        <p class="text-xs uppercase tracking-widest font-bold text-studio-muted">2. Share with Guests (AI Access)</p>
+                        <a href="#" class="text-[10px] text-studio-brand hover:underline flex items-center">Print Tabletop QR Cards <i data-lucide="external-link" class="w-3 h-3 ml-1"></i></a>
+                    </div>
+                    <div class="flex items-center bg-studio-900 border border-studio-700 rounded-lg p-2 mb-3">
+                        <input type="text" readonly value="https://thewedcinema.com/g/virat-anushka" class="bg-transparent text-sm text-white w-full px-2 focus:outline-none">
+                        <button onclick="showToast('Link Copied!')" class="bg-studio-800 border border-studio-700 text-white px-4 py-1.5 rounded-md text-xs font-medium hover:bg-studio-700 transition">Copy</button>
+                    </div>
+                    
+                    <!-- The Growth Engine Injection -->
+                    <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 flex items-start space-x-3">
+                        <div class="bg-blue-500/20 p-1.5 rounded text-blue-400 mt-0.5"><i data-lucide="star" class="w-4 h-4"></i></div>
+                        <div>
+                            <p class="text-sm font-medium text-white mb-1">Maximize Reviews & Leads</p>
+                            <p class="text-[10px] text-gray-400 leading-relaxed">Guests using this link will automatically be asked to leave a Google Review for your studio 24 hours after downloading their selfies.</p>
+                            <label class="flex items-center space-x-2 mt-2 cursor-pointer">
+                                <input type="checkbox" checked class="rounded border-gray-600 bg-gray-800 text-blue-500 focus:ring-blue-500/20">
+                                <span class="text-xs text-white">Enable Automated Review Requests</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-3 rounded-full shadow-2xl text-xs font-medium uppercase tracking-widest transition-all duration-300 opacity-0 pointer-events-none z-50 flex items-center">
+        <i data-lucide="info" class="w-4 h-4 mr-2"></i> <span id="toast-msg">Message</span>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // UI Interactions
+        function togglePinInput(checkbox) {
+            const container = document.getElementById('pin-input-container');
+            if (checkbox.checked) {
+                container.classList.remove('hidden');
+                setTimeout(() => container.classList.remove('opacity-0'), 10);
+            } else {
+                container.classList.add('opacity-0');
+                setTimeout(() => container.classList.add('hidden'), 300);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('-translate-y-4');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+                toast.classList.remove('-translate-y-4');
+            }, 3000);
+        }
+
+        // Modal Logic
+        function openShareModal() {
+            const modal = document.getElementById('share-modal');
+            const content = document.getElementById('share-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeShareModal() {
+            const modal = document.getElementById('share-modal');
+            const content = document.getElementById('share-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Drag and drop visual feedback
+        const dropZone = document.getElementById('drop-zone');
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        function preventDefaults (e) { e.preventDefault(); e.stopPropagation(); }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            showToast('Simulating: Processing 4,209 files...');
+        });
+    </script>
+</body>
+</html>

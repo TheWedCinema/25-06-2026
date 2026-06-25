@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vendor Portal | Asraf Khan Studios</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        editorial: {
+                            bg: '#FBFaf7', 
+                            text: '#1C1C1C', 
+                            muted: '#737373', 
+                            border: '#E5E5E5',
+                            accent: '#A67C74' 
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #FBFaf7; color: #1C1C1C; -webkit-font-smoothing: antialiased; }
+        
+        .glass-nav {
+            background: rgba(251, 250, 247, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* ------------------------------------- */
+        /* ------------------------------------- */
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1.5rem;
+        }
+        @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+            position: relative;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            background-color: #EFECE6; /* Placeholder load color */
+        }
+
+        .masonry-item img {
+            width: 100%;
+            display: block;
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* The Vendor Overlay */
+        .vendor-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+        }
+        
+        @media (hover: hover) {
+            .masonry-item:hover img { transform: scale(1.03); }
+            .masonry-item:hover .vendor-overlay { opacity: 1; }
+        }
+        @media (hover: none) {
+            .vendor-overlay { opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 40%); padding: 1rem;}
+        }
+
+        .btn-social {
+            background: rgba(255,255,255,0.95);
+            color: #1C1C1C;
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        .btn-social:hover { background: #1C1C1C; color: white; }
+
+        /* Custom Modal */
+        #attribution-modal {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ------------------------------------- -->
+    <!-- ------------------------------------- -->
+    <nav class="sticky top-0 z-40 glass-nav">
+        <div class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex flex-col">
+                <span class="text-[9px] uppercase tracking-[0.3em] font-medium text-editorial-muted mb-0.5">Media Portal by</span>
+                <span class="font-serif text-sm tracking-widest text-editorial-text uppercase">Asraf Khan Studios</span>
+            </div>
+            
+            <div class="flex items-center space-x-6">
+                <button onclick="downloadAll()" class="hidden md:flex items-center space-x-2 text-[10px] uppercase tracking-widest font-medium text-editorial-text border border-editorial-border px-4 py-2 rounded-full hover:bg-editorial-text hover:text-white transition">
+                    <i data-lucide="folder-down" class="w-4 h-4"></i>
+                    <span>Download Collection (42)</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ------------------------------------- -->
+    <!-- ------------------------------------- -->
+    <header class="max-w-[1400px] mx-auto px-6 py-16 md:py-24 animate-slide-up">
+        <div class="max-w-2xl">
+            <div class="inline-flex items-center space-x-2 bg-white border border-editorial-border px-3 py-1 rounded-full mb-6 shadow-sm">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="text-[9px] uppercase tracking-widest font-semibold text-editorial-muted">Vendor Access Granted</span>
+            </div>
+            
+            <h1 class="font-serif text-4xl md:text-6xl text-editorial-text leading-tight mb-4">
+                Curated for <br><span class="italic text-editorial-accent">Kriti Beauty Studio</span>
+            </h1>
+            
+            <p class="text-sm md:text-base text-editorial-muted font-light leading-relaxed mb-8">
+                Akshay & Anjali's Wedding • Udaipur <br>
+                Thank you for your incredible artistry. Our AI has automatically curated all the portraits highlighting your hair and makeup work.
+            </p>
+            
+            <div class="bg-[#F3EFEB] p-4 rounded-lg border border-[#E8DFD5] flex items-start space-x-4">
+                <i data-lucide="info" class="w-5 h-5 text-editorial-accent mt-0.5 shrink-0"></i>
+                <div>
+                    <p class="text-xs font-semibold text-editorial-text uppercase tracking-wider mb-1">Social Media Guidelines</p>
+                    <p class="text-[11px] text-editorial-muted leading-relaxed">
+                        These high-resolution images are complimentary for your portfolio and social media. We kindly request that you do not apply secondary filters and tag <strong>@AsrafKhanStudios</strong> in all captions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ------------------------------------- -->
+    <!-- ------------------------------------- -->
+    <main class="max-w-[1400px] mx-auto px-6 pb-32 animate-slide-up" style="animation-delay: 0.2s;">
+        
+        <div class="flex items-center justify-between mb-8 border-b border-editorial-border pb-4">
+            <h2 class="text-xs uppercase tracking-widest font-semibold text-editorial-text">Your Highlights (42)</h2>
+            <div class="flex space-x-4 text-[10px] font-medium text-editorial-muted uppercase tracking-wider">
+                <button class="text-editorial-text border-b border-editorial-text pb-1">All</button>
+                <button class="hover:text-editorial-text transition">Portraits</button>
+                <button class="hover:text-editorial-text transition">Details</button>
+            </div>
+        </div>
+
+        <div class="masonry-grid" id="vendor-grid">
+            <!-- Dynamic Images Injected Here -->
+        </div>
+
+    </main>
+
+    <!-- ------------------------------------- -->
+    <!-- ------------------------------------- -->
+    <footer class="bg-white border-t border-editorial-border py-20 text-center">
+        <div class="max-w-lg mx-auto px-6">
+            <i data-lucide="camera" class="w-8 h-8 text-editorial-accent mx-auto mb-6"></i>
+            <h3 class="font-serif text-2xl md:text-3xl text-editorial-text mb-4">Elevate your brand portfolio</h3>
+            <p class="text-sm text-editorial-muted font-light mb-8 leading-relaxed">
+                Asraf Khan Studios offers exclusive editorial brand shoots for luxury wedding vendors. Elevate your website and social presence with our signature cinematic style.
+            </p>
+            <button onclick="alert('Opening lead capture for Vendor Brand Shoot...')" class="bg-editorial-text text-white px-8 py-3.5 rounded-full text-[10px] uppercase tracking-widest font-semibold hover:bg-black transition shadow-lg">
+                Inquire for Brand Shoot
+            </button>
+        </div>
+        <p class="text-[8px] uppercase tracking-[0.2em] text-editorial-muted/50 mt-20">Platform by The Wed Cinema</p>
+    </footer>
+
+    <!-- ------------------------------------- -->
+    <!-- ------------------------------------- -->
+    <!-- Smart Download Modal -->
+    <div id="attribution-modal" class="fixed inset-0 z-50 bg-editorial-text/40 backdrop-blur-sm opacity-0 pointer-events-none flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden transform translate-y-8 transition-transform duration-400" id="modal-content">
+            
+            <div class="relative h-48 bg-gray-100">
+                <img id="modal-preview" src="" class="w-full h-full object-cover">
+                <button onclick="closeModal()" class="absolute top-3 right-3 bg-white/50 backdrop-blur rounded-full p-1.5 hover:bg-white transition text-editorial-text">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div class="p-6 text-center">
+                <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-100">
+                    <i data-lucide="check" class="w-6 h-6 text-green-600"></i>
+                </div>
+                <h3 class="font-serif text-xl text-editorial-text mb-2">Ready for Social</h3>
+                <p class="text-xs text-editorial-muted mb-6 leading-relaxed">
+                    Image optimized for Instagram (4:5). <br>We've copied the photographer's tag to your clipboard!
+                </p>
+                
+                <div class="bg-editorial-bg border border-editorial-border rounded p-3 text-left mb-6 relative group">
+                    <p class="text-[10px] text-editorial-muted mb-1">Copied to clipboard:</p>
+                    <p class="text-xs font-medium text-editorial-text">Stunning bride! 🤍<br>📸 Photography: @AsrafKhanStudios<br>💄 Makeup: @KritiBeauty</p>
+                    <button class="absolute top-3 right-3 text-editorial-muted hover:text-editorial-text transition">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <button onclick="executeDownload()" id="btn-final-download" class="w-full bg-editorial-text text-white py-3.5 rounded-lg text-[10px] uppercase tracking-widest font-semibold hover:bg-black transition flex items-center justify-center space-x-2">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Save Image</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ------------------------------------- -->
+    <!-- ------------------------------------- -->
+    <script>
+        lucide.createIcons();
+
+        // High-End Vendor Curated DB (Mock)
+        const vendorPhotos = [
+            "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", // MUA focus
+            "https://images.unsplash.com/photo-1595956553066-fe24a8c33395?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80", 
+            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1200&q=80",
+            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        ];
+
+        function renderGrid() {
+            const grid = document.getElementById('vendor-grid');
+            vendorPhotos.forEach(src => {
+                const item = document.createElement('div');
+                item.className = 'masonry-item group';
+                item.innerHTML = `
+                    <img src="${src}" loading="lazy" alt="Vendor Highlight">
+                    <div class="vendor-overlay">
+                        <button onclick="triggerSmartDownload('${src}')" class="btn-social w-full justify-center">
+                            <i data-lucide="instagram" class="w-4 h-4"></i> Download for Social
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(item);
+            });
+            lucide.createIcons();
+        }
+
+        function triggerSmartDownload(src) {
+            // 1. Copy Tag to Clipboard natively
+            const textToCopy = "Stunning bride! 🤍\n📸 Photography: @AsrafKhanStudios\n💄 Makeup: @KritiBeauty";
+            
+            // Fallback copy mechanism to avoid iFrame restrictions
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Copy failed', err);
+            }
+            document.body.removeChild(textArea);
+
+            // 2. Open Notification Modal
+            document.getElementById('modal-preview').src = src;
+            const modal = document.getElementById('attribution-modal');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('translate-y-8');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('attribution-modal');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.add('translate-y-8');
+        }
+
+        function executeDownload() {
+            const btn = document.getElementById('btn-final-download');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving...';
+            setTimeout(() => {
+                btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-2"></i> Saved to Camera Roll';
+                lucide.createIcons();
+                btn.classList.replace('bg-editorial-text', 'bg-green-600');
+                
+                setTimeout(() => {
+                    closeModal();
+                    setTimeout(() => {
+                        btn.innerHTML = '<i data-lucide="download" class="w-4 h-4"></i><span>Save Image</span>';
+                        btn.classList.replace('bg-green-600', 'bg-editorial-text');
+                        lucide.createIcons();
+                    }, 400);
+                }, 1500);
+            }, 800);
+        }
+
+        function downloadAll() {
+            alert('Compiling high-resolution ZIP archive for Kriti Beauty Studio...');
+        }
+
+        window.onload = renderGrid;
+    </script>
+</body>
+</html>

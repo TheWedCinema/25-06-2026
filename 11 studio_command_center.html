@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Command Center | The Wed Cinema OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        studio: {
+                            900: '#0a0a0b', // Deepest background
+                            800: '#121214', // Panel background
+                            700: '#1e1e21', // Hover states, borders
+                            accent: '#ffffff', // High contrast text/buttons
+                            muted: '#8a8a93', // Secondary text
+                            success: '#34d399', // Money/Growth
+                            warning: '#fbbf24', // Processing
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0a0b;
+            color: #ffffff;
+            /* Subtly patterned background for a pro-tool feel */
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .glass-panel {
+            background: #121214;
+            border: 1px solid #1e1e21;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom Scrollbar for dashboard feel */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1e1e21; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+        /* Subtle pulse for active AI processing */
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            80%, 100% { transform: scale(2); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 glass-panel border-r border-t-0 border-b-0 border-l-0 flex flex-col justify-between hidden md:flex z-20">
+        <div>
+            <div class="p-6 border-b border-studio-700">
+                <h1 class="text-xs uppercase tracking-[0.3em] font-bold text-studio-accent mb-1">The Wed Cinema</h1>
+                <p class="text-[10px] uppercase tracking-widest text-studio-muted">Operating System</p>
+            </div>
+
+            <nav class="p-4 space-y-1">
+                <a href="#" class="flex items-center space-x-3 px-3 py-2.5 bg-studio-700/50 text-white rounded-lg transition">
+                    <i class="fas fa-home w-5 text-center"></i>
+                    <span class="text-sm font-medium">Command Center</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2.5 text-studio-muted hover:text-white hover:bg-studio-700/30 rounded-lg transition group">
+                    <i class="fas fa-camera w-5 text-center group-hover:text-white transition"></i>
+                    <span class="text-sm font-medium">Events & Galleries</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2.5 text-studio-muted hover:text-white hover:bg-studio-700/30 rounded-lg transition group">
+                    <i class="fas fa-robot w-5 text-center group-hover:text-studio-warning transition"></i>
+                    <span class="text-sm font-medium">AI Processing</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2.5 text-studio-muted hover:text-white hover:bg-studio-700/30 rounded-lg transition group flex justify-between">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-users w-5 text-center group-hover:text-white transition"></i>
+                        <span class="text-sm font-medium">Guest Leads CRM</span>
+                    </div>
+                    <span class="bg-studio-accent text-studio-900 text-[10px] font-bold px-1.5 py-0.5 rounded">NEW</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2.5 text-studio-muted hover:text-white hover:bg-studio-700/30 rounded-lg transition group">
+                    <i class="fas fa-store w-5 text-center group-hover:text-studio-success transition"></i>
+                    <span class="text-sm font-medium">Print Store & Revenue</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="p-4 border-t border-studio-700">
+            <div class="flex items-center space-x-3 px-3 py-2 cursor-pointer hover:bg-studio-700/30 rounded-lg transition">
+                <img src="https://ui-avatars.com/api/?name=Asraf+Khan&background=fff&color=000" alt="Asraf Khan" class="w-8 h-8 rounded-full">
+                <div class="overflow-hidden">
+                    <p class="text-sm font-medium text-white truncate">Asraf Khan Studios</p>
+                    <p class="text-xs text-studio-muted truncate">Pro Tier</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-screen overflow-y-auto relative">
+        
+        <!-- Mobile Header (Visible only on sm/md) -->
+        <header class="md:hidden glass-panel border-b border-studio-700 p-4 flex justify-between items-center sticky top-0 z-30">
+            <div>
+                <h1 class="text-xs uppercase tracking-[0.2em] font-bold text-studio-accent">TWC OS</h1>
+            </div>
+            <button class="text-studio-muted hover:text-white">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </header>
+
+        <!-- Dashboard Header -->
+        <div class="p-8 pb-4 max-w-6xl mx-auto w-full">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="font-serif text-3xl mb-1">Good morning, Asraf.</h2>
+                    <p class="text-studio-muted text-sm">Here is what's happening across your studio today, June 25, 2026.</p>
+                </div>
+                <div class="hidden sm:flex space-x-3">
+                    <button class="px-4 py-2 glass-panel rounded-lg text-sm font-medium text-white hover:bg-studio-700 transition flex items-center">
+                        <i class="fas fa-plus mr-2"></i> New Event
+                    </button>
+                </div>
+            </div>
+
+            <!-- KPI / Revenue Cards (The Business Engine) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Card 1: Print Revenue -->
+                <div class="glass-panel p-6 rounded-xl relative overflow-hidden group cursor-pointer hover:border-studio-success/50 transition-colors">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-dollar-sign text-6xl text-studio-success"></i>
+                    </div>
+                    <p class="text-xs font-medium text-studio-muted uppercase tracking-wider mb-2">30-Day Print Revenue</p>
+                    <h3 class="text-3xl font-semibold text-white mb-2">$4,285<span class="text-sm text-studio-muted font-normal">.00</span></h3>
+                    <p class="text-xs text-studio-success flex items-center">
+                        <i class="fas fa-arrow-up mr-1"></i> 12% vs last month
+                    </p>
+                </div>
+
+                <!-- Card 2: Guest Leads -->
+                <div class="glass-panel p-6 rounded-xl relative overflow-hidden group cursor-pointer hover:border-white/30 transition-colors">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-address-book text-6xl text-white"></i>
+                    </div>
+                    <p class="text-xs font-medium text-studio-muted uppercase tracking-wider mb-2">New Guest Leads Captured</p>
+                    <h3 class="text-3xl font-semibold text-white mb-2">842</h3>
+                    <p class="text-xs text-studio-muted">Across 3 active galleries</p>
+                </div>
+
+                <!-- Card 3: Storage/System -->
+                <div class="glass-panel p-6 rounded-xl relative overflow-hidden group cursor-pointer hover:border-studio-warning/50 transition-colors">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-cloud text-6xl text-studio-warning"></i>
+                    </div>
+                    <p class="text-xs font-medium text-studio-muted uppercase tracking-wider mb-2">Cloud Storage</p>
+                    <h3 class="text-3xl font-semibold text-white mb-2">2.4 <span class="text-lg text-studio-muted font-normal">TB</span></h3>
+                    <p class="text-xs text-studio-muted">78% of 3TB Quota used</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Main Activity Panel: Active AI Processing -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-medium text-white">Active AI Processing</h3>
+                        <a href="#" class="text-xs text-studio-muted hover:text-white transition">View All <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+
+                    <!-- Event Processing Card (Tying back to Module 1 & 2) -->
+                    <div class="glass-panel rounded-xl p-0 overflow-hidden border-l-2 border-l-studio-warning">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 rounded-lg bg-studio-700 flex items-center justify-center relative">
+                                        <i class="fas fa-robot text-studio-warning"></i>
+                                        <div class="absolute inset-0 rounded-lg border border-studio-warning pulse-ring"></div>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-serif text-xl text-white">Akshay & Anjali</h4>
+                                        <p class="text-xs text-studio-muted">Udaipur • 4,209 RAW files uploaded</p>
+                                    </div>
+                                </div>
+                                <span class="bg-studio-warning/10 text-studio-warning text-xs font-medium px-2.5 py-1 rounded-full border border-studio-warning/20">
+                                    AI Curating
+                                </span>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <span class="text-studio-muted">Facial Recognition & Sorting</span>
+                                        <span class="text-white">84%</span>
+                                    </div>
+                                    <div class="w-full bg-studio-700 rounded-full h-1.5 overflow-hidden">
+                                        <div class="bg-studio-warning h-1.5 rounded-full" style="width: 84%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-between items-center pt-2 border-t border-studio-700/50">
+                                    <div class="flex space-x-4">
+                                        <div class="text-center">
+                                            <p class="text-[10px] text-studio-muted uppercase">Faces Found</p>
+                                            <p class="text-sm font-medium text-white">312</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <p class="text-[10px] text-studio-muted uppercase">Guest Matches</p>
+                                            <p class="text-sm font-medium text-white">89</p>
+                                        </div>
+                                    </div>
+                                    <button class="text-xs bg-studio-700 hover:bg-studio-600 text-white px-3 py-1.5 rounded transition">
+                                        Preview Gallery
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar: Live Activity Feed -->
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-medium text-white">Live Activity</h3>
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-studio-success opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-studio-success"></span>
+                        </span>
+                    </div>
+
+                    <div class="glass-panel rounded-xl p-6">
+                        <div class="space-y-6 relative before:absolute before:inset-0 before:ml-4 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-studio-700 before:to-transparent">
+                            
+                            <!-- Activity Item 1 (Sale) -->
+                            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                                <div class="flex items-center justify-center w-8 h-8 rounded-full border border-studio-700 bg-studio-800 group-[.is-active]:text-emerald-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                                    <i class="fas fa-shopping-bag text-xs text-studio-success"></i>
+                                </div>
+                                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-3 rounded glass-panel">
+                                    <div class="flex items-center justify-between space-x-2 mb-1">
+                                        <div class="font-bold text-white text-xs">Print Order #402</div>
+                                        <time class="text-[10px] text-studio-muted">Just now</time>
+                                    </div>
+                                    <div class="text-xs text-studio-muted">Guest 'Rohan S.' ordered 2x 8x10 Fine Art Prints. <span class="text-studio-success">+$45.00</span></div>
+                                </div>
+                            </div>
+
+                            <!-- Activity Item 2 (Lead) -->
+                            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                                <div class="flex items-center justify-center w-8 h-8 rounded-full border border-studio-700 bg-studio-800 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                                    <i class="fas fa-user-plus text-xs"></i>
+                                </div>
+                                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-3 rounded glass-panel">
+                                    <div class="flex items-center justify-between space-x-2 mb-1">
+                                        <div class="font-bold text-white text-xs">New Guest Lead</div>
+                                        <time class="text-[10px] text-studio-muted">12m ago</time>
+                                    </div>
+                                    <div class="text-xs text-studio-muted">Priya M. unlocked their gallery via facial recognition.</div>
+                                </div>
+                            </div>
+
+                            <!-- Activity Item 3 (System) -->
+                            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                                <div class="flex items-center justify-center w-8 h-8 rounded-full border border-studio-700 bg-studio-800 text-studio-muted shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                                    <i class="fas fa-check-circle text-xs"></i>
+                                </div>
+                                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-3 rounded glass-panel opacity-70">
+                                    <div class="flex items-center justify-between space-x-2 mb-1">
+                                        <div class="font-bold text-white text-xs">Gallery Delivered</div>
+                                        <time class="text-[10px] text-studio-muted">2h ago</time>
+                                    </div>
+                                    <div class="text-xs text-studio-muted">'Rahul & Priya' client gallery delivery email sent.</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

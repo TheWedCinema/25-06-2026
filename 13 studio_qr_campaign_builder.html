@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Campaign Builder | The Wed Cinema OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        studio: {
+                            900: '#0a0a0b',
+                            800: '#121214',
+                            700: '#1e1e21',
+                            accent: '#ffffff',
+                            muted: '#8a8a93',
+                            success: '#34d399',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0a0a0b; color: #ffffff; }
+        .glass-panel { background: #121214; border: 1px solid #1e1e21; }
+        
+        /* The Print Canvas Area */
+        .print-canvas {
+            background-color: #f8f9fa; /* White paper look */
+            background-image: linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0), 
+                              linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+
+        /* The actual printable card */
+        .card-preview {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased h-screen flex overflow-hidden">
+
+    <!-- Sidebar (Simplified for context) -->
+    <aside class="w-20 lg:w-64 glass-panel border-r border-studio-700 flex flex-col hidden md:flex z-20">
+        <div class="p-6 border-b border-studio-700 flex justify-center lg:justify-start">
+            <h1 class="text-xs uppercase tracking-[0.3em] font-bold text-studio-accent hidden lg:block">TWC OS</h1>
+            <i class="fas fa-camera text-xl lg:hidden"></i>
+        </div>
+        <nav class="p-4 space-y-2 flex-1">
+            <a href="#" class="flex items-center space-x-3 px-3 py-3 text-studio-muted hover:text-white hover:bg-studio-700/30 rounded-lg transition"><i class="fas fa-home w-5 text-center"></i><span class="text-sm font-medium hidden lg:block">Dashboard</span></a>
+            <a href="#" class="flex items-center space-x-3 px-3 py-3 text-studio-muted hover:text-white hover:bg-studio-700/30 rounded-lg transition"><i class="fas fa-images w-5 text-center"></i><span class="text-sm font-medium hidden lg:block">Galleries</span></a>
+            <a href="#" class="flex items-center space-x-3 px-3 py-3 bg-studio-700/50 text-white rounded-lg transition"><i class="fas fa-qrcode w-5 text-center"></i><span class="text-sm font-medium hidden lg:block">QR Campaigns</span></a>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        
+        <!-- Header -->
+        <header class="glass-panel border-b border-studio-700 p-6 flex justify-between items-center z-30">
+            <div>
+                <h2 class="text-xl font-serif">Tabletop QR Builder</h2>
+                <p class="text-xs text-studio-muted mt-1">Generate print-ready physical cards for live event lead capture.</p>
+            </div>
+            <div class="flex space-x-3">
+                <button class="px-4 py-2 border border-studio-700 rounded-lg text-sm font-medium text-white hover:bg-studio-700 transition">
+                    <i class="fas fa-save mr-2"></i> Save Draft
+                </button>
+                <button class="px-4 py-2 bg-white text-black rounded-lg text-sm font-medium hover:bg-gray-200 transition">
+                    <i class="fas fa-print mr-2"></i> Export High-Res PDF
+                </button>
+            </div>
+        </header>
+
+        <!-- Builder Interface -->
+        <div class="flex-1 flex overflow-hidden">
+            
+            <!-- Left Controls Panel -->
+            <div class="w-1/3 glass-panel border-r border-studio-700 overflow-y-auto p-6 space-y-8">
+                
+                <!-- Section 1: Event Link -->
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-studio-muted mb-4">1. Select Event</h3>
+                    <div class="relative">
+                        <select class="w-full bg-studio-900 border border-studio-700 text-white text-sm rounded-lg focus:ring-studio-success focus:border-studio-success block p-3 appearance-none">
+                            <option>Akshay & Anjali (Udaipur)</option>
+                            <option>Rohan & Priya (Goa)</option>
+                            <option>Create New Event...</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-4 top-4 text-studio-muted pointer-events-none"></i>
+                    </div>
+                    <p class="text-[10px] text-studio-muted mt-2"><i class="fas fa-link mr-1"></i> Links to: studio.com/akshay-anjali?source=qr</p>
+                </div>
+
+                <!-- Section 2: Aesthetics -->
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-studio-muted mb-4">2. Card Design</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs text-studio-muted mb-1 block">Cover Photo</label>
+                            <div class="border-2 border-dashed border-studio-700 rounded-lg p-4 text-center hover:border-studio-muted transition cursor-pointer group">
+                                <i class="fas fa-cloud-upload-alt text-xl text-studio-muted group-hover:text-white mb-2"></i>
+                                <p class="text-xs text-studio-muted group-hover:text-white">Replace Image</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-studio-muted mb-1 block">Primary Text (Couple's Name)</label>
+                            <input type="text" value="Akshay & Anjali" class="w-full bg-studio-900 border border-studio-700 text-white text-sm rounded-lg p-3 focus:outline-none focus:border-white transition">
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-studio-muted mb-1 block">Secondary Text (Date/Location)</label>
+                            <input type="text" value="25th November 2026 • Udaipur" class="w-full bg-studio-900 border border-studio-700 text-white text-sm rounded-lg p-3 focus:outline-none focus:border-white transition">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Branding & Call to Action -->
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-studio-muted mb-4">3. Branding & CTA</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-studio-900 border border-studio-700 rounded-lg">
+                            <div>
+                                <p class="text-sm font-medium">White-Label QR Code</p>
+                                <p class="text-[10px] text-studio-muted">Use your studio logo in center</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div class="w-9 h-5 bg-studio-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-studio-success"></div>
+                            </label>
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-studio-muted mb-1 block">Call to Action Text</label>
+                            <select class="w-full bg-studio-900 border border-studio-700 text-white text-sm rounded-lg p-3 appearance-none">
+                                <option>Scan to find your photos</option>
+                                <option>Unlock AI Guest Gallery</option>
+                                <option>Join the VIP Guest List</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Preview Panel (The Result) -->
+            <div class="w-2/3 print-canvas flex items-center justify-center p-12 relative overflow-y-auto">
+                
+                <div class="absolute top-6 right-6 flex space-x-2">
+                    <span class="bg-black/50 backdrop-blur text-white text-xs px-3 py-1.5 rounded-full border border-white/10">
+                        <i class="fas fa-ruler-combined mr-1"></i> 4x6" Portrait
+                    </span>
+                </div>
+
+                <!-- THE GENERATED CARD PREVIEW -->
+                <div class="card-preview w-[400px] bg-white rounded-xl overflow-hidden flex flex-col aspect-[2/3] relative">
+                    
+                    <!-- Top Image Area -->
+                    <div class="h-1/2 relative bg-gray-900">
+                        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Couple" class="w-full h-full object-cover opacity-80">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        
+                        <div class="absolute bottom-6 w-full text-center px-4">
+                            <h2 class="font-serif text-3xl text-white font-medium italic mb-1">Akshay & Anjali</h2>
+                            <p class="text-xs text-gray-300 tracking-widest uppercase">25th November 2026 • Udaipur</p>
+                        </div>
+                    </div>
+
+                    <!-- Bottom QR Area -->
+                    <div class="h-1/2 bg-white flex flex-col items-center justify-center p-8 text-center relative">
+                        
+                        <p class="text-xs font-bold uppercase tracking-widest text-gray-900 mb-6">Scan to find your photos</p>
+                        
+                        <!-- Simulated QR Code -->
+                        <div class="relative w-36 h-36 bg-white border border-gray-200 p-2 rounded-xl shadow-sm mb-6 flex items-center justify-center">
+                            <!-- Placeholder for actual QR code rendering -->
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://thewedcinema.com/akshay-anjali&color=000000" alt="QR Code" class="w-full h-full opacity-90">
+                            
+                            <!-- Studio White-Label Logo overlay -->
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="bg-white p-1 rounded-md shadow-md">
+                                    <div class="w-8 h-8 bg-black flex items-center justify-center rounded">
+                                        <span class="text-white text-[8px] font-bold tracking-tighter">AK<br>STD</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-[10px] text-gray-500 max-w-[200px] leading-relaxed">
+                            Powered by intelligent facial recognition to securely curate your private moments.
+                        </p>
+
+                        <!-- Invisible branding for the OS, photographer is hero -->
+                        <div class="absolute bottom-3 w-full text-center opacity-30">
+                            <p class="text-[7px] text-gray-400 uppercase tracking-widest">Platform by The Wed Cinema</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

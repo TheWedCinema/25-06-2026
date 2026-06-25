@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cinematic Premiere | The Wed Cinema</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        cinema: {
+                            bg: '#050505',
+                            panel: '#121212',
+                            border: '#2A2A2A',
+                            text: '#FFFFFF',
+                            muted: '#888888',
+                            accent: '#D4AF37' /* Premium Gold */
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #050505; color: #FFFFFF; -webkit-font-smoothing: antialiased; }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 21/9; /* Cinematic Ultra-Widescreen */
+            background-color: #000;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+        }
+
+        .video-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 40%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+        }
+
+        .video-container:hover .video-overlay, .video-container.paused .video-overlay {
+            opacity: 1;
+        }
+
+        /* Custom Progress Bar */
+        .progress-bar-bg {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            transition: height 0.2s ease;
+        }
+        .progress-bar-bg:hover { height: 6px; }
+        
+        .progress-fill {
+            height: 100%;
+            background: #FFFFFF;
+            border-radius: 2px;
+            width: 35%; /* Mock progress */
+            position: relative;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: #FFFFFF;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .progress-bar-bg:hover .progress-fill::after { opacity: 1; }
+
+        /* Chapter Markers */
+        .chapter-marker {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: #050505;
+        }
+
+        /* Hide Scrollbar */
+        ::-webkit-scrollbar { display: none; }
+        
+        /* Message Box */
+        #cinema-alert {
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #cinema-alert.show {
+            pointer-events: auto;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="w-full px-8 py-6 flex justify-between items-center z-50 absolute top-0 left-0 bg-gradient-to-b from-black/80 to-transparent">
+        <div class="flex items-center space-x-4">
+            <button onclick="showMessage('Returning to Photo Gallery...')" class="text-cinema-muted hover:text-white transition flex items-center text-xs uppercase tracking-widest font-medium">
+                <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Gallery
+            </button>
+        </div>
+        <div class="text-center">
+            <h2 class="font-serif text-sm tracking-[0.3em] text-white uppercase">Asraf Khan Studios</h2>
+        </div>
+        <div class="flex items-center space-x-6">
+            <button onclick="showMessage('Downloading 4K Master File...')" class="text-white hover:text-cinema-accent transition">
+                <i data-lucide="download" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-[1600px] mx-auto px-4 sm:px-8 pt-24 pb-32 flex flex-col items-center justify-center animate-fade-in">
+        
+        <div class="w-full text-center mb-12 animate-slide-up">
+            <p class="text-[10px] uppercase tracking-[0.4em] text-cinema-accent font-medium mb-4">World Premiere</p>
+            <h1 class="font-serif text-5xl md:text-7xl text-white italic drop-shadow-2xl">The Cinematic Film</h1>
+            <p class="text-sm text-cinema-muted font-light mt-4 tracking-widest uppercase">Akshay & Anjali • Udaipur</p>
+        </div>
+
+        <!-- The Custom Player -->
+        <div class="video-container group paused animate-slide-up" style="animation-delay: 0.2s;" id="main-player">
+            <!-- Simulated Video Poster -->
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2400&q=80" alt="Wedding Film" class="w-full h-full object-cover opacity-80">
+            
+            <!-- Custom UI Overlay -->
+            <div class="video-overlay">
+                <!-- Center Play Button (Visible when paused) -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <button onclick="togglePlay()" class="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 text-white transform hover:scale-105" id="center-play-btn">
+                        <i data-lucide="play" class="w-8 h-8 ml-1"></i>
+                    </button>
+                </div>
+
+                <!-- Bottom Controls -->
+                <div class="w-full mt-auto relative z-10">
+                    <!-- Progress Bar with Chapters -->
+                    <div class="progress-bar-bg mb-4">
+                        <div class="progress-fill"></div>
+                        <!-- Chapter Breaks -->
+                        <div class="chapter-marker" style="left: 15%"></div>
+                        <div class="chapter-marker" style="left: 45%"></div>
+                        <div class="chapter-marker" style="left: 80%"></div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-6">
+                            <button onclick="togglePlay()" class="text-white hover:text-cinema-accent transition" id="bottom-play-btn">
+                                <i data-lucide="play" class="w-5 h-5"></i>
+                            </button>
+                            <button class="text-white hover:text-cinema-accent transition">
+                                <i data-lucide="volume-2" class="w-5 h-5"></i>
+                            </button>
+                            <span class="text-xs font-medium tabular-nums tracking-wider text-white">01:42 <span class="text-cinema-muted">/ 05:30</span></span>
+                            
+                            <!-- Chapter Indicator -->
+                            <span class="hidden md:inline-block text-xs font-medium text-cinema-accent px-3 py-1 bg-white/10 rounded-full border border-white/5 backdrop-blur-sm">
+                                Chapter: The Vows
+                            </span>
+                        </div>
+                        
+                        <div class="flex items-center space-x-6">
+                            <button class="text-white hover:text-cinema-accent transition text-xs font-bold tracking-wider">
+                                4K
+                            </button>
+                            <button onclick="showMessage('Entering Fullscreen...')" class="text-white hover:text-cinema-accent transition">
+                                <i data-lucide="maximize" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full max-w-4xl mx-auto mt-20 animate-slide-up" style="animation-delay: 0.4s;">
+            
+            <h3 class="text-xs uppercase tracking-[0.2em] font-medium text-cinema-muted mb-6 text-center border-b border-cinema-border pb-4">Cinematic Add-ons</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Upsell 1: RAW Footage Unlock -->
+                <div class="bg-cinema-panel border border-cinema-border rounded-xl p-6 flex flex-col justify-between hover:border-white/30 transition group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-cinema-accent/5 rounded-full blur-3xl group-hover:bg-cinema-accent/10 transition"></div>
+                    
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-10 h-10 bg-black border border-cinema-border rounded-lg flex items-center justify-center">
+                                <i data-lucide="hard-drive" class="w-5 h-5 text-cinema-accent"></i>
+                            </div>
+                            <span class="text-sm font-bold text-white">$499</span>
+                        </div>
+                        <h4 class="font-serif text-xl text-white mb-2">The RAW Documentary Cut</h4>
+                        <p class="text-xs text-cinema-muted leading-relaxed mb-6">
+                            Unlock every single moment captured on video. 4+ hours of unedited, color-corrected footage including full speeches, complete dances, and behind-the-scenes moments.
+                        </p>
+                    </div>
+                    
+                    <button onclick="processUpsell('RAW Documentary Cut', 499)" class="w-full bg-white text-black py-3 rounded-lg text-xs uppercase tracking-widest font-semibold hover:bg-gray-200 transition flex items-center justify-center">
+                        <i data-lucide="lock" class="w-4 h-4 mr-2"></i> Unlock Now
+                    </button>
+                </div>
+
+                <!-- Upsell 2: Social Media Reels -->
+                <div class="bg-cinema-panel border border-cinema-border rounded-xl p-6 flex flex-col justify-between hover:border-white/30 transition group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition"></div>
+                    
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-10 h-10 bg-black border border-cinema-border rounded-lg flex items-center justify-center">
+                                <i data-lucide="smartphone" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <span class="bg-white/10 text-white text-[9px] uppercase tracking-widest px-2 py-1 rounded">Included</span>
+                        </div>
+                        <h4 class="font-serif text-xl text-white mb-2">Social Media Reels</h4>
+                        <p class="text-xs text-cinema-muted leading-relaxed mb-6">
+                            Three professionally edited 9:16 vertical videos, optimized perfectly for Instagram and TikTok. Ready to share with your friends and family.
+                        </p>
+                    </div>
+                    
+                    <button onclick="showMessage('Downloading 3x Vertical Reels.ZIP...')" class="w-full bg-transparent border border-cinema-border text-white py-3 rounded-lg text-xs uppercase tracking-widest font-semibold hover:border-white transition flex items-center justify-center">
+                        <i data-lucide="download" class="w-4 h-4 mr-2"></i> Download Reels
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Alert Box -->
+    <div id="cinema-alert" class="fixed top-10 left-1/2 -translate-x-1/2 z-50 bg-cinema-panel border border-cinema-border text-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-3 min-w-[300px]">
+        <i data-lucide="info" class="w-5 h-5 text-cinema-accent"></i>
+        <p id="cinema-alert-text" class="text-sm font-medium tracking-wide">Message</p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        let isPlaying = false;
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            const container = document.getElementById('main-player');
+            const centerBtn = document.getElementById('center-play-btn');
+            const bottomBtn = document.getElementById('bottom-play-btn');
+            
+            if (isPlaying) {
+                container.classList.remove('paused');
+                centerBtn.innerHTML = '<i data-lucide="pause" class="w-8 h-8"></i>';
+                bottomBtn.innerHTML = '<i data-lucide="pause" class="w-5 h-5"></i>';
+                showMessage('Playing Master Film...');
+            } else {
+                container.classList.add('paused');
+                centerBtn.innerHTML = '<i data-lucide="play" class="w-8 h-8 ml-1"></i>';
+                bottomBtn.innerHTML = '<i data-lucide="play" class="w-5 h-5"></i>';
+            }
+            lucide.createIcons();
+        }
+
+        let alertTimeout;
+        function showMessage(text) {
+            const alertBox = document.getElementById('cinema-alert');
+            const alertText = document.getElementById('cinema-alert-text');
+            
+            alertText.textContent = text;
+            alertBox.classList.add('show');
+            
+            clearTimeout(alertTimeout);
+            alertTimeout = setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 3000);
+        }
+
+        function processUpsell(itemName, price) {
+            showMessage(`Initiating secure checkout for ${itemName}...`);
+            setTimeout(() => {
+                alert(`CTO Note: This opens the integrated Stripe checkout overlay for a frictionless $${price} micro-transaction, keeping the user in the cinema experience while capturing revenue.`);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
