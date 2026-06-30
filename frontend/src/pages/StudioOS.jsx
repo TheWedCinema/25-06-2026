@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { BRAND_STRAPLINE } from "@/constants/brand";
+import { PAGE_FADE_IN } from "@/constants/motion";
 import IngestTab from "@/pages/studio/IngestTab";
 import RulesTab from "@/pages/studio/RulesTab";
 import StorageTab from "@/pages/studio/StorageTab";
@@ -72,7 +73,7 @@ function StudioOS() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-16">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+        <motion.div {...PAGE_FADE_IN}>
           <p className="font-sans-twc text-[11px] uppercase tracking-[0.3em] text-[#D4AF37] mb-3">Studio Command Center</p>
           <h1 className="font-serif-twc text-5xl md:text-7xl text-[#FDFBF7] tracking-tighter leading-[0.95]">Video Delivery <span className="italic text-zinc-400">OS.</span></h1>
           <p className="font-sans-twc text-zinc-400 leading-relaxed mt-6 max-w-2xl">A photographer-grade control room — ingest 50GB+ cinematic masters, watch FFmpeg generate HLS ladders in real time, set delivery rules, and observe how your clients actually watch their wedding.</p>

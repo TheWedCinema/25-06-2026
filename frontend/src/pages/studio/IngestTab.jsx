@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import { Upload, Activity } from "lucide-react";
 import { HlsTarget } from "@/pages/studio/_shared";
+import {
+  UPLOAD_TICK_MS, UPLOAD_DONE_RESET_MS,
+  UPLOAD_CHUNK_MIN_PCT, UPLOAD_CHUNK_RANGE_PCT,
+} from "@/constants/timings";
+
+const MAX_PCT = 100;
 
 export default function IngestTab({
   data, category, setCategory, deliverable, setDeliverable,
@@ -9,13 +15,13 @@ export default function IngestTab({
   // Simulated chunked TUS upload — functional setState (no stale-closure risk)
   useEffect(() => {
     if (uploadingProgress === null) return undefined;
-    if (uploadingProgress >= 100) {
-      const t = setTimeout(() => setUploadingProgress(null), 1800);
+    if (uploadingProgress >= MAX_PCT) {
+      const t = setTimeout(() => setUploadingProgress(null), UPLOAD_DONE_RESET_MS);
       return () => clearTimeout(t);
     }
     const t = setTimeout(
-      () => setUploadingProgress((prev) => Math.min(100, (prev ?? 0) + Math.floor(4 + Math.random() * 9))),
-      350,
+      () => setUploadingProgress((prev) => Math.min(MAX_PCT, (prev ?? 0) + Math.floor(UPLOAD_CHUNK_MIN_PCT + Math.random() * UPLOAD_CHUNK_RANGE_PCT))),
+      UPLOAD_TICK_MS,
     );
     return () => clearTimeout(t);
   }, [uploadingProgress, setUploadingProgress]);

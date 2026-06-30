@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, X, Settings } from "lucide-react";
+import { OVERLAY_FADE } from "@/constants/motion";
 
 const QUALITIES = ["Auto / 4K", "2K HD", "1080p", "720p"];
 
@@ -17,7 +18,7 @@ export default function PlayerOverlay({ src, title, onClose }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      {...OVERLAY_FADE}
       className="fixed inset-0 z-[80] bg-black"
       data-testid="player-overlay"
     >

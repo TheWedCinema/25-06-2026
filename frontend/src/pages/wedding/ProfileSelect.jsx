@@ -1,15 +1,16 @@
 import { motion } from "framer-motion";
+import { PROFILE_TILE } from "@/constants/motion";
 
 export default function ProfileSelect({ wedding, onSelect }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16" data-testid="profile-select">
       <p className="font-sans-twc text-[11px] uppercase tracking-[0.3em] text-[#D4AF37] mb-4">{wedding.studio_initials} {wedding.studio}</p>
-      <h1 className="font-serif-twc text-5xl md:text-6xl text-[#FDFBF7] tracking-tight">Who's watching?</h1>
+      <h1 className="font-serif-twc text-5xl md:text-6xl text-[#FDFBF7] tracking-tight">Who&apos;s watching?</h1>
       <div className="mt-16 flex flex-wrap items-start justify-center gap-10 md:gap-16">
         {wedding.profiles.map((p, i) => (
           <motion.button
             key={p.id}
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1, duration: 0.6 }}
+            {...PROFILE_TILE(i * 0.1)}
             onClick={() => onSelect(p)}
             className="group text-center"
             data-testid={`profile-${p.id}`}

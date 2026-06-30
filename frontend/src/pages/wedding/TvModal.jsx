@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Tv } from "lucide-react";
+import { TV_CODE_MIN, TV_CODE_RANGE } from "@/constants/timings";
+
+const genPairingCode = () => Math.floor(TV_CODE_MIN + Math.random() * TV_CODE_RANGE).toString();
 
 export default function TvModal({ open, onClose }) {
-  const [code] = useState(() => Math.floor(100000 + Math.random() * 900000).toString());
+  const [code] = useState(genPairingCode);
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4" data-testid="tv-modal">

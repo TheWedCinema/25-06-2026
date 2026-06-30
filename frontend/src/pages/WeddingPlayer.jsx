@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, ArrowLeft, Tv, Share2, Check, Upload, Image as ImageIcon, Film
 } from "lucide-react";
 import { BRAND_STRAPLINE } from "@/constants/brand";
+import { HERO_FADE_IN } from "@/constants/motion";
+import { SHARE_COPIED_RESET_MS } from "@/constants/timings";
+import useWeddingMeta from "@/hooks/useWeddingMeta";
 import PinGate from "@/pages/wedding/PinGate";
 import ProfileSelect from "@/pages/wedding/ProfileSelect";
 import PlayerOverlay from "@/pages/wedding/PlayerOverlay";
@@ -14,36 +16,21 @@ import ContentRow from "@/pages/wedding/ContentRow";
 import PhotoVault from "@/pages/wedding/PhotoVault";
 import StudioCard from "@/pages/wedding/StudioCard";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
 function WeddingPlayer() {
   const { slug } = useParams();
-  const [meta, setMeta] = useState(null);
+  const { meta, error } = useWeddingMeta(slug);
   const [wedding, setWedding] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [error, setError] = useState(null);
   const [playing, setPlaying] = useState(null);
   const [tvOpen, setTvOpen] = useState(false);
   const [tab, setTab] = useState("cinema");
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await axios.get(`${API}/weddings/${slug}/meta`);
-        setMeta(data);
-      } catch (e) {
-        setError(e.response?.status === 404 ? "Wedding not found" : "Unable to load");
-      }
-    })();
-  }, [slug]);
-
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), SHARE_COPIED_RESET_MS);
     } catch {
       /* clipboard API blocked — non-critical */
     }
@@ -109,7 +96,7 @@ function WeddingPlayer() {
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
         </div>
         <div className="relative h-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col justify-end pb-20">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }} className="max-w-2xl">
+          <motion.div {...HERO_FADE_IN} className="max-w-2xl">
             <div className="flex items-center gap-3 mb-4" data-testid="ott-badges">
               <span className="font-sans-twc text-[10px] uppercase tracking-[0.28em] text-[#D4AF37] border border-[#D4AF37]/40 px-2 py-1 rounded-sm">Live Premiere</span>
               <span className="font-sans-twc text-[10px] uppercase tracking-[0.28em] text-zinc-300 border border-white/15 px-2 py-1 rounded-sm">4K HDR</span>

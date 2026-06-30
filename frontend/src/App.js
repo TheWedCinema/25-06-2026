@@ -7,20 +7,12 @@ import {
   Play, Tv, Film, Users, ScanFace, QrCode, Sparkles, Shield,
   Cloud, Check, Instagram, Star, ArrowRight, Zap
 } from "lucide-react";
+import { FADE_UP, STAGGER, VIEWPORT_ONCE_HALF, VIEWPORT_ONCE_TINY } from "@/constants/motion";
 import WeddingPlayer from "@/pages/WeddingPlayer";
 import StudioOS from "@/pages/StudioOS";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
-};
-
-const stagger = {
-  visible: { transition: { staggerChildren: 0.12 } },
-};
 
 function Nav({ onApply }) {
   return (
@@ -57,18 +49,18 @@ function Hero({ onApply, remaining }) {
       </div>
 
       <div className="relative h-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col justify-end pb-24 md:pb-32">
-        <motion.div initial="hidden" animate="visible" variants={stagger} className="max-w-4xl">
-          <motion.p variants={fadeUp} className="font-sans-twc text-[11px] md:text-xs uppercase tracking-[0.32em] text-[#D4AF37] mb-6">
+        <motion.div initial="hidden" animate="visible" variants={STAGGER} className="max-w-4xl">
+          <motion.p variants={FADE_UP} className="font-sans-twc text-[11px] md:text-xs uppercase tracking-[0.32em] text-[#D4AF37] mb-6">
             India's First Wedding OTT Platform
           </motion.p>
-          <motion.h1 variants={fadeUp} className="font-serif-twc text-[56px] leading-[0.95] md:text-[96px] lg:text-[120px] md:leading-[0.92] text-[#FDFBF7] tracking-tighter">
+          <motion.h1 variants={FADE_UP} className="font-serif-twc text-[56px] leading-[0.95] md:text-[96px] lg:text-[120px] md:leading-[0.92] text-[#FDFBF7] tracking-tighter">
             Deliver weddings<br />
             <span className="italic text-[#D4AF37]">like Netflix.</span>
           </motion.h1>
-          <motion.p variants={fadeUp} className="mt-8 max-w-2xl font-sans-twc text-base md:text-lg text-zinc-300 leading-relaxed">
+          <motion.p variants={FADE_UP} className="mt-8 max-w-2xl font-sans-twc text-base md:text-lg text-zinc-300 leading-relaxed">
             Photos. 4K films. AI galleries. One-click TV. A single cinematic link replaces every hard drive, pen-drive and WeTransfer link you've ever sent.
           </motion.p>
-          <motion.div variants={fadeUp} className="mt-12 flex flex-col sm:flex-row gap-4">
+          <motion.div variants={FADE_UP} className="mt-12 flex flex-col sm:flex-row gap-4">
             <button onClick={onApply} className="bg-[#D4AF37] hover:bg-[#F3E5AB] text-black font-sans-twc font-medium px-8 py-4 rounded-sm tracking-wide transition-colors inline-flex items-center justify-center gap-2 group" data-testid="hero-cta-apply">
               Book a Live Demo
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -78,7 +70,7 @@ function Hero({ onApply, remaining }) {
             </a>
           </motion.div>
           {remaining !== null && (
-            <motion.p variants={fadeUp} className="mt-10 font-sans-twc text-xs uppercase tracking-[0.28em] text-zinc-500" data-testid="hero-spots">
+            <motion.p variants={FADE_UP} className="mt-10 font-sans-twc text-xs uppercase tracking-[0.28em] text-zinc-500" data-testid="hero-spots">
               <span className="text-[#D4AF37]">●</span> {remaining} of 100 founding studio spots remaining
             </motion.p>
           )}
@@ -128,13 +120,13 @@ function Problem() {
             <span className="italic text-zinc-500">is broken.</span>
           </h2>
         </div>
-        <motion.ul initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={stagger} className="md:col-span-7 md:pt-4 space-y-8">
+        <motion.ul initial="hidden" whileInView="visible" viewport={VIEWPORT_ONCE_HALF} variants={STAGGER} className="md:col-span-7 md:pt-4 space-y-8">
           {pains.map((p) => (
-            <motion.li key={p} variants={fadeUp} className="border-b border-white/10 pb-6" data-testid="pain-point">
+            <motion.li key={p} variants={FADE_UP} className="border-b border-white/10 pb-6" data-testid="pain-point">
               <p className="font-serif-twc text-2xl md:text-3xl text-[#FDFBF7] leading-snug">{p}</p>
             </motion.li>
           ))}
-          <motion.p variants={fadeUp} className="font-sans-twc text-lg text-zinc-400 leading-relaxed pt-4 italic">
+          <motion.p variants={FADE_UP} className="font-sans-twc text-lg text-zinc-400 leading-relaxed pt-4 italic">
             Your client spent lakhs on the wedding. Don't make them watch it on a pen drive.
           </motion.p>
         </motion.ul>
@@ -170,11 +162,11 @@ function Features() {
           </p>
         </div>
 
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={stagger} className="grid md:grid-cols-3 gap-4 md:gap-6">
+        <motion.div initial="hidden" whileInView="visible" viewport={VIEWPORT_ONCE_TINY} variants={STAGGER} className="grid md:grid-cols-3 gap-4 md:gap-6">
           {items.map((it) => (
             <motion.div
               key={it.title}
-              variants={fadeUp}
+              variants={FADE_UP}
               className={`group bg-white/[0.02] border border-white/10 backdrop-blur-xl rounded-md p-8 md:p-10 hover:border-[#D4AF37]/40 hover:bg-white/[0.04] transition-all duration-500 ${it.span === 2 ? 'md:col-span-2' : ''}`}
               data-testid={`feature-card-${it.title.toLowerCase().replace(/\s+/g, '-')}`}
             >
