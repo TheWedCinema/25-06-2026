@@ -482,6 +482,9 @@ function Footer() {
         </div>
         <p className="font-sans-twc text-xs text-zinc-600">© 2026 The Wed Cinema · Built by wedding filmmakers, for wedding photographers.</p>
       </div>
+      <div className="max-w-7xl mx-auto px-6 md:px-12 mt-8 pt-6 border-t border-white/5 text-center">
+        <p className="font-sans-twc text-[11px] uppercase tracking-[0.28em] text-zinc-500" data-testid="brand-strapline">Built by Wedding Filmmakers. Designed for Real Wedding Problems. Powered by The Wed Cinema™.</p>
+      </div>
     </footer>
   );
 }

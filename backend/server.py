@@ -105,19 +105,81 @@ WEDDINGS = {
         "date": "14 February 2026",
         "venue": "Umaid Bhawan Palace, Jodhpur",
         "studio": "Lumiere Films",
+        "studio_initials": "LF.",
+        "studio_tagline": "Premier Cinematography",
         "poster_tagline": "A Cinematic Wedding Story",
         "poster_image": "https://images.pexels.com/photos/34172822/pexels-photo-34172822.jpeg",
-        "logline": "Two cities, two families, one impossible love story — filmed across five days under the Rajasthan sun.",
+        "logline": "Experience the royal destination wedding. A masterfully crafted cinematic documentary highlighting the magic, love, and traditions across five days under the Rajasthan sun.",
         "pin": "1234",
         "trailer_url": TRAILER_VIDEO,
-        "episodes": [
-            {"id": "e1", "title": "Haldi",    "duration": "08:42", "synopsis": "Turmeric, laughter and the first tears of the bride's mother.", "thumb": "https://images.unsplash.com/photo-1525135850648-b42365991054", "url": DEMO_VIDEO},
-            {"id": "e2", "title": "Mehndi",   "duration": "12:18", "synopsis": "Henna, hidden initials, and a sangeet rehearsal that wouldn't stop.",     "thumb": "https://images.unsplash.com/photo-1505932794465-147d1f1b2c97", "url": DEMO_VIDEO},
-            {"id": "e3", "title": "Sangeet",  "duration": "15:04", "synopsis": "Choreographed chaos. Two families, one dance floor.",                       "thumb": "https://images.unsplash.com/photo-1514178703120-3fa66528901d", "url": DEMO_VIDEO},
-            {"id": "e4", "title": "Ceremony", "duration": "22:51", "synopsis": "The seven vows, the fire, and a city holding its breath.",                  "thumb": "https://images.unsplash.com/photo-1530082625928-db66d39c5a21", "url": DEMO_VIDEO},
+        "profiles": [
+            {"id": "couple",  "name": "Aanya & Vikram", "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80", "role": "owners"},
+            {"id": "family",  "name": "Family",         "avatar": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=200&q=80", "role": "viewer"},
+            {"id": "guest",   "name": "Guest",          "avatar": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=200&q=80", "role": "viewer"},
+        ],
+        "rows": [
+            {
+                "id": "masterpieces",
+                "title": "The Cinematic Masterpieces",
+                "items": [
+                    {"id": "sde",        "title": "Same Day Edit (SDE)",  "duration": "05:12", "synopsis": "Instant wedding day highlight.",     "thumb": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80", "url": DEMO_VIDEO},
+                    {"id": "wedfilm",    "title": "The Wedding Film",      "duration": "28:40", "synopsis": "Cinematic documentary mastercut.",   "thumb": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80", "url": DEMO_VIDEO},
+                    {"id": "highlights", "title": "Wedding Highlights",    "duration": "08:15", "synopsis": "The best moments combined.",        "thumb": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80", "url": DEMO_VIDEO},
+                ],
+            },
+            {
+                "id": "archives",
+                "title": "Complete Event Archives",
+                "items": [
+                    {"id": "haldi",   "title": "Full Video: Haldi",   "duration": "45:30",   "synopsis": "Morning traditions and colors.",       "thumb": "https://images.unsplash.com/photo-1525135850648-b42365991054?auto=format&fit=crop&w=900&q=80", "url": DEMO_VIDEO},
+                    {"id": "mehandi", "title": "Full Video: Mehandi", "duration": "38:20",   "synopsis": "Mehandi application and laughter.",    "thumb": "https://images.unsplash.com/photo-1505932794465-147d1f1b2c97?auto=format&fit=crop&w=900&q=80", "url": DEMO_VIDEO},
+                    {"id": "sangeet", "title": "Full Video: Sangeet", "duration": "1:15:00", "synopsis": "Performances and family dances.",       "thumb": "https://images.unsplash.com/photo-1514178703120-3fa66528901d?auto=format&fit=crop&w=900&q=80", "url": DEMO_VIDEO},
+                    {"id": "ceremony","title": "Full Video: Ceremony","duration": "1:48:22", "synopsis": "The seven vows beneath the fire.",      "thumb": "https://images.unsplash.com/photo-1530082625928-db66d39c5a21?auto=format&fit=crop&w=900&q=80", "url": DEMO_VIDEO},
+                ],
+            },
+            {
+                "id": "reels",
+                "title": "Social Media Cuts & Reels",
+                "share": True,
+                "items": [
+                    {"id": "bridal",   "title": "Bridal Entry Magic", "duration": "00:28", "synopsis": "9:16 vertical · ready for Reels.",   "thumb": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80", "url": DEMO_VIDEO},
+                    {"id": "haldimad", "title": "Haldi Madness",      "duration": "00:31", "synopsis": "9:16 vertical · ready for Reels.",   "thumb": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80", "url": DEMO_VIDEO},
+                    {"id": "couple",   "title": "Couple Goals",       "duration": "00:24", "synopsis": "9:16 vertical · ready for Reels.",   "thumb": "https://images.unsplash.com/photo-1549417229-aa67d3263c09?auto=format&fit=crop&w=600&q=80", "url": DEMO_VIDEO},
+                ],
+            },
+        ],
+        "photos": [
+            "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1549417229-aa67d3263c09?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1400&q=80",
+            "https://images.unsplash.com/photo-1525135850648-b42365991054?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1505932794465-147d1f1b2c97?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1514178703120-3fa66528901d?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1530082625928-db66d39c5a21?auto=format&fit=crop&w=900&q=80",
         ],
     }
 }
+
+
+def _public_wedding(w):
+    return {
+        "slug": w["slug"],
+        "couple": w["couple"],
+        "date": w["date"],
+        "venue": w["venue"],
+        "studio": w["studio"],
+        "studio_initials": w["studio_initials"],
+        "studio_tagline": w["studio_tagline"],
+        "poster_tagline": w["poster_tagline"],
+        "poster_image": w["poster_image"],
+        "logline": w["logline"],
+        "trailer_url": w["trailer_url"],
+        "profiles": w["profiles"],
+        "rows": w["rows"],
+        "photos": w["photos"],
+    }
 
 
 class PinVerifyRequest(BaseModel):
@@ -136,10 +198,11 @@ async def wedding_meta(slug: str):
         "date": w["date"],
         "venue": w["venue"],
         "studio": w["studio"],
+        "studio_initials": w["studio_initials"],
         "poster_tagline": w["poster_tagline"],
         "poster_image": w["poster_image"],
         "logline": w["logline"],
-        "episode_count": len(w["episodes"]),
+        "row_count": len(w["rows"]),
     }
 
 
@@ -150,28 +213,17 @@ async def wedding_unlock(slug: str, body: PinVerifyRequest):
         raise HTTPException(status_code=404, detail="Wedding not found")
     if body.pin.strip() != w["pin"]:
         raise HTTPException(status_code=401, detail="Incorrect PIN. Please check the link your photographer sent.")
-    # Return full wedding payload incl video URLs once PIN verified
-    return {
-        "slug": w["slug"],
-        "couple": w["couple"],
-        "date": w["date"],
-        "venue": w["venue"],
-        "studio": w["studio"],
-        "poster_tagline": w["poster_tagline"],
-        "poster_image": w["poster_image"],
-        "logline": w["logline"],
-        "trailer_url": w["trailer_url"],
-        "episodes": w["episodes"],
-    }
+    return _public_wedding(w)
 
 
 # Back-compat: keep legacy /api/episodes/demo
 @api_router.get("/episodes/demo")
 async def demo_episodes():
     w = WEDDINGS["aanya-vikram"]
+    archive_row = next(r for r in w["rows"] if r["id"] == "archives")
     return {
         "wedding": {"couple": w["couple"], "date": w["date"], "poster_tagline": w["poster_tagline"]},
-        "episodes": [{"id": e["id"], "title": e["title"], "duration": e["duration"], "thumb": e["thumb"]} for e in w["episodes"]],
+        "episodes": [{"id": e["id"], "title": e["title"], "duration": e["duration"], "thumb": e["thumb"]} for e in archive_row["items"][:4]],
     }
 
 
