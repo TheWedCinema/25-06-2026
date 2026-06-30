@@ -1,14 +1,16 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Request, Response
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import httpx
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 
 ROOT_DIR = Path(__file__).parent
@@ -20,6 +22,123 @@ db = client[os.environ['DB_NAME']]
 
 app = FastAPI(title="The Wed Cinema API")
 api_router = APIRouter(prefix="/api")
+
+# ---------- Emergent Google Auth ----------
+EMERGENT_AUTH_URL = "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data"
+SESSION_TTL_DAYS = 7
+SESSION_COOKIE = "session_token"
+
+
+class AuthSessionRequest(BaseModel):
+    session_id: str
+
+
+class AuthUser(BaseModel):
+    user_id: str
+    email: EmailStr
+    name: str
+    picture: Optional[str] = None
+
+
+async def _get_authed_user(request: Request) -> Optional[dict]:
+    """Read session_token from cookie OR Authorization header, validate, return user dict or None."""
+    token = request.cookies.get(SESSION_COOKIE)
+    if not token:
+        auth_header = request.headers.get("Authorization", "")
+        if auth_header.lower().startswith("bearer "):
+            token = auth_header.split(" ", 1)[1].strip()
+    if not token:
+        return None
+    session = await db.user_sessions.find_one({"session_token": token}, {"_id": 0})
+    if not session:
+        return None
+    expires_at = session.get("expires_at")
+    if isinstance(expires_at, str):
+        expires_at = datetime.fromisoformat(expires_at)
+    if expires_at and expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if expires_at and expires_at < datetime.now(timezone.utc):
+        return None
+    user = await db.photographers.find_one({"user_id": session["user_id"]}, {"_id": 0})
+    return user
+
+
+@api_router.post("/auth/session")
+async def auth_session(payload: AuthSessionRequest, response: Response):
+    """Exchange a one-time session_id (from Emergent auth callback) for a persistent session."""
+    async with httpx.AsyncClient(timeout=10.0) as http:
+        try:
+            r = await http.get(EMERGENT_AUTH_URL, headers={"X-Session-ID": payload.session_id})
+        except httpx.HTTPError:
+            raise HTTPException(status_code=502, detail="Unable to reach auth provider")
+    if r.status_code != 200:
+        raise HTTPException(status_code=401, detail="Invalid or expired session_id")
+    data = r.json()
+    email = (data.get("email") or "").lower()
+    name = data.get("name") or "Photographer"
+    picture = data.get("picture")
+    session_token = data.get("session_token")
+    if not email or not session_token:
+        raise HTTPException(status_code=502, detail="Malformed auth response")
+
+    existing = await db.photographers.find_one({"email": email}, {"_id": 0})
+    if existing:
+        user_id = existing["user_id"]
+        await db.photographers.update_one(
+            {"user_id": user_id},
+            {"$set": {"name": name, "picture": picture, "last_login_at": datetime.now(timezone.utc).isoformat()}},
+        )
+    else:
+        user_id = f"user_{uuid.uuid4().hex[:12]}"
+        await db.photographers.insert_one({
+            "user_id": user_id,
+            "email": email,
+            "name": name,
+            "picture": picture,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "last_login_at": datetime.now(timezone.utc).isoformat(),
+        })
+
+    expires_at = datetime.now(timezone.utc) + timedelta(days=SESSION_TTL_DAYS)
+    await db.user_sessions.insert_one({
+        "user_id": user_id,
+        "session_token": session_token,
+        "expires_at": expires_at.isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    })
+
+    response.set_cookie(
+        key=SESSION_COOKIE,
+        value=session_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=SESSION_TTL_DAYS * 24 * 60 * 60,
+        path="/",
+    )
+    return {"user_id": user_id, "email": email, "name": name, "picture": picture}
+
+
+@api_router.get("/auth/me", response_model=AuthUser)
+async def auth_me(request: Request):
+    user = await _get_authed_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return AuthUser(**user)
+
+
+@api_router.post("/auth/logout")
+async def auth_logout(request: Request, response: Response):
+    token = request.cookies.get(SESSION_COOKIE)
+    if not token:
+        auth_header = request.headers.get("Authorization", "")
+        if auth_header.lower().startswith("bearer "):
+            token = auth_header.split(" ", 1)[1].strip()
+    if token:
+        await db.user_sessions.delete_one({"session_token": token})
+    response.delete_cookie(key=SESSION_COOKIE, path="/", samesite="none", secure=True)
+    return {"ok": True}
+
 
 # ---------- Founding Photographer Application ----------
 FOUNDER_LIMIT = 100

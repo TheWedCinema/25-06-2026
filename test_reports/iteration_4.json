@@ -1,0 +1,38 @@
+{
+  "summary": "Auth iteration: backend 15/15 pytest pass and frontend 7/7 Playwright tests pass. Backend: /api/auth/me unauthenticated -> 401 'Not authenticated'; with Bearer token (seeded user_sessions) -> 200 with {user_id,email,name,picture}; with cookie session_token -> 200; expired session (expires_at past) -> 401; invalid token -> 401. /api/auth/session with invalid session_id -> 401 'Invalid or expired session_id'; missing body -> 422. /api/auth/logout with valid Bearer token -> 200 {ok:true}, subsequent /me -> 401; logout without token -> 200 (no-op). Regression: /api/founders/stats (97 remaining of 100), /api/founders/apply 422 on missing fields, /api/weddings/aanya-vikram/meta (row_count=3, no video leaks), /api/weddings/aanya-vikram/unlock pin=1234 (3 rows/3 profiles/9 photos), wrong pin -> 401, /api/studio/stats (used_gb=432, 2 active jobs, 6 hls_targets) all pass. Frontend: landing renders with data-testid=nav-signin link; unauth /studio cleanly redirects to /login (data-testid=login-page) with no studio-os in DOM; login page shows 'Enter your Cinema OS.' headline, google sign-in button (login-google-btn) and back link (login-back); clicking Google button navigates to https://auth.emergentagent.com/?redirect=https%3A%2F%2Fai-gallery-build.preview.emergentagent.com%2Fauth%2Fcallback (redirect param URL-encoded, contains /auth/callback); seeding session_token cookie + visiting /studio shows StudioOS with user pill='Test Photographer' and visible studio-logout; clicking logout calls POST /api/auth/logout -> 200 {ok:true}, browser navigates to / (landing), and subsequent /studio visit redirects back to /login with /api/auth/me returning 401; /w/aanya-vikram remains fully public (PIN gate visible, no auth gate). Confirmed httpOnly cookie is cleared by Set-Cookie expire header on logout.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_auth.py",
+    "/app/test_reports/pytest/auth_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py is now ~420 lines — auth router (lines 26-140) should be extracted into /app/backend/routers/auth.py before it grows further; same for the founders + weddings + studio blocks. The single-file pattern will get unwieldy past 700 LOC.",
+    "_get_authed_user reads expires_at as a string and parses it inline — consider storing expires_at as a native BSON Date in Mongo (currently stored as ISO string) so tz-aware comparison is automatic and indexable (TTL index possible).",
+    "AuthContext.useEffect calls refresh on every mount but the BrowserRouter is inside AuthProvider — this is correct, but the hash-skip branch (`window.location.hash?.includes('session_id=')`) means a direct /studio visit with a stale hash (unlikely but possible) would skip /me and ProtectedRoute would redirect even if the user already has a valid cookie. Low priority.",
+    "ProtectedRoute uses Navigate with state.from but no consumer (LoginPage) currently reads it to redirect back post-login — minor UX miss; the request was specifically 'land on /studio after sign-in' (option d), so this is intentional, but worth noting.",
+    "/api/auth/session sets the cookie with samesite=none + secure=True, which is correct for the preview's https + cross-origin requirements; for local dev (http) this cookie will silently fail to set. Document this in /app/auth_testing.md as an env-specific gotcha (already partly there).",
+    "logout endpoint always returns {ok:true} even when no token present — fine for the UX, but consider returning 204 No Content for the empty case to differentiate."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_auth.py"
+  ],
+  "success_rate": {
+    "backend": "100% (15/15)",
+    "frontend": "100% (7/7)"
+  },
+  "test_credentials": "No real Google account needed. Auth tested by direct DB seeding into user_sessions + photographers collections (see /app/auth_testing.md). Demo PIN 1234 still works on /w/aanya-vikram (public).",
+  "seed_data_creation": "Seeded transient photographer + user_sessions rows during pytest fixtures and during the Playwright run; all rows are cleaned up after each test (pytest teardown deletes by user_id; manual cleanup script run for any leftover test_session_*/test.photographer.*).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Auth backend tests at /app/backend/tests/test_auth.py (15 cases). pytest-xdist runs 2 workers in parallel — keep test fixtures idempotent (use uuid in user_id/session_token). For browser auth tests, seed a session via python3 + pymongo (NOT inside the Playwright script — the automation env does not have pymongo) and then set the cookie via page.context.add_cookies with domain=ai-gallery-build.preview.emergentagent.com, secure=True, sameSite='None', httpOnly=True. The Sign-In nav link is data-testid=nav-signin; studio user pill is data-testid=studio-user-pill; logout is data-testid=studio-logout; login page is data-testid=login-page with google btn login-google-btn and back link login-back. The Google OAuth redirect URL is exactly https://auth.emergentagent.com/?redirect=<frontend>/auth/callback. /w/:slug is intentionally public (PIN-gated, not auth-gated).",
+  "rca of the issue": "N/A — no failures. One transient ERR_CONNECTION_CLOSED was observed mid-logout navigation in the first sweep but was not reproducible on retry; the logout backend call returned 200, /api/auth/me became 401, and the /studio -> /login redirect worked correctly."
+}

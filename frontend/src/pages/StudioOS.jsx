@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, LogOut } from "lucide-react";
 import { BRAND_STRAPLINE } from "@/constants/brand";
 import { PAGE_FADE_IN } from "@/constants/motion";
+import { useAuth } from "@/auth/AuthContext";
 import IngestTab from "@/pages/studio/IngestTab";
 import RulesTab from "@/pages/studio/RulesTab";
 import StorageTab from "@/pages/studio/StorageTab";
@@ -19,6 +20,8 @@ const TABS = [
 ];
 
 function StudioOS() {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [data, setData] = useState(null);
   const [tab, setTab] = useState("ingest");
   const [category, setCategory] = useState(null);
@@ -27,6 +30,11 @@ function StudioOS() {
   const [meta, setMeta] = useState("");
   const [uploadingProgress, setUploadingProgress] = useState(null);
   const [rules, setRules] = useState({ allow_downloads: true, watermark: true });
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/", { replace: true });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -67,7 +75,15 @@ function StudioOS() {
           <div className="flex items-center gap-3">
             <span className="font-serif-twc text-2xl text-[#D4AF37]" data-testid="studio-initials">{data.studio.initials}</span>
             <span className="hidden md:inline font-sans-twc text-[11px] uppercase tracking-[0.22em] text-zinc-400">{data.studio.name}</span>
-            <button className="ml-3 border border-white/15 hover:bg-white/10 text-white font-sans-twc text-[11px] uppercase tracking-[0.22em] px-3 py-2 rounded-sm transition" data-testid="studio-save-close">Save & Close</button>
+            {user && (
+              <div className="ml-3 flex items-center gap-2 pl-3 border-l border-white/10" data-testid="studio-user-pill">
+                {user.picture && <img src={user.picture} alt={user.name} className="w-7 h-7 rounded-full object-cover border border-white/10" referrerPolicy="no-referrer" />}
+                <span className="hidden lg:inline font-sans-twc text-[11px] uppercase tracking-[0.22em] text-zinc-300">{user.name}</span>
+              </div>
+            )}
+            <button onClick={handleLogout} className="ml-2 border border-white/15 hover:bg-white/10 text-white font-sans-twc text-[11px] uppercase tracking-[0.22em] px-3 py-2 rounded-sm transition inline-flex items-center gap-2" data-testid="studio-logout">
+              <LogOut size={12} /> <span className="hidden md:inline">Sign Out</span>
+            </button>
           </div>
         </div>
       </div>

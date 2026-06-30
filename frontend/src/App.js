@@ -8,6 +8,10 @@ import {
   Cloud, Check, Instagram, Star, ArrowRight, Zap
 } from "lucide-react";
 import { FADE_UP, STAGGER, VIEWPORT_ONCE_HALF, VIEWPORT_ONCE_TINY } from "@/constants/motion";
+import { AuthProvider } from "@/auth/AuthContext";
+import AuthCallback from "@/auth/AuthCallback";
+import LoginPage from "@/auth/LoginPage";
+import ProtectedRoute from "@/auth/ProtectedRoute";
 import WeddingPlayer from "@/pages/WeddingPlayer";
 import StudioOS from "@/pages/StudioOS";
 
@@ -27,6 +31,7 @@ function Nav({ onApply }) {
           <a href="/w/aanya-vikram" className="hover:text-white transition" data-testid="nav-ott">OTT Demo</a>
           <a href="/studio" className="hover:text-white transition" data-testid="nav-studio">Studio OS</a>
           <a href="#pricing" className="hover:text-white transition" data-testid="nav-pricing">Pricing</a>
+          <a href="/login" className="hover:text-white transition" data-testid="nav-signin">Sign In</a>
         </div>
         <button onClick={onApply} className="bg-[#D4AF37] hover:bg-[#F3E5AB] text-black font-sans-twc font-medium text-xs uppercase tracking-[0.18em] px-5 py-3 rounded-sm transition-colors" data-testid="nav-apply-btn">
           Apply – Founders
@@ -535,13 +540,17 @@ function Landing() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/w/:slug" element={<WeddingPlayer />} />
-        <Route path="/studio" element={<StudioOS />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/w/:slug" element={<WeddingPlayer />} />
+          <Route path="/studio" element={<ProtectedRoute><StudioOS /></ProtectedRoute>} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
