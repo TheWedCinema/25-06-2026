@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, X, Settings } from "lucide-react";
+import { ArrowLeft, X, Settings, Gauge } from "lucide-react";
 import { OVERLAY_FADE } from "@/constants/motion";
 
 const QUALITIES = ["Auto / 4K", "2K HD", "1080p", "720p"];
+const SPEEDS = [0.5, 1, 1.25, 1.5, 2];
 
 export default function PlayerOverlay({ src, title, onClose }) {
   const videoRef = useRef(null);
   const [quality, setQuality] = useState(QUALITIES[0]);
+  const [speed, setSpeed] = useState(1);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -15,6 +17,10 @@ export default function PlayerOverlay({ src, title, onClose }) {
     window.addEventListener("keydown", handler);
     return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", handler); };
   }, [onClose]);
+
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.playbackRate = speed;
+  }, [speed]);
 
   return (
     <motion.div
@@ -28,6 +34,18 @@ export default function PlayerOverlay({ src, title, onClose }) {
         </button>
         <p className="font-sans-twc text-xs uppercase tracking-[0.3em] text-zinc-400" data-testid="player-title">{title}</p>
         <div className="flex items-center gap-4">
+          <div className="relative group">
+            <button className="text-zinc-300 hover:text-white inline-flex items-center gap-2 font-sans-twc text-xs uppercase tracking-[0.22em]" data-testid="player-speed">
+              <Gauge size={14} /> {speed}×
+            </button>
+            <div className="absolute right-0 top-full mt-2 bg-black/90 backdrop-blur border border-white/10 rounded-sm py-2 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all min-w-[140px]">
+              {SPEEDS.map((s) => (
+                <button key={s} onClick={() => setSpeed(s)} className={`block w-full text-left px-4 py-2 text-xs font-sans-twc uppercase tracking-[0.18em] ${s === speed ? "text-[#D4AF37]" : "text-zinc-300 hover:text-white"}`} data-testid={`speed-${s.toString().replace('.', '-')}x`}>
+                  {s}× {s === 0.5 ? "Slow" : s === 1 ? "Normal" : s === 2 ? "Fast" : ""}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="relative group">
             <button className="text-zinc-300 hover:text-white inline-flex items-center gap-2 font-sans-twc text-xs uppercase tracking-[0.22em]" data-testid="player-quality">
               <Settings size={14} /> {quality}

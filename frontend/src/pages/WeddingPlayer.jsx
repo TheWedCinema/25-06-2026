@@ -15,6 +15,8 @@ import TvModal from "@/pages/wedding/TvModal";
 import ContentRow from "@/pages/wedding/ContentRow";
 import PhotoVault from "@/pages/wedding/PhotoVault";
 import StudioCard from "@/pages/wedding/StudioCard";
+import RawArchivesUpsell from "@/pages/wedding/RawArchivesUpsell";
+import NeuralScan from "@/pages/wedding/NeuralScan";
 
 function WeddingPlayer() {
   const { slug } = useParams();
@@ -128,6 +130,8 @@ function WeddingPlayer() {
             {wedding.rows.map((row) => <ContentRow key={row.id} row={row} onPlay={setPlaying} />)}
           </div>
 
+          <RawArchivesUpsell onUnlock={() => window.alert("Stripe checkout opens here — wire /api/billing/raw-archives next")} />
+
           {/* Guest Upload */}
           <section className="py-12" data-testid="guest-upload-section">
             <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -143,7 +147,10 @@ function WeddingPlayer() {
           </section>
         </>
       ) : (
-        <div className="pt-6"><PhotoVault photos={wedding.photos} /></div>
+        <div className="pt-6">
+          <NeuralScan />
+          <PhotoVault photos={wedding.photos} />
+        </div>
       )}
 
       <StudioCard wedding={wedding} />
