@@ -3,14 +3,13 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft, Upload, HardDrive, Server, Activity, Eye, Tv, Smartphone,
-  RotateCw, Cloud, Shield, Check, X, ChevronRight, Settings, AlertCircle,
-  Film, Image as ImageIcon, Sparkles
+  ArrowLeft, Upload, HardDrive, Server, Activity, Tv, Smartphone,
+  RotateCw, Cloud, Check, X, Sparkles
 } from "lucide-react";
+import { BRAND_STRAPLINE } from "@/constants/brand";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
-const STRAPLINE = "Built by Wedding Filmmakers. Designed for Real Wedding Problems. Powered by The Wed Cinema™.";
 
 function Stat({ label, value, sub, icon: Icon }) {
   return (
@@ -274,7 +273,7 @@ function StudioOS() {
 
         {/* Strapline */}
         <footer className="mt-20 pt-8 border-t border-white/5 text-center">
-          <p className="font-sans-twc text-[11px] uppercase tracking-[0.28em] text-zinc-500" data-testid="brand-strapline">{STRAPLINE}</p>
+          <p className="font-sans-twc text-[11px] uppercase tracking-[0.28em] text-zinc-500" data-testid="brand-strapline">{BRAND_STRAPLINE}</p>
         </footer>
       </div>
     </div>
