@@ -71,7 +71,7 @@ class TestWeddingUnlock:
         assert len(rows["masterpieces"]["items"]) == 3
         assert len(rows["archives"]["items"]) == 4
         assert len(rows["reels"]["items"]) == 3
-        assert rows["reels"].get("share") is True
+        assert rows["reels"].get("share")
         # photos
         assert len(d["photos"]) == 9
         # trailer url present

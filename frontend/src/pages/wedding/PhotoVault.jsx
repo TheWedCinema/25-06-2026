@@ -14,8 +14,8 @@ export default function PhotoVault({ photos }) {
           </button>
         </div>
         <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-          {photos.map((src, i) => (
-            <div key={i} className="break-inside-avoid overflow-hidden rounded-md group cursor-zoom-in" data-testid={`photo-${i}`}>
+          {photos.map((src) => (
+            <div key={src} className="break-inside-avoid overflow-hidden rounded-md group cursor-zoom-in" data-testid={`photo-${photos.indexOf(src)}`}>
               <img src={src} alt="" loading="lazy" className="w-full h-auto transition-transform duration-700 group-hover:scale-105" />
             </div>
           ))}

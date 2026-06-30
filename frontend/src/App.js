@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "@/App.css";
 import axios from "axios";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Play, Tv, Film, Users, ScanFace, QrCode, Sparkles, Shield,
-  Cloud, ChevronRight, Check, Instagram, Star, ArrowRight, Zap
+  Cloud, Check, Instagram, Star, ArrowRight, Zap
 } from "lucide-react";
 import WeddingPlayer from "@/pages/WeddingPlayer";
 import StudioOS from "@/pages/StudioOS";
@@ -99,8 +99,8 @@ function TrustBadges() {
   return (
     <section className="border-y border-white/5 bg-black py-8" data-testid="trust-badges">
       <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-2 md:grid-cols-5 gap-y-6 gap-x-8">
-        {badges.map((b, i) => (
-          <div key={i} className="flex items-center gap-3 opacity-60 hover:opacity-100 transition" data-testid={`trust-badge-${i}`}>
+        {badges.map((b) => (
+          <div key={b.label} className="flex items-center gap-3 opacity-60 hover:opacity-100 transition" data-testid={`trust-badge-${b.label.toLowerCase().replace(/\s+/g, '-')}`}>
             <b.icon size={18} className="text-[#D4AF37]" />
             <span className="font-sans-twc text-[10px] md:text-xs uppercase tracking-[0.22em] text-zinc-300">{b.label}</span>
           </div>
@@ -129,8 +129,8 @@ function Problem() {
           </h2>
         </div>
         <motion.ul initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={stagger} className="md:col-span-7 md:pt-4 space-y-8">
-          {pains.map((p, i) => (
-            <motion.li key={i} variants={fadeUp} className="border-b border-white/10 pb-6" data-testid={`pain-${i}`}>
+          {pains.map((p) => (
+            <motion.li key={p} variants={fadeUp} className="border-b border-white/10 pb-6" data-testid="pain-point">
               <p className="font-serif-twc text-2xl md:text-3xl text-[#FDFBF7] leading-snug">{p}</p>
             </motion.li>
           ))}
@@ -171,12 +171,12 @@ function Features() {
         </div>
 
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={stagger} className="grid md:grid-cols-3 gap-4 md:gap-6">
-          {items.map((it, i) => (
+          {items.map((it) => (
             <motion.div
-              key={i}
+              key={it.title}
               variants={fadeUp}
               className={`group bg-white/[0.02] border border-white/10 backdrop-blur-xl rounded-md p-8 md:p-10 hover:border-[#D4AF37]/40 hover:bg-white/[0.04] transition-all duration-500 ${it.span === 2 ? 'md:col-span-2' : ''}`}
-              data-testid={`feature-card-${i}`}
+              data-testid={`feature-card-${it.title.toLowerCase().replace(/\s+/g, '-')}`}
             >
               <it.icon size={28} className="text-[#D4AF37] mb-6" strokeWidth={1.4} />
               <h3 className="font-serif-twc text-2xl md:text-3xl text-[#FDFBF7] mb-3 tracking-tight">{it.title}</h3>
@@ -204,8 +204,8 @@ function HowItWorks() {
           From raw footage to <span className="italic text-zinc-400">cinema</span> in minutes.
         </h2>
         <div className="grid md:grid-cols-4 gap-6">
-          {steps.map((s, i) => (
-            <div key={i} className="relative border-t border-white/15 pt-6 group" data-testid={`step-${i}`}>
+          {steps.map((s) => (
+            <div key={s.n} className="relative border-t border-white/15 pt-6 group" data-testid={`step-${s.n}`}>
               <span className="absolute -top-3 left-0 font-serif-twc text-7xl md:text-8xl text-white/[0.06] leading-none select-none">{s.n}</span>
               <div className="relative">
                 <h3 className="font-serif-twc text-2xl md:text-3xl text-[#FDFBF7] mb-3 mt-8">{s.t}</h3>
@@ -241,7 +241,7 @@ function OttEpisodes() {
 
         <div className="ott-row grid md:grid-cols-4 gap-4">
           {episodes.map((e, i) => (
-            <div key={i} className="ott-card relative aspect-[16/10] overflow-hidden rounded-md cursor-pointer transition-all duration-700 ease-out group" data-testid={`episode-${i}`}>
+            <div key={e.title} className="ott-card relative aspect-[16/10] overflow-hidden rounded-md cursor-pointer transition-all duration-700 ease-out group" data-testid={`episode-${i}`}>
               <img src={e.url} alt={e.title} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -277,8 +277,8 @@ function TVConnect() {
             Chromecast, Apple TV, Android TV, Samsung & LG Smart TVs. Phone becomes a remote. No cables, no app installs, no Bluetooth chaos.
           </p>
           <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
-            {["Chromecast", "AirPlay", "Android TV", "WebOS", "Tizen"].map((p, i) => (
-              <span key={i} className="font-sans-twc text-xs uppercase tracking-[0.22em] text-zinc-500 inline-flex items-center gap-2">
+            {["Chromecast", "AirPlay", "Android TV", "WebOS", "Tizen"].map((p) => (
+              <span key={p} className="font-sans-twc text-xs uppercase tracking-[0.22em] text-zinc-500 inline-flex items-center gap-2">
                 <Check size={14} className="text-[#D4AF37]" /> {p}
               </span>
             ))}
@@ -362,7 +362,7 @@ function Pricing({ onApply }) {
         </div>
         <div className="grid md:grid-cols-4 gap-4">
           {tiers.map((t, i) => (
-            <div key={i} className={`p-8 rounded-md flex flex-col h-full transition-all duration-500 ${t.featured ? 'gold-glow bg-gradient-to-b from-[#1a1410] to-black border border-[#D4AF37]/50' : 'border border-white/10 bg-white/[0.02] hover:border-white/25'}`} data-testid={`pricing-tier-${i}`}>
+            <div key={t.name} className={`p-8 rounded-md flex flex-col h-full transition-all duration-500 ${t.featured ? 'gold-glow bg-gradient-to-b from-[#1a1410] to-black border border-[#D4AF37]/50' : 'border border-white/10 bg-white/[0.02] hover:border-white/25'}`} data-testid={`pricing-tier-${i}`}>
               {t.featured && <span className="font-sans-twc text-[10px] uppercase tracking-[0.28em] text-[#D4AF37] mb-4">Most Loved</span>}
               <h3 className="font-serif-twc text-3xl text-[#FDFBF7]">{t.name}</h3>
               <p className="font-sans-twc text-xs uppercase tracking-[0.22em] text-zinc-500 mt-2">{t.weddings}</p>
@@ -371,8 +371,8 @@ function Pricing({ onApply }) {
                 <span className="font-sans-twc text-sm text-zinc-500">{t.per}</span>
               </div>
               <ul className="space-y-3 flex-1">
-                {t.perks.map((p, j) => (
-                  <li key={j} className="font-sans-twc text-sm text-zinc-300 flex items-start gap-2">
+                {t.perks.map((p) => (
+                  <li key={p} className="font-sans-twc text-sm text-zinc-300 flex items-start gap-2">
                     <Check size={14} className="text-[#D4AF37] mt-1 flex-shrink-0" /> {p}
                   </li>
                 ))}
@@ -510,16 +510,16 @@ function Landing() {
   const [open, setOpen] = useState(false);
   const [remaining, setRemaining] = useState(null);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const { data } = await axios.get(`${API}/founders/stats`);
       setRemaining(data.remaining);
-    } catch (e) {
-      console.error("stats fetch failed", e);
+    } catch {
+      /* non-blocking: counter is purely informational */
     }
-  };
+  }, []);
 
-  useEffect(() => { fetchStats(); }, []);
+  useEffect(() => { fetchStats(); }, [fetchStats]);
 
   return (
     <div className="App grain" data-testid="app-root">
