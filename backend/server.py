@@ -38,6 +38,15 @@ class AuthUser(BaseModel):
     email: EmailStr
     name: str
     picture: Optional[str] = None
+    role: str = "photographer"  # super_admin | photographer | client
+
+
+# Bootstrap super-admin emails via env (comma-separated). First sign-in matching this list = super_admin.
+SUPER_ADMIN_EMAILS = {
+    e.strip().lower()
+    for e in os.environ.get("SUPER_ADMIN_EMAILS", "test.photographer@example.com").split(",")
+    if e.strip()
+}
 
 
 async def _get_authed_user(request: Request) -> Optional[dict]:
@@ -60,7 +69,29 @@ async def _get_authed_user(request: Request) -> Optional[dict]:
     if expires_at and expires_at < datetime.now(timezone.utc):
         return None
     user = await db.photographers.find_one({"user_id": session["user_id"]}, {"_id": 0})
+    if user and not user.get("role"):
+        user["role"] = "photographer"
     return user
+
+
+async def _require_role(request: Request, *allowed_roles: str) -> dict:
+    user = await _get_authed_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    if user.get("role") not in allowed_roles:
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
+    return user
+
+
+async def _audit(action: str, actor_id: str, target: Optional[str] = None, meta: Optional[dict] = None):
+    await db.audit_log.insert_one({
+        "id": f"audit_{uuid.uuid4().hex[:10]}",
+        "action": action,
+        "actor_id": actor_id,
+        "target": target,
+        "meta": meta or {},
+        "ts": datetime.now(timezone.utc).isoformat(),
+    })
 
 
 @api_router.post("/auth/session")
@@ -90,14 +121,29 @@ async def auth_session(payload: AuthSessionRequest, response: Response):
         )
     else:
         user_id = f"user_{uuid.uuid4().hex[:12]}"
+        # Pre-existing invite for this email → role=client and auto-link to invited weddings
+        invite = await db.client_invites.find_one({"email": email, "status": "pending"}, {"_id": 0})
+        if invite:
+            role = "client"
+        elif email in SUPER_ADMIN_EMAILS:
+            role = "super_admin"
+        else:
+            role = "photographer"
         await db.photographers.insert_one({
             "user_id": user_id,
             "email": email,
             "name": name,
             "picture": picture,
+            "role": role,
             "created_at": datetime.now(timezone.utc).isoformat(),
             "last_login_at": datetime.now(timezone.utc).isoformat(),
         })
+        if invite:
+            await db.client_invites.update_many(
+                {"email": email, "status": "pending"},
+                {"$set": {"status": "accepted", "user_id": user_id, "accepted_at": datetime.now(timezone.utc).isoformat()}},
+            )
+        await _audit("user.signup", user_id, target=email, meta={"role": role})
 
     expires_at = datetime.now(timezone.utc) + timedelta(days=SESSION_TTL_DAYS)
     await db.user_sessions.insert_one({
@@ -116,7 +162,7 @@ async def auth_session(payload: AuthSessionRequest, response: Response):
         max_age=SESSION_TTL_DAYS * 24 * 60 * 60,
         path="/",
     )
-    return {"user_id": user_id, "email": email, "name": name, "picture": picture}
+    return {"user_id": user_id, "email": email, "name": name, "picture": picture, "role": (existing or {}).get("role") if existing else role}
 
 
 @api_router.get("/auth/me", response_model=AuthUser)
@@ -398,6 +444,110 @@ async def studio_stats():
         "categories": ["Premium Masterpiece (SDE, Highlights, etc.)", "Complete Event Archives (Haldi, Mehendi, Sangeet)"],
         "size_simulations": ["1 GB (Highlight Reel)", "5 GB (Drone master)", "10 GB (Full HD video)", "20 GB (4K Master)", "50 GB (Cinematic raw)"],
     }
+
+
+# ---------- Super Admin (RBAC-gated) ----------
+class ClientInviteRequest(BaseModel):
+    email: EmailStr
+    wedding_slug: str
+    invited_by: Optional[str] = None
+
+
+@api_router.get("/admin/overview")
+async def admin_overview(request: Request):
+    admin = await _require_role(request, "super_admin")
+    total_users = await db.photographers.count_documents({})
+    by_role = {}
+    for role in ("super_admin", "photographer", "client"):
+        by_role[role] = await db.photographers.count_documents({"role": role})
+    return {
+        "actor": {"email": admin["email"], "role": admin["role"]},
+        "totals": {
+            "users": total_users,
+            "by_role": by_role,
+            "founder_applications": await db.founder_applications.count_documents({}),
+            "active_sessions": await db.user_sessions.count_documents({}),
+            "weddings": len(WEDDINGS),
+            "photo_categories": await db.photo_categories.count_documents({}),
+            "client_invites": await db.client_invites.count_documents({}),
+        },
+    }
+
+
+@api_router.get("/admin/users")
+async def admin_users(request: Request, limit: int = 100):
+    await _require_role(request, "super_admin")
+    docs = await db.photographers.find({}, {"_id": 0}).sort("created_at", -1).to_list(limit)
+    return docs
+
+
+@api_router.patch("/admin/users/{user_id}/role")
+async def admin_set_role(user_id: str, body: dict, request: Request):
+    admin = await _require_role(request, "super_admin")
+    role = body.get("role")
+    if role not in ("super_admin", "photographer", "client"):
+        raise HTTPException(status_code=400, detail="Invalid role")
+    r = await db.photographers.update_one({"user_id": user_id}, {"$set": {"role": role}})
+    if r.matched_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    await _audit("user.role_change", admin["user_id"], target=user_id, meta={"new_role": role})
+    return {"ok": True, "user_id": user_id, "role": role}
+
+
+@api_router.get("/admin/audit")
+async def admin_audit(request: Request, limit: int = 100):
+    await _require_role(request, "super_admin")
+    return await db.audit_log.find({}, {"_id": 0}).sort("ts", -1).to_list(limit)
+
+
+# ---------- Client Invites ----------
+@api_router.post("/invites")
+async def create_invite(payload: ClientInviteRequest, request: Request):
+    photog = await _require_role(request, "super_admin", "photographer")
+    invite = {
+        "id": f"inv_{uuid.uuid4().hex[:10]}",
+        "email": payload.email.lower(),
+        "wedding_slug": payload.wedding_slug,
+        "invited_by": photog["user_id"],
+        "status": "pending",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    # auto-link if invitee already exists
+    existing = await db.photographers.find_one({"email": payload.email.lower()}, {"_id": 0})
+    if existing:
+        invite["status"] = "accepted"
+        invite["user_id"] = existing["user_id"]
+        invite["accepted_at"] = datetime.now(timezone.utc).isoformat()
+        # demote to client role only if currently default photographer
+        if existing.get("role") == "photographer":
+            await db.photographers.update_one({"user_id": existing["user_id"]}, {"$set": {"role": "client"}})
+    await db.client_invites.insert_one(dict(invite))
+    await _audit("invite.create", photog["user_id"], target=payload.email, meta={"wedding": payload.wedding_slug})
+    return invite
+
+
+@api_router.get("/me/galleries")
+async def my_galleries(request: Request):
+    """Client-facing list of weddings they've been invited to."""
+    user = await _get_authed_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    invites = await db.client_invites.find(
+        {"email": user["email"], "status": "accepted"}, {"_id": 0}
+    ).to_list(50)
+    weddings = []
+    for inv in invites:
+        w = WEDDINGS.get(inv["wedding_slug"])
+        if w:
+            weddings.append({
+                "slug": w["slug"],
+                "couple": w["couple"],
+                "date": w["date"],
+                "venue": w["venue"],
+                "poster_image": w["poster_image"],
+                "studio": w["studio"],
+            })
+    return {"role": user.get("role"), "weddings": weddings}
 
 
 # ---------- Photo Categories (GitHub-synced gallery library) ----------

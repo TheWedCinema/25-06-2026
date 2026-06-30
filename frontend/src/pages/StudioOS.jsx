@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, LogOut } from "lucide-react";
+import { ArrowLeft, LogOut, ShieldCheck } from "lucide-react";
 import { BRAND_STRAPLINE } from "@/constants/brand";
 import { PAGE_FADE_IN } from "@/constants/motion";
 import { useAuth } from "@/auth/AuthContext";
@@ -82,6 +82,11 @@ function StudioOS() {
                 {user.picture && <img src={user.picture} alt={user.name} className="w-7 h-7 rounded-full object-cover border border-white/10" referrerPolicy="no-referrer" />}
                 <span className="hidden lg:inline font-sans-twc text-[11px] uppercase tracking-[0.22em] text-zinc-300">{user.name}</span>
               </div>
+            )}
+            {user?.role === "super_admin" && (
+              <Link to="/admin" className="border border-[#D4AF37]/40 hover:bg-[#D4AF37]/10 text-[#D4AF37] font-sans-twc text-[11px] uppercase tracking-[0.22em] px-3 py-2 rounded-sm transition inline-flex items-center gap-2" data-testid="studio-admin-link">
+                <ShieldCheck size={12} /> <span className="hidden md:inline">Admin</span>
+              </Link>
             )}
             <button onClick={handleLogout} className="ml-2 border border-white/15 hover:bg-white/10 text-white font-sans-twc text-[11px] uppercase tracking-[0.22em] px-3 py-2 rounded-sm transition inline-flex items-center gap-2" data-testid="studio-logout">
               <LogOut size={12} /> <span className="hidden md:inline">Sign Out</span>

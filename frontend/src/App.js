@@ -12,8 +12,10 @@ import { AuthProvider } from "@/auth/AuthContext";
 import AuthCallback from "@/auth/AuthCallback";
 import LoginPage from "@/auth/LoginPage";
 import ProtectedRoute from "@/auth/ProtectedRoute";
+import RequireRole from "@/auth/RequireRole";
 import WeddingPlayer from "@/pages/WeddingPlayer";
 import StudioOS from "@/pages/StudioOS";
+import AdminPanel from "@/pages/AdminPanel";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -548,6 +550,7 @@ function App() {
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/w/:slug" element={<WeddingPlayer />} />
           <Route path="/studio" element={<ProtectedRoute><StudioOS /></ProtectedRoute>} />
+          <Route path="/admin" element={<RequireRole roles={["super_admin"]}><AdminPanel /></RequireRole>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
