@@ -346,7 +346,6 @@ async def demo_episodes():
     }
 
 
-# ---------- Studio Command Center (Video Delivery OS) ----------
 @api_router.get("/studio/stats")
 async def studio_stats():
     """Mock dashboard data for the photographer admin / Studio OS preview."""
@@ -401,7 +400,96 @@ async def studio_stats():
     }
 
 
+# ---------- Photo Categories (GitHub-synced gallery library) ----------
+@api_router.get("/photos/categories")
+async def list_photo_categories(request: Request):
+    """List the photographer's photo categories. Returns the seeded
+    'The Wed Cinema Gallery' card for any logged-in studio."""
+    user = await _get_authed_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    user_id = user["user_id"]
+    cursor = db.photo_categories.find({"user_id": user_id}, {"_id": 0}).sort("created_at", 1)
+    docs = await cursor.to_list(50)
+
+    # Auto-seed the founding gallery on first visit
+    if not docs:
+        seed = {
+            "id": f"cat_{uuid.uuid4().hex[:10]}",
+            "user_id": user_id,
+            "name": "The Wed Cinema Gallery",
+            "slug": "the-wed-cinema-gallery",
+            "source": "github",
+            "github": {
+                "owner": "TheWedCinema",
+                "repo": "25-06-2026",
+                "branch": "main",
+                "path": "",
+            },
+            "cover_image": "https://images.pexels.com/photos/34172822/pexels-photo-34172822.jpeg",
+            "tagline": "Master design library · auto-synced from GitHub",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        }
+        await db.photo_categories.insert_one(dict(seed))
+        docs = [seed]
+
+    return docs
+
+
+@api_router.get("/photos/categories/{cat_id}/sync")
+async def sync_photo_category(cat_id: str, request: Request):
+    """Live-fetch the file manifest from GitHub Contents API. Returns the latest
+    items so the gallery stays in sync with the repo without manual refresh."""
+    user = await _get_authed_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    cat = await db.photo_categories.find_one({"id": cat_id, "user_id": user["user_id"]}, {"_id": 0})
+    if not cat:
+        raise HTTPException(status_code=404, detail="Category not found")
+    if cat.get("source") != "github":
+        return {"category": cat, "items": [], "synced_at": datetime.now(timezone.utc).isoformat()}
+
+    gh = cat["github"]
+    api_url = f"https://api.github.com/repos/{gh['owner']}/{gh['repo']}/contents/{gh['path']}?ref={gh['branch']}"
+    async with httpx.AsyncClient(timeout=10.0) as http:
+        try:
+            r = await http.get(api_url, headers={"Accept": "application/vnd.github+json"})
+        except httpx.HTTPError:
+            raise HTTPException(status_code=502, detail="Unable to reach GitHub")
+    if r.status_code == 404:
+        raise HTTPException(status_code=404, detail="GitHub repo/path not found")
+    if r.status_code != 200:
+        raise HTTPException(status_code=502, detail=f"GitHub error: {r.status_code}")
+
+    items = []
+    for entry in r.json():
+        if entry.get("type") != "file":
+            continue
+        items.append({
+            "name": entry["name"],
+            "size_bytes": entry.get("size", 0),
+            "download_url": entry.get("download_url"),
+            "html_url": entry.get("html_url"),
+            "sha": entry.get("sha"),
+        })
+
+    synced_at = datetime.now(timezone.utc).isoformat()
+    await db.photo_categories.update_one(
+        {"id": cat_id},
+        {"$set": {"last_synced_at": synced_at, "item_count": len(items)}},
+    )
+
+    return {
+        "category": {**cat, "last_synced_at": synced_at, "item_count": len(items)},
+        "items": items,
+        "synced_at": synced_at,
+    }
+
+
 app.include_router(api_router)
+
 
 app.add_middleware(
     CORSMiddleware,

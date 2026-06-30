@@ -9,6 +9,7 @@ import { useAuth } from "@/auth/AuthContext";
 import IngestTab from "@/pages/studio/IngestTab";
 import RulesTab from "@/pages/studio/RulesTab";
 import StorageTab from "@/pages/studio/StorageTab";
+import GalleryTab from "@/pages/studio/GalleryTab";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -17,6 +18,7 @@ const TABS = [
   { id: "ingest",  label: "Ingest & Transcode" },
   { id: "rules",   label: "Delivery Rules" },
   { id: "storage", label: "Storage & Engagement" },
+  { id: "gallery", label: "Photo Categories" },
 ];
 
 function StudioOS() {
@@ -115,6 +117,7 @@ function StudioOS() {
         )}
         {tab === "rules" && <RulesTab data={data} rules={rules} setRules={setRules} />}
         {tab === "storage" && <StorageTab data={data} />}
+        {tab === "gallery" && <GalleryTab />}
 
         <footer className="mt-20 pt-8 border-t border-white/5 text-center">
           <p className="font-sans-twc text-[11px] uppercase tracking-[0.28em] text-zinc-500" data-testid="brand-strapline">{BRAND_STRAPLINE}</p>
