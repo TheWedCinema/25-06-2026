@@ -1,0 +1,121 @@
+{
+  "theme": "dark",
+  "archetype": "5 (Luxury)",
+  "colors": {
+    "background": "#000000",
+    "text_primary": "#FDFBF7",
+    "text_secondary": "#A1A1AA",
+    "accent_primary": "#D4AF37",
+    "accent_hover": "#F3E5AB",
+    "surface_glass": "rgba(255, 255, 255, 0.03)",
+    "border_glass": "rgba(255, 255, 255, 0.1)"
+  },
+  "typography": {
+    "heading_font": "Cormorant Garamond",
+    "body_font": "Montserrat",
+    "font_imports": "@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap');",
+    "h1_classes": "font-serif text-5xl md:text-6xl lg:text-7xl tracking-tighter leading-none text-[#FDFBF7]",
+    "h2_classes": "font-serif text-4xl md:text-5xl tracking-tight text-[#FDFBF7]",
+    "h3_classes": "font-serif text-2xl md:text-3xl tracking-tight text-[#FDFBF7]",
+    "body_classes": "font-sans text-base md:text-lg leading-relaxed text-zinc-400"
+  },
+  "layout": {
+    "spacing_strategy": "Generous spacing. Use py-24 or py-32 for section vertical padding. Use p-8 or p-12 for internal card padding.",
+    "container_classes": "max-w-7xl mx-auto px-6 md:px-12",
+    "alignment": "Prioritize asymmetrical layouts and optical alignment. Use pure HTML/Tailwind for marketing sections, overriding Shadcn defaults where necessary."
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#D4AF37] text-black font-sans font-medium px-8 py-4 rounded-sm hover:bg-[#F3E5AB] transition-colors duration-300 tracking-wide",
+      "secondary": "bg-white/5 border border-white/20 text-white font-sans font-medium px-8 py-4 rounded-sm hover:bg-white/10 backdrop-blur-md transition-colors duration-300 tracking-wide"
+    },
+    "cards": {
+      "glass": "bg-white/[0.02] border border-white/10 backdrop-blur-xl rounded-lg overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+    }
+  },
+  "visual_enhancers": {
+    "texture": "Apply a subtle grain/noise overlay across the entire site body to give it a physical, analog film feel.",
+    "hover_effects": "Cinematic zoom: hover:scale-105 transition-transform duration-700 ease-out on images. Sibling dimming on OTT cards.",
+    "motion": "Use framer-motion for smooth, slow fade-ups on scroll. Elements should drift in slowly to emphasize luxury."
+  },
+  "sections_and_media": [
+    {
+      "name": "Hero Section",
+      "description": "Fullscreen cinematic background, pure black gradient overlay at bottom to blend into next section.",
+      "image_url": "https://images.pexels.com/photos/34172822/pexels-photo-34172822.jpeg",
+      "design_instructions": "Overlay must be a gradient: bg-gradient-to-b from-black/40 via-black/60 to-black. Center-aligned text for maximum cinematic impact. Display dual CTAs."
+    },
+    {
+      "name": "Trust Badges",
+      "description": "Minimalist row of features/guarantees under hero.",
+      "design_instructions": "Use lucide-react icons. Text should be uppercase, tracking-widest, text-xs, text-zinc-500. Opacity 60% default, 100% on hover."
+    },
+    {
+      "name": "Problem Section",
+      "description": "Wedding Delivery is Broken",
+      "design_instructions": "Stark contrast. Massive typography for pain points ('Hard drives die'). Asymmetrical alignment. Minimal to no imagery, focus on the painful truth."
+    },
+    {
+      "name": "Features Grid",
+      "description": "Bento grid of 8 features (One Platform. Every Wedding Solution).",
+      "design_instructions": "Cards should use the glassmorphism style. Icons in soft gold. Use a mix of col-span-1 and col-span-2 for asymmetrical tension."
+    },
+    {
+      "name": "How It Works",
+      "description": "4-step infographic",
+      "design_instructions": "Vertical line connecting steps or horizontal connected cards. Step numbers in large serif font (e.g., text-6xl text-white/5) overlapping the text."
+    },
+    {
+      "name": "OTT Episodes Mockup",
+      "description": "Netflix-style horizontal scroll of episodes",
+      "images": [
+        {
+          "role": "Haldi",
+          "url": "https://images.unsplash.com/photo-1525135850648-b42365991054"
+        },
+        {
+          "role": "Mehndi",
+          "url": "https://images.unsplash.com/photo-1505932794465-147d1f1b2c97"
+        },
+        {
+          "role": "Sangeet",
+          "url": "https://images.unsplash.com/photo-1514178703120-3fa66528901d"
+        },
+        {
+          "role": "Ceremony",
+          "url": "https://images.unsplash.com/photo-1530082625928-db66d39c5a21"
+        }
+      ],
+      "design_instructions": "Aspect ratio 16:9 for episode cards. Apply a Play button icon overlay on hover. Episode title in bottom left. Hover state should zoom the image and dim sibling cards."
+    },
+    {
+      "name": "One-Click TV",
+      "description": "Casting to Smart TV illustration/photo.",
+      "image_url": "https://images.unsplash.com/photo-1646861039459-fd9e3aabf3fb",
+      "design_instructions": "Image on right, text on left. Image should have a subtle gold glow or a 1px border-white/20 to separate it from the black background."
+    },
+    {
+      "name": "Founding Photographers",
+      "description": "Exclusive 'Apply Now' form limited to 100 studios.",
+      "design_instructions": "Use Shadcn forms but highly customized: inputs should have bg-transparent, border-b border-white/20 only, rounded-none to look editorial and high-end."
+    },
+    {
+      "name": "Pricing",
+      "description": "4 Tiers",
+      "design_instructions": "Tall rectangular cards. The 'Studio' card should be highlighted with a gold border and a subtle gold ambient shadow. Use pure HTML/Tailwind, avoid Shadcn Card if it restricts height/flexibility."
+    },
+    {
+      "name": "Final CTA",
+      "description": "Stop delivering hard drives. Start delivering experiences.",
+      "design_instructions": "Centered alignment. Massive typography. Gold primary button. Ensure plenty of negative space (py-40)."
+    }
+  ],
+  "accessibility_and_testing": {
+    "data_testid_requirement": "All interactive and key informational elements MUST include a data-testid attribute in kebab-case format (e.g., data-testid='hero-cta-demo').",
+    "contrast": "Ensure text over images has sufficient text-shadow or a gradient overlay behind it to pass WCAG AA standards."
+  },
+  "tech_stack_overrides": {
+    "icons": "lucide-react",
+    "animations": "framer-motion"
+  }
+}
