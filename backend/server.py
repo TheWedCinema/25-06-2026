@@ -227,6 +227,61 @@ async def demo_episodes():
     }
 
 
+# ---------- Studio Command Center (Video Delivery OS) ----------
+@api_router.get("/studio/stats")
+async def studio_stats():
+    """Mock dashboard data for the photographer admin / Studio OS preview."""
+    return {
+        "studio": {
+            "name": "Lumiere Films",
+            "initials": "LF.",
+            "tagline": "Premier Cinematography",
+        },
+        "storage": {
+            "label": "Backblaze B2 Vault",
+            "used_gb": 432,
+            "total_gb": 1024,
+            "egress_gb": 128.4,
+            "monthly_cost_inr": 214.20,
+            "savings_note": "Savings vs S3",
+        },
+        "engagement": {
+            "tv_views_pct": 42,
+            "mobile_views_pct": 58,
+            "replay_rate_pct": 94,
+        },
+        "jobs": {
+            "active": [
+                {"id": "j1", "filename": "Aanya-Vikram-SDE_master.mov", "size_gb": 5, "deliverable": "Same Day Edit",       "progress": 78, "phase": "HLS 1080p"},
+                {"id": "j2", "filename": "Aanya-Vikram-Highlights.mov", "size_gb": 12, "deliverable": "Wedding Highlights", "progress": 42, "phase": "HLS 720p"},
+            ],
+            "hls_targets": [
+                {"res": "240p",  "status": "done"},
+                {"res": "480p",  "status": "done"},
+                {"res": "720p",  "status": "running"},
+                {"res": "1080p", "status": "pending"},
+                {"res": "2K HD", "status": "pending"},
+                {"res": "4K UHD","status": "pending"},
+            ],
+        },
+        "rules": {
+            "allow_client_downloads": True,
+            "auto_watermark_low_bitrates": True,
+        },
+        "pending_guest_uploads": [
+            {"id": "g1", "guest": "Riya Mehta",   "files": 12, "size_mb": 184, "submitted": "2 hours ago"},
+            {"id": "g2", "guest": "Karan Bhatia", "files": 5,  "size_mb": 96,  "submitted": "5 hours ago"},
+            {"id": "g3", "guest": "Nisha Iyer",   "files": 27, "size_mb": 412, "submitted": "1 day ago"},
+        ],
+        "deliverable_types": [
+            "Same Day Edit (SDE)", "Wedding Highlight Film", "Full Wedding Film (4K Master)",
+            "Traditional Video Part 1", "Pre Wedding Film", "Drone Film Master", "Family Film Edit",
+        ],
+        "categories": ["Premium Masterpiece (SDE, Highlights, etc.)", "Complete Event Archives (Haldi, Mehendi, Sangeet)"],
+        "size_simulations": ["1 GB (Highlight Reel)", "5 GB (Drone master)", "10 GB (Full HD video)", "20 GB (4K Master)", "50 GB (Cinematic raw)"],
+    }
+
+
 app.include_router(api_router)
 
 app.add_middleware(

@@ -8,6 +8,7 @@ import {
   Cloud, ChevronRight, Check, Instagram, Star, ArrowRight, Zap
 } from "lucide-react";
 import WeddingPlayer from "@/pages/WeddingPlayer";
+import StudioOS from "@/pages/StudioOS";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -31,7 +32,8 @@ function Nav({ onApply }) {
         <div className="hidden md:flex items-center gap-10 text-sm font-sans-twc tracking-wide text-zinc-400">
           <a href="#problem" className="hover:text-white transition" data-testid="nav-problem">Problem</a>
           <a href="#features" className="hover:text-white transition" data-testid="nav-features">Platform</a>
-          <a href="#episodes" className="hover:text-white transition" data-testid="nav-ott">OTT Demo</a>
+          <a href="/w/aanya-vikram" className="hover:text-white transition" data-testid="nav-ott">OTT Demo</a>
+          <a href="/studio" className="hover:text-white transition" data-testid="nav-studio">Studio OS</a>
           <a href="#pricing" className="hover:text-white transition" data-testid="nav-pricing">Pricing</a>
         </div>
         <button onClick={onApply} className="bg-[#D4AF37] hover:bg-[#F3E5AB] text-black font-sans-twc font-medium text-xs uppercase tracking-[0.18em] px-5 py-3 rounded-sm transition-colors" data-testid="nav-apply-btn">
@@ -293,6 +295,21 @@ function TVConnect() {
   );
 }
 
+function FounderQuote() {
+  return (
+    <section className="py-28 md:py-40 bg-black border-t border-white/5" data-testid="founder-quote-section">
+      <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
+        <p className="font-sans-twc text-[11px] uppercase tracking-[0.3em] text-[#D4AF37] mb-8">A Note from the Founder</p>
+        <p className="font-serif-twc text-3xl md:text-5xl lg:text-6xl text-[#FDFBF7] leading-[1.1] tracking-tight" data-testid="founder-quote">
+          "I make photographers look like filmmakers<br className="hidden md:inline" />
+          and make wedding delivery feel like <span className="italic text-[#D4AF37]">Netflix.</span>"
+        </p>
+        <p className="font-sans-twc text-sm text-zinc-500 mt-10 tracking-[0.18em] uppercase">— The Founder, The Wed Cinema</p>
+      </div>
+    </section>
+  );
+}
+
 function Founders({ onApply, remaining }) {
   return (
     <section id="founders" className="py-28 md:py-40 bg-black border-t border-white/5" data-testid="founders-section">
@@ -514,6 +531,7 @@ function Landing() {
       <HowItWorks />
       <OttEpisodes />
       <TVConnect />
+      <FounderQuote />
       <Founders onApply={() => setOpen(true)} remaining={remaining} />
       <Pricing onApply={() => setOpen(true)} />
       <FinalCTA onApply={() => setOpen(true)} />
@@ -529,6 +547,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/w/:slug" element={<WeddingPlayer />} />
+        <Route path="/studio" element={<StudioOS />} />
       </Routes>
     </BrowserRouter>
   );

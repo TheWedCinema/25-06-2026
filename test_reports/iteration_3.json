@@ -1,0 +1,25 @@
+{
+  "summary": "Iteration 3 testing complete. Backend: 7/7 pytest tests pass for /api/studio/stats (full shape incl. used_gb=432, total_gb=1024, egress_gb=128.4, monthly_cost_inr=214.20, engagement 42/58/94, 2 jobs, 6 HLS targets 240p->4K UHD, 3 pending uploads, 7 deliverables), /api/weddings/aanya-vikram/meta (row_count=3, studio_initials='LF.', no video URL leaks), /api/weddings/aanya-vikram/unlock with pin=1234 (3 profiles, 3 rows with 3/4/3 items, reels.share=true, 9 photos), wrong PIN -> 401, founders stats + apply validation regression. Frontend: full Playwright e2e flow on landing -> Studio OS nav link + founder-quote ('I make photographers look like filmmakers... like Netflix.') -> /w/aanya-vikram PIN gate (1234) -> profile-select with couple/family/guest -> ott-experience with badges, play-film/trailer/watch-tv CTAs -> all 3 content rows render -> Photos tab swaps to photo-vault with 9 photos -> content card opens player-overlay with quality dropdown + close -> Watch on TV opens tv-modal with 6-digit code + 3 cast options -> studio-card with chat/call -> brand-strapline. /studio renders Video Delivery OS hero, 3 tabs, ingest pane with 3 selects + meta + Start Chunk Upload (TUS) which triggers ingest-progress bar, j1/j2 active jobs, 6 HLS target tiles; Rules tab toggles work (aria-pressed flips true->false) + 3 pending uploads with Approve/Reject; Storage tab renders all 6 stat cards with exact backend values (432 GB / 1024, ₹214.20, 42%/58%/94%). studio-back link returns to landing. No console errors of concern.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_studio_and_ott.py",
+    "/app/test_reports/pytest/studio_ott.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "WeddingPlayer.jsx is ~430 lines and growing — consider extracting PinGate, ProfileSelect, PlayerOverlay, TvModal, ContentRow, PhotoVault, StudioCard into /pages/wedding/ submodules before next iteration to stay <700 lines per file.",
+    "StudioOS.jsx Rules tab toggles update local state only; there is no PUT/PATCH to /api/studio/rules — values reset on reload. Acceptable for the current preview but flag this as MOCKED PERSISTENCE for future iterations.",
+    "Approve/Reject buttons on pending guest uploads (g1/g2/g3) are non-functional placeholders (no onClick handler, no backend route). Flag as MOCKED for future iteration.",
+    "Both StudioOS.jsx and WeddingPlayer.jsx redeclare an identical BRAND_STRAPLINE constant — extract to a shared /constants/brand.js to follow DRY.",
+    "/api/studio/stats returns a freeform dict (no Pydantic response_model). Adding a StudioStats Pydantic model would give the frontend a stable contract and catch schema drift early."
+  ],
+  "updated_files": ["/app/backend/tests/test_studio_and_ott.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "Demo PIN 1234 (no auth credentials required for any endpoint)",
+  "seed_data_creation": "None — all studio data is in-memory mock from /api/studio/stats; WEDDINGS dict is hard-coded in backend.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend tests live at /app/backend/tests/test_studio_and_ott.py (pytest, 7 cases) and existing /app/backend/tests/* from iter 1. Studio rules toggles and Approve/Reject are intentionally UI-only — do not expect a persistence API yet. The `[data-testid^=\"photo-\"]` selector matches both photo-vault and photo-0..8 — when counting photos, use `[data-testid^=\"photo-\"]:not([data-testid=\"photo-vault\"])` or filter to digits, expected count is 9.",
+  "rca of the issue": "N/A — no failures observed in this iteration."
+}
