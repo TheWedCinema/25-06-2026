@@ -1,0 +1,31 @@
+{
+  "summary": "First-finish smoke test of The Wed Cinema landing + FastAPI backend. All 8 backend endpoints behave per spec (200/409/422 as expected). Frontend landing renders cinematic hero, dual CTAs, live spot counter wired to /api/founders/stats, 4 pricing tiers, and full apply→success flow works end-to-end. Counter decremented live (98→97) after Playwright signup, confirming integration.",
+  "tested_scope": ["frontend", "backend", "integration"],
+  "passed": [
+    "GET /api/ → 200 {service:'The Wed Cinema', status:'live'}",
+    "GET /api/founders/stats → 200, total_spots=100, remaining counter live",
+    "POST /api/founders/apply valid payload → 200, returns full record with id+created_at; remaining decremented",
+    "POST /api/founders/apply duplicate email → 409 'An application with this email already exists.'",
+    "POST /api/founders/apply missing required fields → 422 (full_name/studio_name/email/city flagged)",
+    "POST /api/founders/apply invalid email format → 422 with EmailStr validation error",
+    "GET /api/founders/applications → 200, sorted newest-first (verified Kavya 07:31 before Aanya)",
+    "GET /api/episodes/demo → 200, wedding metadata + 4 episodes (Haldi, Mehndi, Sangeet, Ceremony) with thumb URLs",
+    "Frontend loads at REACT_APP_BACKEND_URL — hero 'Deliver weddings like Netflix.' visually rendered (split spans), dual CTAs (Book Live Demo / Watch Demo Wedding) visible",
+    "founders-counter shows live '97 of 100 spots remaining' from /api/founders/stats",
+    "nav-apply-btn opens apply-modal",
+    "Apply form submission with valid data shows apply-success: \"You're on the list.\"",
+    "All 4 pricing-tier-0..3 elements visible",
+    "Counter decremented live from 98→97 after Playwright submission (integration confirmed)",
+    "No console errors during landing render"
+  ],
+  "failed": [],
+  "observations": [
+    "Playwright text=\"Deliver weddings like Netflix\" returned not-visible because hero is split across nested <span> elements (separate 'Deliver weddings' and 'like Netflix.' spans). Visually correct — screenshot confirms. Not a bug.",
+    "After success screen, modal remains open and Escape key did not dismiss it. Acceptable UX (user clicks close X), but the test could not re-open modal to test inline duplicate-email error in UI. Duplicate-email path verified at API layer (HTTP 409). LOW priority — consider verifying inline error UX in full testing pass."
+  ],
+  "action_items": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "retest_needed": false,
+  "full_testing_deferred": true,
+  "test_credentials": "N/A — no auth required for this app"
+}
