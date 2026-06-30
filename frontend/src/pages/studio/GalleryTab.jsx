@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import {
   Image as ImageIcon, Github, ExternalLink, RefreshCw, FileText, Layers, ArrowLeft, FolderOpen
@@ -44,16 +44,16 @@ function CategoryDrillIn({ cat, onBack }) {
   const [syncing, setSyncing] = useState(false);
   const [meta, setMeta] = useState(cat);
 
-  const doSync = async () => {
+  const doSync = useCallback(async () => {
     setSyncing(true);
     try {
       const { data } = await axios.get(`${API}/photos/categories/${cat.id}/sync`, { withCredentials: true });
       setItems(data.items);
       setMeta(data.category);
     } finally { setSyncing(false); }
-  };
+  }, [cat.id]);
 
-  useEffect(() => { doSync(); }, []);
+  useEffect(() => { doSync(); }, [doSync]);
 
   return (
     <div data-testid={`photo-cat-detail-${cat.slug}`}>
