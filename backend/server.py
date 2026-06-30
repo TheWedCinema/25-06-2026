@@ -94,21 +94,84 @@ async def list_applications(limit: int = 100):
     return docs
 
 
-# ---------- Demo Episodes (OTT mock) ----------
+# ---------- Public Wedding OTT (demo) ----------
+DEMO_VIDEO = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+TRAILER_VIDEO = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+
+WEDDINGS = {
+    "aanya-vikram": {
+        "slug": "aanya-vikram",
+        "couple": "Aanya & Vikram",
+        "date": "14 February 2026",
+        "venue": "Umaid Bhawan Palace, Jodhpur",
+        "studio": "Lumiere Films",
+        "poster_tagline": "A Cinematic Wedding Story",
+        "poster_image": "https://images.pexels.com/photos/34172822/pexels-photo-34172822.jpeg",
+        "logline": "Two cities, two families, one impossible love story — filmed across five days under the Rajasthan sun.",
+        "pin": "1234",
+        "trailer_url": TRAILER_VIDEO,
+        "episodes": [
+            {"id": "e1", "title": "Haldi",    "duration": "08:42", "synopsis": "Turmeric, laughter and the first tears of the bride's mother.", "thumb": "https://images.unsplash.com/photo-1525135850648-b42365991054", "url": DEMO_VIDEO},
+            {"id": "e2", "title": "Mehndi",   "duration": "12:18", "synopsis": "Henna, hidden initials, and a sangeet rehearsal that wouldn't stop.",     "thumb": "https://images.unsplash.com/photo-1505932794465-147d1f1b2c97", "url": DEMO_VIDEO},
+            {"id": "e3", "title": "Sangeet",  "duration": "15:04", "synopsis": "Choreographed chaos. Two families, one dance floor.",                       "thumb": "https://images.unsplash.com/photo-1514178703120-3fa66528901d", "url": DEMO_VIDEO},
+            {"id": "e4", "title": "Ceremony", "duration": "22:51", "synopsis": "The seven vows, the fire, and a city holding its breath.",                  "thumb": "https://images.unsplash.com/photo-1530082625928-db66d39c5a21", "url": DEMO_VIDEO},
+        ],
+    }
+}
+
+
+class PinVerifyRequest(BaseModel):
+    pin: str
+
+
+@api_router.get("/weddings/{slug}/meta")
+async def wedding_meta(slug: str):
+    w = WEDDINGS.get(slug)
+    if not w:
+        raise HTTPException(status_code=404, detail="Wedding not found")
+    # Return only the metadata needed BEFORE PIN entry (no video URLs)
+    return {
+        "slug": w["slug"],
+        "couple": w["couple"],
+        "date": w["date"],
+        "venue": w["venue"],
+        "studio": w["studio"],
+        "poster_tagline": w["poster_tagline"],
+        "poster_image": w["poster_image"],
+        "logline": w["logline"],
+        "episode_count": len(w["episodes"]),
+    }
+
+
+@api_router.post("/weddings/{slug}/unlock")
+async def wedding_unlock(slug: str, body: PinVerifyRequest):
+    w = WEDDINGS.get(slug)
+    if not w:
+        raise HTTPException(status_code=404, detail="Wedding not found")
+    if body.pin.strip() != w["pin"]:
+        raise HTTPException(status_code=401, detail="Incorrect PIN. Please check the link your photographer sent.")
+    # Return full wedding payload incl video URLs once PIN verified
+    return {
+        "slug": w["slug"],
+        "couple": w["couple"],
+        "date": w["date"],
+        "venue": w["venue"],
+        "studio": w["studio"],
+        "poster_tagline": w["poster_tagline"],
+        "poster_image": w["poster_image"],
+        "logline": w["logline"],
+        "trailer_url": w["trailer_url"],
+        "episodes": w["episodes"],
+    }
+
+
+# Back-compat: keep legacy /api/episodes/demo
 @api_router.get("/episodes/demo")
 async def demo_episodes():
+    w = WEDDINGS["aanya-vikram"]
     return {
-        "wedding": {
-            "couple": "Aanya & Vikram",
-            "date": "2026-02-14",
-            "poster_tagline": "A Cinematic Wedding Story",
-        },
-        "episodes": [
-            {"id": "e1", "title": "Haldi", "duration": "08:42", "thumb": "https://images.unsplash.com/photo-1525135850648-b42365991054"},
-            {"id": "e2", "title": "Mehndi", "duration": "12:18", "thumb": "https://images.unsplash.com/photo-1505932794465-147d1f1b2c97"},
-            {"id": "e3", "title": "Sangeet", "duration": "15:04", "thumb": "https://images.unsplash.com/photo-1514178703120-3fa66528901d"},
-            {"id": "e4", "title": "Ceremony", "duration": "22:51", "thumb": "https://images.unsplash.com/photo-1530082625928-db66d39c5a21"},
-        ],
+        "wedding": {"couple": w["couple"], "date": w["date"], "poster_tagline": w["poster_tagline"]},
+        "episodes": [{"id": e["id"], "title": e["title"], "duration": e["duration"], "thumb": e["thumb"]} for e in w["episodes"]],
     }
 
 

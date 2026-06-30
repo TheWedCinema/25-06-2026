@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import "@/App.css";
 import axios from "axios";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Play, Tv, Film, Users, ScanFace, QrCode, Sparkles, Shield,
   Cloud, ChevronRight, Check, Instagram, Star, ArrowRight, Zap
 } from "lucide-react";
+import WeddingPlayer from "@/pages/WeddingPlayer";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -69,7 +71,7 @@ function Hero({ onApply, remaining }) {
               Book a Live Demo
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
-            <a href="#episodes" className="bg-white/5 hover:bg-white/10 border border-white/20 backdrop-blur-md text-white font-sans-twc font-medium px-8 py-4 rounded-sm tracking-wide transition-colors inline-flex items-center justify-center gap-2" data-testid="hero-cta-watch">
+            <a href="/w/aanya-vikram" className="bg-white/5 hover:bg-white/10 border border-white/20 backdrop-blur-md text-white font-sans-twc font-medium px-8 py-4 rounded-sm tracking-wide transition-colors inline-flex items-center justify-center gap-2" data-testid="hero-cta-watch">
               <Play size={16} fill="currentColor" /> Watch Demo Wedding
             </a>
           </motion.div>
@@ -484,7 +486,7 @@ function Footer() {
   );
 }
 
-function App() {
+function Landing() {
   const [open, setOpen] = useState(false);
   const [remaining, setRemaining] = useState(null);
 
@@ -515,6 +517,17 @@ function App() {
       <Footer />
       <ApplyModal open={open} onClose={() => setOpen(false)} onSubmitted={fetchStats} />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/w/:slug" element={<WeddingPlayer />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
